@@ -17,20 +17,20 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>golang并发 | Hexo</title>
-  <meta name="description" content="占坑">
+  <title>elasticSearch学习笔记 | Hexo</title>
+  <meta name="description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
 <meta property="og:type" content="article">
-<meta property="og:title" content="golang并发">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/13/golang并发/index.html">
+<meta property="og:title" content="elasticSearch学习笔记">
+<meta property="og:url" content="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="占坑">
+<meta property="og:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-12T22:33:31.000Z">
+<meta property="og:updated_time" content="2018-10-13T15:03:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="golang并发">
-<meta name="twitter:description" content="占坑">
+<meta name="twitter:title" content="elasticSearch学习笔记">
+<meta name="twitter:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://lqczzz.github.io/2018/10/13/golang并发/index.html">
+  <link rel="canonical" href="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -294,14 +294,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-golang并发" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-elasticSearch学习笔记" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      golang并发
+      elasticSearch学习笔记
     </h1>
   
 
@@ -309,8 +309,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/13/golang并发/" class="article-date">
-	  <time datetime="2018-10-12T22:28:05.000Z" itemprop="datePublished">2018-10-13</time>
+	<a href="/2018/10/13/elasticSearch学习笔记/" class="article-date">
+	  <time datetime="2018-10-13T14:29:32.000Z" itemprop="datePublished">2018-10-13</time>
 	</a>
 </span>
         
@@ -318,14 +318,121 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/13/golang并发/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/13/elasticSearch学习笔记/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <p>占坑</p>
-
+        <h1 id="elasticSearch入门"><a href="#elasticSearch入门" class="headerlink" title="elasticSearch入门"></a>elasticSearch入门</h1><p>最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。</p>
+<p>怎么入门：</p>
+<ol>
+<li>类比入门：类比一个熟悉的知识点，知识迁移会更容易</li>
+<li>简单的事例入门：动手进行简单的一个demo感受一下流程</li>
+</ol>
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><h3 id="1-安装es"><a href="#1-安装es" class="headerlink" title="1.安装es"></a>1.安装es</h3><p>前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了</p>
+<p>步骤：</p>
+<ol>
+<li>安装es：<ul>
+<li>brew install elasticsearch</li>
+<li>es服务端会被安装</li>
+</ul>
+</li>
+<li>安装kibana：<ul>
+<li>brew install kibana</li>
+<li>kibana可以理解为图形化的es客户端</li>
+</ul>
+</li>
+<li>启动es：brew services start elasticsearch</li>
+</ol>
+<p>安装es成功之后访问<code>http://localhost:9200/</code>可以获得es的状态信息<br>安装kibana成功之后访问<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>可以对es进行操作</p>
+<h3 id="2-自动补全"><a href="#2-自动补全" class="headerlink" title="2.自动补全"></a>2.自动补全</h3><pre><code>// hashtag
+{
+    id,
+    name,
+    score, // weight
+}
+</code></pre><h4 id="mappings-amp-analysizer"><a href="#mappings-amp-analysizer" class="headerlink" title="mappings &amp; analysizer"></a>mappings &amp; analysizer</h4><pre><code>PUT feed_id
+{
+    &quot;mappings&quot;: {
+        &quot;hashtag&quot;: {
+            &quot;properties&quot;: {
+                &quot;name&quot;: {
+                    &quot;type&quot;: &quot;completion&quot; 
+                }
+            }
+        }
+    }
+}
+</code></pre><h4 id="添加数据"><a href="#添加数据" class="headerlink" title="添加数据"></a>添加数据</h4><pre><code>POST feed_id/hashtag
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;hashtag name&quot;],
+        &quot;weight&quot;: 2
+    }
+}
+POST feed_id/hashtag/3
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;hashtag name2&quot;],
+        &quot;weight&quot;: 3
+    }
+}
+POST feed_id/hashtag/4
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;ashtag name2&quot;],
+        &quot;weight&quot;: 4
+    }
+}
+POST feed_id/hashtag/5
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;shtag name2&quot;],
+        &quot;weight&quot;: 5
+    }
+}
+POST feed_id/hashtag/6
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;htag name2&quot;],
+        &quot;weight&quot;: 6
+    }
+}
+POST feed_id/hashtag/7
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;爱我中华&quot;],
+        &quot;weight&quot;: 6
+    }
+}
+POST feed_id/hashtag/8
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;爱你中华&quot;],
+        &quot;weight&quot;: 6
+    }
+}
+POST feed_id/hashtag/9
+{
+    &quot;name&quot;: {
+        &quot;input&quot;: [&quot;爱你&quot;],
+        &quot;weight&quot;: 6
+    }
+}
+</code></pre><h4 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h4><pre><code>POST feed_id/_search?pretty
+{
+    &quot;suggest&quot;: {
+        &quot;hashtag-suggest&quot;: {
+            &quot;prefix&quot;: &quot;h&quot;,
+            &quot;completion&quot;: {
+                &quot;field&quot;: &quot;name&quot;
+            }
+        }
+    }
+}
+</code></pre><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>摘抄自<a href="ttps://github.com/looly/elasticsearch-definitive-guide-cn" target="_blank" rel="noopener">elasticsearch-definitive-guide-cn</a></p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2>
       
     </div>
     <div class="article-footer">
@@ -334,7 +441,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://lqczzz.github.io/2018/10/13/golang并发/" title="golang并发" target="_blank" rel="external">http://lqczzz.github.io/2018/10/13/golang并发/</a>
+      <a href="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/" title="elasticSearch学习笔记" target="_blank" rel="external">http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -380,10 +487,10 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2018/10/13/纪timeline重构/" title="纪timeline重构"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
     
+    <li class="next">
+      <a href="/2018/10/13/纪timeline重构/" title="纪timeline重构"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
     
     
   </ul>
