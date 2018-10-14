@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel channel可以单独创建，在进程之间传递 channel是线程安全队">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-14T12:58:47.000Z">
+<meta property="og:updated_time" content="2018-10-14T14:56:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang并发">
 <meta name="twitter:description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel channel可以单独创建，在进程之间传递 channel是线程安全队">
@@ -389,8 +389,45 @@
 </ul>
 </li>
 </ul>
-<h2 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h2><p>go块</p>
+<h2 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h2><p>java和c++的并发模型都是线程模型，它的好处是直接对硬件的抽象，大多数语言，包括python，它的线程模型都是操作系统线程，但是坏处是使用复杂。</p>
+<p>但是线程模型有三个危害</p>
+<blockquote>
+<ol>
+<li>竞态条件</li>
+<li>死锁</li>
+<li>内存可见性问题<br>引用自《七周七并发编程模型》</li>
+</ol>
+</blockquote>
+<pre><code>public class Test {
+    static boolean ready = false;   // 竞态条件一：共享变量
+    static int data = 0
 
+    static Thread t1 = new Thread() {
+        public void run() {
+            data = 10;  // 竞态条件二：会有并行实体(线程)修改变量
+            ready = true;
+        }
+    };
+
+    static Thread t2 = new Thread() {
+        public void run() {
+            if (ready) {    // 竞态条件三：一个未处理完成另外一个处理可能会介入
+                System.out.Println(&quot;data is :&quot; + data)
+            } else {
+                System.out.Println(&quot;no data&quot;)
+            }
+        }
+    };
+
+    public static void main(String[] args) throw InterruptedException{
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+    }
+}
+</code></pre>
       
     </div>
     <div class="article-footer">
