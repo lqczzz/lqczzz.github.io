@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://lqczzz.github.io/2018/10/13/%E7%BA%AAtimeline%E9%87%8D%E6%9E%84/</loc>
+    <loc>http://lqczzz.github.io/2018/10/13/golang%E5%B9%B6%E5%8F%91/</loc>
     
-    <lastmod>2018-10-14T02:48:51.000Z</lastmod>
+    <lastmod>2018-10-14T12:58:47.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://lqczzz.github.io/2018/10/14/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/</loc>
+    
+    <lastmod>2018-10-14T11:48:01.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://lqczzz.github.io/2018/10/13/%E8%AE%B0timeline%E9%87%8D%E6%9E%84/</loc>
+    
+    <lastmod>2018-10-14T03:15:20.000Z</lastmod>
     
   </url>
   
@@ -16,13 +30,6 @@
   </url>
   
   <url>
-    <loc>http://lqczzz.github.io/2018/10/13/golang%E5%B9%B6%E5%8F%91/</loc>
-    
-    <lastmod>2018-10-12T22:33:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://lqczzz.github.io/about/index.html</loc>
     
     <lastmod>2018-10-12T22:32:51.000Z</lastmod>
@@ -30,14 +37,14 @@
   </url>
   
   <url>
-    <loc>http://lqczzz.github.io/categories/index.html</loc>
+    <loc>http://lqczzz.github.io/books/index.html</loc>
     
     <lastmod>2018-10-12T21:48:40.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://lqczzz.github.io/books/index.html</loc>
+    <loc>http://lqczzz.github.io/categories/index.html</loc>
     
     <lastmod>2018-10-12T21:48:40.000Z</lastmod>
     
