@@ -17,20 +17,22 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>知识管理 | Hexo</title>
-  <meta name="description" content="为什么这样分类笔记用于我对知识的掌握，工作快两年了我才发现了知识的几个特点：  很多知识机靠记忆是没办法持久化存储的  比如前端vue框架，我用了大半年了，发现才转后台3个月，vue的很多东西就忘的差不多了 比如spring相关的框架，从大学开始使用到现在，断断续续，每次重新使用都得重新学习一遍，虽然每次学习的时间会越来越缩短。 比如开发工具，使用的编辑器的快捷键的使用等，都是很容易遗忘但是有没必">
+  <title>一次goroutine内存泄漏问题定位 | Hexo</title>
+  <meta name="description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="知识管理">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/14/知识管理/index.html">
+<meta property="og:title" content="一次goroutine内存泄漏问题定位">
+<meta property="og:url" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="为什么这样分类笔记用于我对知识的掌握，工作快两年了我才发现了知识的几个特点：  很多知识机靠记忆是没办法持久化存储的  比如前端vue框架，我用了大半年了，发现才转后台3个月，vue的很多东西就忘的差不多了 比如spring相关的框架，从大学开始使用到现在，断断续续，每次重新使用都得重新学习一遍，虽然每次学习的时间会越来越缩短。 比如开发工具，使用的编辑器的快捷键的使用等，都是很容易遗忘但是有没必">
+<meta property="og:description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-14T11:48:01.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/img/goroutine-leak.png">
+<meta property="og:updated_time" content="2018-10-16T05:52:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="知识管理">
-<meta name="twitter:description" content="为什么这样分类笔记用于我对知识的掌握，工作快两年了我才发现了知识的几个特点：  很多知识机靠记忆是没办法持久化存储的  比如前端vue框架，我用了大半年了，发现才转后台3个月，vue的很多东西就忘的差不多了 比如spring相关的框架，从大学开始使用到现在，断断续续，每次重新使用都得重新学习一遍，虽然每次学习的时间会越来越缩短。 比如开发工具，使用的编辑器的快捷键的使用等，都是很容易遗忘但是有没必">
+<meta name="twitter:title" content="一次goroutine内存泄漏问题定位">
+<meta name="twitter:description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
+<meta name="twitter:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/img/goroutine-leak.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://lqczzz.github.io/2018/10/14/知识管理/index.html">
+  <link rel="canonical" href="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -338,14 +340,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-知识管理" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-一次goroutine内存泄漏问题定位" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      知识管理
+      一次goroutine内存泄漏问题定位
     </h1>
   
 
@@ -353,8 +355,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/14/知识管理/" class="article-date">
-	  <time datetime="2018-10-14T03:06:31.000Z" itemprop="datePublished">2018-10-14</time>
+	<a href="/2018/10/16/一次goroutine内存泄漏问题定位/" class="article-date">
+	  <time datetime="2018-10-16T05:38:08.000Z" itemprop="datePublished">2018-10-16</time>
 	</a>
 </span>
         
@@ -362,55 +364,129 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/14/知识管理/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/16/一次goroutine内存泄漏问题定位/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="为什么这样分类"><a href="#为什么这样分类" class="headerlink" title="为什么这样分类"></a>为什么这样分类</h2><p>笔记用于我对知识的掌握，工作快两年了我才发现了知识的几个特点：</p>
-<ol>
-<li><p>很多知识机靠记忆是没办法持久化存储的</p>
-<ul>
-<li>比如前端vue框架，我用了大半年了，发现才转后台3个月，vue的很多东西就忘的差不多了</li>
-<li>比如spring相关的框架，从大学开始使用到现在，断断续续，每次重新使用都得重新学习一遍，虽然每次学习的时间会越来越缩短。</li>
-<li>比如开发工具，使用的编辑器的快捷键的使用等，都是很容易遗忘但是有没必要刻意去记住的</li>
-</ul>
-</li>
-<li><p>很多知识是细枝末节的</p>
-<ul>
-<li><p>比如某种框架，框架其实是一种架构良好的工具，提供了某种不变的东西，让你快速实现某种变化，来适应不同的业务场景。比如spring系的的框架，模版设计模式就很常用，你只要继承某种基类，然后实现特定的抽象函数（钩子函数），就能完成一个不同的功能，而前端框架vue的组件化就是最明显的模板模式的应用。框架是一种工具，工具的实现和接口都是细枝末节的，就算完全忘记了，只要拿上一个上午的时间甚者更短，就能再次掌握起来了。</p>
-</li>
-<li><p>在华为曾做过一个项目，后台开始是用node实现的，领导觉得node不安全，于是让我们用java重构，并且做好服务化，我们把微服务当作银弹，结果重构之后更加难部署了，项目的规模也没有达到必须使用服务化的必要。这就是锤子理论，拿起锤子，觉得什么都是钉子。</p>
-</li>
-</ul>
-</li>
-</ol>
-<ol>
-<li><p>很多知识是可以进行类比的</p>
-<ul>
-<li>比如web框架，不管是node的koa，python的flask还是golang的gin，都是有很多通用的概念，常用的套路，相同的业务场景和解决方案，举一反三对掌握新的工具是很有用的</li>
-</ul>
-</li>
-<li><p>很多知识是可以快速掌握和应用的</p>
-</li>
-</ol>
-<h2 id="分类的策略"><a href="#分类的策略" class="headerlink" title="分类的策略"></a>分类的策略</h2><ol>
-<li>入门类：对概念和基本流程有一个基本的认识</li>
-<li>笔记类：<ul>
-<li>常用的用法的记录</li>
-</ul>
-</li>
-<li>原理类：<ul>
-<li>对入门类有更详细的认识</li>
-</ul>
-</li>
-<li>实战类：<ul>
-<li>具体场景下的使用</li>
-</ul>
-</li>
-</ol>
+        <h2 id="定位过程"><a href="#定位过程" class="headerlink" title="定位过程"></a>定位过程</h2><p>问题：</p>
+<p><img src="./img/goroutine-leak.png" alt="goroutine-leak"></p>
+<p>Dump goroutines:</p>
+<pre><code>ps aux | grep &apos;content_svr&apos; #43
+kill -USR2 43
+</code></pre><p>比较两小时间的Diff：<br>两小时前:</p>
+<pre><code>$ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1
+1
+$ grep &apos;producer&apos; /proc/43/fd1
+53
+</code></pre><p>两小时后:</p>
+<pre><code>$ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1
+41
+$ grep &apos;producer&apos; /proc/43/fd1
+221
+</code></pre><h2 id="问题代码"><a href="#问题代码" class="headerlink" title="问题代码"></a>问题代码</h2><pre><code>// 简化了业务逻辑
 
+type Cron struct{
+    ch1 chan []int
+    ch2 chan []int
+}
+
+func (cron *Cron)start() {
+    timer := time.NewTicker(cron.taskDuration)
+    for {
+        select {
+        case &lt;-timer.C:
+            cron.doCron()
+        }
+    }
+}
+
+func (cron *Cron)doCron() {
+    cron.step1()
+    cron.step2()
+    cron.step3()
+}
+
+func (cron *Cron)step1() {
+    go func(){
+        cron.ch1 &lt;- []int{100}
+        // 注意这里没有关闭ch1，导致下面的goroutine一直没有关闭
+    }()
+}
+
+func (cron *Cron)step2() {
+    go func(){
+        for item := range cron.ch1 {
+            _ = item
+            cron.ch2 &lt;- []int{200}
+            // 注意这里没有关闭ch2，导致下面的goroutine一直没有关闭
+        }
+    }()
+}
+
+func (cron *Cron)step3() {
+    go func(){
+        for item := range cron.ch2 {
+            _ = item
+        }
+    }()
+}
+</code></pre><h2 id="纠正"><a href="#纠正" class="headerlink" title="纠正"></a>纠正</h2><pre><code>// 1. 每次创建goroutine时候创建channel
+// 2. 每次使用完channel，close channel，退出goroutine
+
+type Cron struct{
+    ch1 chan []int
+    ch2 chan []int
+}
+
+const (
+    concurrency = 100
+)
+func (cron *Cron)start() {
+    timer := time.NewTicker(cron.taskDuration)
+    for {
+        select {
+        case &lt;-timer.C:
+            cron.doCron()
+        }
+    }
+}
+
+func (cron *Cron)doCron() {
+    cron.ch1 = make(chan []int, concurrency) // fixed
+    cron.ch2 = make(chan []int, concurrency) // fixed
+
+    cron.step1()
+    cron.step2()
+    cron.step3()
+}
+
+func (cron *Cron)step1() {
+    go func(){
+        cron.ch1 &lt;- []int{100}
+        close(ch1) // fixed
+    }()
+}
+
+func (cron *Cron)step2() {
+    go func(){
+        for item := range cron.ch1 {
+            _ = item
+            cron.ch2 &lt;- []int{200}
+            close(ch2) // fixed
+        }
+    }()
+}
+
+func (cron *Cron)step3() {
+    go func(){
+        for item := range cron.ch2 {
+            _ = item
+        }
+    }()
+}
+</code></pre>
       
     </div>
     <div class="article-footer">
@@ -419,7 +495,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://lqczzz.github.io/2018/10/14/知识管理/" title="知识管理" target="_blank" rel="external">http://lqczzz.github.io/2018/10/14/知识管理/</a>
+      <a href="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/" title="一次goroutine内存泄漏问题定位" target="_blank" rel="external">http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -465,13 +541,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2018/10/16/一次goroutine内存泄漏问题定位/" title="一次goroutine内存泄漏问题定位"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2018/10/13/elasticSearch学习笔记/" title="elasticSearch学习笔记"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2018/10/14/知识管理/" title="知识管理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
