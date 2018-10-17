@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-13T15:03:26.000Z">
+<meta property="og:updated_time" content="2018-10-17T05:17:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="elasticSearch学习笔记">
 <meta name="twitter:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
@@ -388,6 +388,7 @@
 </ul>
 </li>
 <li>启动es：brew services start elasticsearch</li>
+<li>启动kibana：brew services start kibana</li>
 </ol>
 <p>安装es成功之后访问<code>http://localhost:9200/</code>可以获得es的状态信息<br>安装kibana成功之后访问<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>可以对es进行操作</p>
 <h3 id="2-自动补全"><a href="#2-自动补全" class="headerlink" title="2.自动补全"></a>2.自动补全</h3><pre><code>// hashtag
