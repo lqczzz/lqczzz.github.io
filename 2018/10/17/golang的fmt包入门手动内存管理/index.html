@@ -17,20 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>elasticSearch学习笔记 | Hexo</title>
-  <meta name="description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
+  <title>从golang的fmt包入门手动内存管理 | Hexo</title>
+  <meta name="description" content="矫情的话在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优秀">
+<meta name="keywords" content="timeline重构任重道远">
 <meta property="og:type" content="article">
-<meta property="og:title" content="elasticSearch学习笔记">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/index.html">
+<meta property="og:title" content="从golang的fmt包入门手动内存管理">
+<meta property="og:url" content="http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
+<meta property="og:description" content="矫情的话在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优秀">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-17T05:17:10.000Z">
+<meta property="og:updated_time" content="2018-10-17T15:05:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="elasticSearch学习笔记">
-<meta name="twitter:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
+<meta name="twitter:title" content="从golang的fmt包入门手动内存管理">
+<meta name="twitter:description" content="矫情的话在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优秀">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/index.html">
+  <link rel="canonical" href="http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -338,14 +339,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-elasticSearch学习笔记" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-golang的fmt包入门手动内存管理" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      elasticSearch学习笔记
+      从golang的fmt包入门手动内存管理
     </h1>
   
 
@@ -353,131 +354,126 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/13/elasticSearch学习笔记/" class="article-date">
-	  <time datetime="2018-10-13T14:29:32.000Z" itemprop="datePublished">2018-10-13</time>
+	<a href="/2018/10/17/golang的fmt包入门手动内存管理/" class="article-date">
+	  <time datetime="2018-10-17T14:01:43.000Z" itemprop="datePublished">2018-10-17</time>
 	</a>
 </span>
         
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/timeline重构任重道远/">timeline重构任重道远</a>
+  </span>
+
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/13/elasticSearch学习笔记/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/17/golang的fmt包入门手动内存管理/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="elasticSearch入门"><a href="#elasticSearch入门" class="headerlink" title="elasticSearch入门"></a>elasticSearch入门</h1><p>最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。</p>
-<p>怎么入门：</p>
+        <h2 id="矫情的话"><a href="#矫情的话" class="headerlink" title="矫情的话"></a>矫情的话</h2><p>在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。</p>
+<p>痛定几周之后决定思痛，要参考学习优秀的代码<br>于是我想，哪里会有优秀的涉及到内存管理的代码呢！</p>
+<p>官方库！！</p>
+<p>然后想，timeline涉及网络io，io才会有大量的内存分配和回收的场景！！</p>
+<p>直接看net包？太尼玛复杂了<br>ok，看fmt包</p>
+<h2 id="fmt包源码摘要和笔记"><a href="#fmt包源码摘要和笔记" class="headerlink" title="fmt包源码摘要和笔记"></a>fmt包源码摘要和笔记</h2><blockquote>
+<p>来自fmt/print.go</p>
+</blockquote>
+<pre><code>// Fprintf根据w的不同，调用w的write方法，很容易做到打印日志到不同地方
+func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
+    p := newPrinter()
+    p.doPrintf(format, a)
+    n, err = w.Write(p.buf)
+    p.free()
+    return
+}
+
+// Printf调用了Fprintf，打印的地方是os.Stdout
+func Printf(format string, a ...interface{}) (n int, err error) {
+    return Fprintf(os.Stdout, format, a...)
+}
+
+func Sprintf(format string, a ...interface{}) string {
+    p := newPrinter()
+    p.doPrintf(format, a)
+    s := string(p.buf)
+    p.free()
+    return s
+}
+</code></pre><p>这里至少有三点可以学:</p>
 <ol>
-<li>类比入门：类比一个熟悉的知识点，知识迁移会更容易</li>
-<li>简单的事例入门：动手进行简单的一个demo感受一下流程</li>
+<li>包本身就是模块化的一种方式，对外提供的函数不一定非得属于某个对象</li>
+<li>接口作为参数的好处：封装变化<br> 这里，变化指的是[]byte的去向，比如os.Stdout</li>
+<li><code>p := newPrinter()</code>这里采用了临时对象池来实现内存的管理</li>
 </ol>
-<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><h3 id="1-安装es"><a href="#1-安装es" class="headerlink" title="1.安装es"></a>1.安装es</h3><p>前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了</p>
-<p>步骤：</p>
-<ol>
-<li>安装es：<ul>
-<li>brew install elasticsearch</li>
-<li>es服务端会被安装</li>
-</ul>
-</li>
-<li>安装kibana：<ul>
-<li>brew install kibana</li>
-<li>kibana可以理解为图形化的es客户端</li>
-</ul>
-</li>
-<li>启动es：brew services start elasticsearch</li>
-<li>启动kibana：brew services start kibana</li>
-</ol>
-<p>安装es成功之后访问<code>http://localhost:9200/</code>可以获得es的状态信息<br>安装kibana成功之后访问<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>可以对es进行操作</p>
-<h3 id="2-自动补全"><a href="#2-自动补全" class="headerlink" title="2.自动补全"></a>2.自动补全</h3><pre><code>// hashtag
-{
-    id,
-    name,
-    score, // weight
+<p>看下去：</p>
+<pre><code>// pp is used to store a printer&apos;s state and is reused with sync.Pool to avoid allocations.
+type pp struct {
+    buf buffer
+    // 省略
 }
-</code></pre><h4 id="mappings-amp-analysizer"><a href="#mappings-amp-analysizer" class="headerlink" title="mappings &amp; analysizer"></a>mappings &amp; analysizer</h4><pre><code>PUT feed_id
-{
-    &quot;mappings&quot;: {
-        &quot;hashtag&quot;: {
-            &quot;properties&quot;: {
-                &quot;name&quot;: {
-                    &quot;type&quot;: &quot;completion&quot; 
-                }
-            }
-        }
+
+var ppFree = sync.Pool{
+    New: func() interface{} { return new(pp) },
+}
+
+// newPrinter allocates a new pp struct or grabs a cached one.
+func newPrinter() *pp {
+    p := ppFree.Get().(*pp)
+    p.panicking = false
+    p.erroring = false
+    p.fmt.init(&amp;p.buf)
+    return p
+}
+
+// free saves used pp structs in ppFree; avoids an allocation per invocation.
+func (p *pp) free() {
+    p.buf = p.buf[:0]   // 清空slice
+    p.arg = nil 
+    p.value = reflect.Value{}
+    ppFree.Put(p)   // 放回对象池里
+}
+</code></pre><p>一个sync.Pool对象就是一组临时对象的集合。Pool是协程安全的。<br>Pool用于存储那些被分配了但是没有被使用，而未来可能会使用的值，以减小垃圾回收的压力。</p>
+<p>fmt包总是需要使用一些[]byte之类的对象，golang建立了一个临时对象池，存放着这些对象，如果需要使用一个[]byte，就去Pool里面拿，如果拿不到就分配一份。<br>这比起不停生成新的[]byte，用完了再等待gc回收来要高效得多</p>
+<h2 id="sync-Pool测试"><a href="#sync-Pool测试" class="headerlink" title="sync.Pool测试"></a>sync.Pool测试</h2><pre><code>// 一个[]byte的对象池，每个对象为一个[]byte
+var bytePool = sync.Pool{
+    New: func() interface{} {
+        b := make([]byte, 1024)
+        return &amp;b
+    },
+}
+
+func main() {
+    a := time.Now().Unix()
+    // 不使用对象池
+    for i := 0; i &lt; 1000000000; i++ {
+        obj := make([]byte, 1024)
+        _ = obj
     }
-}
-</code></pre><h4 id="添加数据"><a href="#添加数据" class="headerlink" title="添加数据"></a>添加数据</h4><pre><code>POST feed_id/hashtag
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;hashtag name&quot;],
-        &quot;weight&quot;: 2
+    b := time.Now().Unix()
+    // 使用对象池
+    for i := 0; i &lt; 1000000000; i++ {
+        obj := bytePool.Get().(*[]byte)
+        _ = obj
+        bytePool.Put(obj)
     }
+    c := time.Now().Unix()
+    fmt.Println(&quot;without pool &quot;, b-a, &quot;s&quot;)
+    fmt.Println(&quot;with    pool &quot;, c-b, &quot;s&quot;)
 }
-POST feed_id/hashtag/3
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;hashtag name2&quot;],
-        &quot;weight&quot;: 3
-    }
-}
-POST feed_id/hashtag/4
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;ashtag name2&quot;],
-        &quot;weight&quot;: 4
-    }
-}
-POST feed_id/hashtag/5
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;shtag name2&quot;],
-        &quot;weight&quot;: 5
-    }
-}
-POST feed_id/hashtag/6
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;htag name2&quot;],
-        &quot;weight&quot;: 6
-    }
-}
-POST feed_id/hashtag/7
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;爱我中华&quot;],
-        &quot;weight&quot;: 6
-    }
-}
-POST feed_id/hashtag/8
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;爱你中华&quot;],
-        &quot;weight&quot;: 6
-    }
-}
-POST feed_id/hashtag/9
-{
-    &quot;name&quot;: {
-        &quot;input&quot;: [&quot;爱你&quot;],
-        &quot;weight&quot;: 6
-    }
-}
-</code></pre><h4 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h4><pre><code>POST feed_id/_search?pretty
-{
-    &quot;suggest&quot;: {
-        &quot;hashtag-suggest&quot;: {
-            &quot;prefix&quot;: &quot;h&quot;,
-            &quot;completion&quot;: {
-                &quot;field&quot;: &quot;name&quot;
-            }
-        }
-    }
-}
-</code></pre><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>摘抄自<a href="ttps://github.com/looly/elasticsearch-definitive-guide-cn" target="_blank" rel="noopener">elasticsearch-definitive-guide-cn</a></p>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2>
+</code></pre><blockquote>
+<p>来自：<a href="https://www.jianshu.com/p/2bd41a8f2254" target="_blank" rel="noopener">go的临时对象池–sync.Pool
+</a></p>
+</blockquote>
+<p>测试效果：</p>
+<pre><code>// 数据量更大更明显
+without pool  21 s
+with    pool  16 s
+</code></pre><p>the end…</p>
+
       
     </div>
     <div class="article-footer">
@@ -486,7 +482,7 @@ POST feed_id/hashtag/9
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/" title="elasticSearch学习笔记" target="_blank" rel="external">http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/</a>
+      <a href="http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/" title="从golang的fmt包入门手动内存管理" target="_blank" rel="external">http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -532,13 +528,9 @@ POST feed_id/hashtag/9
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2018/10/14/知识管理/" title="知识管理"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2018/10/13/记timeline重构/" title="记timeline重构"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2018/10/16/一次goroutine内存泄漏问题定位/" title="一次goroutine内存泄漏问题定位"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
