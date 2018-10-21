@@ -25,12 +25,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/images/goroutine-leak.png">
-<meta property="og:updated_time" content="2018-10-21T05:55:53.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/images/goroutine-leak.png">
+<meta property="og:updated_time" content="2018-10-21T05:57:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一次goroutine内存泄漏问题定位">
 <meta name="twitter:description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
-<meta name="twitter:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/images/goroutine-leak.png">
+<meta name="twitter:image" content="http://lqczzz.github.io/images/goroutine-leak.png">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/index.html">
   
@@ -371,7 +371,7 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <h2 id="定位过程"><a href="#定位过程" class="headerlink" title="定位过程"></a>定位过程</h2><p>问题：</p>
-<p><img src="./images/goroutine-leak.png" alt="goroutine-leak"></p>
+<p><img src="/images/goroutine-leak.png" alt="goroutine-leak"></p>
 <p>Dump goroutines:</p>
 <pre><code>ps aux | grep &apos;content_svr&apos; #43
 kill -USR2 43

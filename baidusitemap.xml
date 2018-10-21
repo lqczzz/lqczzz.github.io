@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://lqczzz.github.io/2018/10/16/%E4%B8%80%E6%AC%A1goroutine%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/</loc>
-    <lastmod>2018-10-21T05:55:53.000Z</lastmod>
+    <lastmod>2018-10-21T05:57:30.000Z</lastmod>
     <data>
         <display>
         <title>一次goroutine内存泄漏问题定位</title>
