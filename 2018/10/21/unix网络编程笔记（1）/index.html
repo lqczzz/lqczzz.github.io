@@ -29,12 +29,12 @@
 <meta property="og:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/1.1.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/osi和网际协议的对应关系.png">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/bug_coreserver.png">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/2.1总图.png">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/基本的tcp_socket函数.png">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/tcp三次握手.png">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/tcp四次挥手.png">
-<meta property="og:updated_time" content="2018-10-21T13:02:51.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/bug_coreserver.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/2.1总图.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/基本的tcp_socket函数.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/tcp三次握手.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/tcp四次挥手.png">
+<meta property="og:updated_time" content="2018-10-21T13:03:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unix网络编程笔记（1）">
 <meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
@@ -452,7 +452,7 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
 <h5 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h5><ol>
 <li>原因1:</li>
 </ol>
-<p><img src="../images/net/bug_coreserver.png" alt="bug"><br>socket上的read和write(操作系统的系统调用)不同于通常的文件读写，可能的到的字节数比预期的要少，原因在于内核缓冲区可能数据不够(read)或者缓冲区已经满了(non block write),上面的主要问题是read的时候缓冲区的数据不够，在项目中，由于网络原因，当我们</p>
+<p><img src="/images/net/bug_coreserver.png" alt="bug"><br>socket上的read和write(操作系统的系统调用)不同于通常的文件读写，可能的到的字节数比预期的要少，原因在于内核缓冲区可能数据不够(read)或者缓冲区已经满了(non block write),上面的主要问题是read的时候缓冲区的数据不够，在项目中，由于网络原因，当我们</p>
 <pre><code>var recvData = make([]byte, Size)
 conn.Read(recvData)
 </code></pre><p>这样获取数据，由于网络不稳定，可能缓冲区的数据足够，可能不够，所以出现了调用20次成功一次的情况<br>既然如此,为什么go实现<code>conn.Read()</code>为什么不帮我们阻塞去等待数据的到来呢</p>
@@ -492,7 +492,7 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
     return nil
   }
 </code></pre><h2 id="chapter2-传输层：tcp-udp-sctp"><a href="#chapter2-传输层：tcp-udp-sctp" class="headerlink" title="chapter2:传输层：tcp/udp/sctp"></a>chapter2:传输层：tcp/udp/sctp</h2><p>主要讲了UDP／TCP／SCTP三种协议，SCTP日常用的少，以后再了解，重点讲了TCP编程，部分笔记来自第三章(方便总结)</p>
-<h3 id="TCP-UDP协议族"><a href="#TCP-UDP协议族" class="headerlink" title="TCP/UDP协议族"></a>TCP/UDP协议族</h3><p><img src="../images/net/2.1总图.png" alt="总图"></p>
+<h3 id="TCP-UDP协议族"><a href="#TCP-UDP协议族" class="headerlink" title="TCP/UDP协议族"></a>TCP/UDP协议族</h3><p><img src="/images/net/2.1总图.png" alt="总图"></p>
 <ol>
 <li>ipv4/ipv6对上层协议提供了分组递送的能力，不具有可靠性(丢包可能)</li>
 <li>tcp是面向连接的流式套接字(stream socket)，关心确认／超时／重传的细节<ul>
@@ -514,10 +514,10 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
 </ul>
 </li>
 </ol>
-<h3 id="三次握手和四次挥手"><a href="#三次握手和四次挥手" class="headerlink" title="三次握手和四次挥手"></a>三次握手和四次挥手</h3><h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><p><img src="../images/net/基本的tcp_socket函数.png" alt="基本socket函数for tcp"></p>
+<h3 id="三次握手和四次挥手"><a href="#三次握手和四次挥手" class="headerlink" title="三次握手和四次挥手"></a>三次握手和四次挥手</h3><h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><p><img src="/images/net/基本的tcp_socket函数.png" alt="基本socket函数for tcp"></p>
 <p>上图来自第五章，展示了基本的一个tcp客户端和服务端的socket系统调用函数的关系，具体每个系统调用的作用在下面总结。这里关心的是三次握手触发的时机:<em>服务端调用了accept，客户端调用connect主动打开</em></p>
-<p><img src="../images/net/tcp三次握手.png" alt="三次握手"></p>
-<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><p><img src="../images/net/tcp四次挥手.png" alt="四次挥手"></p>
+<p><img src="/images/net/tcp三次握手.png" alt="三次握手"></p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><p><img src="/images/net/tcp四次挥手.png" alt="四次挥手"></p>
 <ol>
 <li>主动关闭方(客户端)发送fin分节，意思是我该说的说完了，服务器收到立马回复说我收到了,然后这个分节放到服务端的缓冲区的末尾，等待应用程序处理</li>
 <li>应用程序处理完了，服务端也需要发一个fin告诉客户端我也完事了</li>
