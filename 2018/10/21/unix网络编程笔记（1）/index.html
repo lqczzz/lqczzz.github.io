@@ -18,22 +18,26 @@
   
   
   <title>unix网络编程笔记（1） | Hexo</title>
-  <meta name="description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
+  <meta name="description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
 <meta name="keywords" content="tcp&#x2F;ip">
 <meta property="og:type" content="article">
 <meta property="og:title" content="unix网络编程笔记（1）">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
+<meta property="og:description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/1.1.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/osi和网际协议的对应关系.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/net/bug_coreserver.png">
-<meta property="og:updated_time" content="2018-10-21T11:39:50.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/bug_coreserver.png">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/2.1总图.png">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/基本的tcp_socket函数.png">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/tcp三次握手.png">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/tcp四次挥手.png">
+<meta property="og:updated_time" content="2018-10-21T13:02:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unix网络编程笔记（1）">
-<meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
+<meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
 <meta name="twitter:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/index.html">
@@ -380,7 +384,7 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <h2 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h2><p>假设你对OSI七层模型有所了解</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="从现代交换技术说起"><a href="#从现代交换技术说起" class="headerlink" title="从现代交换技术说起"></a>从现代交换技术说起</h3><p>《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～</p>
+<h2 id="chapter0-简介"><a href="#chapter0-简介" class="headerlink" title="chapter0:简介"></a>chapter0:简介</h2><h3 id="从现代交换技术说起"><a href="#从现代交换技术说起" class="headerlink" title="从现代交换技术说起"></a>从现代交换技术说起</h3><p>《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～</p>
 <p>现代交换技术的分类：</p>
 <ol>
 <li>电路交换</li>
@@ -392,7 +396,7 @@
 <li>同步时分复用；</li>
 <li>信息传送无差错控制；</li>
 </ol>
-<h3 id="分组交换协议"><a href="#分组交换协议" class="headerlink" title="分组交换协议"></a>分组交换协议</h3><p><img src="/images/net/分组交换协议.png" alt="分组交换协议"></p>
+<h3 id="chapter1-分组交换协议"><a href="#chapter1-分组交换协议" class="headerlink" title="chapter1:分组交换协议"></a>chapter1:分组交换协议</h3><p><img src="/images/net/分组交换协议.png" alt="分组交换协议"></p>
 <ol>
 <li>PDU: 协议数据单元，即对等实体(处于同一层)之间的交换单元信息</li>
 <li>SDU: 下一层承载上一层数据的单元，比如tcp层传输的tcp报文(报文头+报文体)数据在tcp层就是一个PDU，传给ip层之后，ip层认为它是SDU（ip层在tcp报文之外加入ip报文头，类似俄罗斯套娃）</li>
@@ -415,9 +419,16 @@
 <li>应用层常构成用户进程，地下四层作为操作系统和内核的机制，存在与内核态</li>
 </ol>
 </li>
-<li>socket可以绕过tcp和udp直接实用ipv4/ipv6，这种socket称为原始套接字(raw socket)<br><img src="/images/net/osi和网际协议的对应关系.png" alt="osi和网际协议的对应关系"></li>
+<li>socket可以绕过tcp和udp直接实用ipv4/ipv6，这种socket称为原始套接字(raw socket),很少用到，在整本书里面第28章介绍了它的两个用途：<ol>
+<li>ping</li>
+<li>traceroute<br>因此不打算深入了解了</li>
+</ol>
+</li>
 </ul>
 </li>
+</ol>
+<p><img src="/images/net/osi和网际协议的对应关系.png" alt="osi和网际协议的对应关系"></p>
+<ol>
 <li><code>netstat</code>和<code>ifconfig</code>可以很方便的查看网络的细节</li>
 </ol>
 <h4 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h4><h5 id="bug"><a href="#bug" class="headerlink" title="bug"></a>bug</h5><p>这里记录一个工作中遇到的bug：</p>
@@ -441,7 +452,7 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
 <h5 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h5><ol>
 <li>原因1:</li>
 </ol>
-<p><img src="/images/net/bug_coreserver.png" alt="bug"><br>socket上的read和write(操作系统的系统调用)不同于通常的文件读写，可能的到的字节数比预期的要少，原因在于内核缓冲区可能数据不够(read)或者缓冲区已经满了(non block write),上面的主要问题是read的时候缓冲区的数据不够，在项目中，由于网络原因，当我们</p>
+<p><img src="../images/net/bug_coreserver.png" alt="bug"><br>socket上的read和write(操作系统的系统调用)不同于通常的文件读写，可能的到的字节数比预期的要少，原因在于内核缓冲区可能数据不够(read)或者缓冲区已经满了(non block write),上面的主要问题是read的时候缓冲区的数据不够，在项目中，由于网络原因，当我们</p>
 <pre><code>var recvData = make([]byte, Size)
 conn.Read(recvData)
 </code></pre><p>这样获取数据，由于网络不稳定，可能缓冲区的数据足够，可能不够，所以出现了调用20次成功一次的情况<br>既然如此,为什么go实现<code>conn.Read()</code>为什么不帮我们阻塞去等待数据的到来呢</p>
@@ -480,7 +491,41 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
     }
     return nil
   }
-</code></pre><h2 id="传输层：tcp-udp-sctp"><a href="#传输层：tcp-udp-sctp" class="headerlink" title="传输层：tcp/udp/sctp"></a>传输层：tcp/udp/sctp</h2><h2 id="套接字编程简介"><a href="#套接字编程简介" class="headerlink" title="套接字编程简介"></a>套接字编程简介</h2><h2 id="基本tcp套接字编程"><a href="#基本tcp套接字编程" class="headerlink" title="基本tcp套接字编程"></a>基本tcp套接字编程</h2><blockquote>
+</code></pre><h2 id="chapter2-传输层：tcp-udp-sctp"><a href="#chapter2-传输层：tcp-udp-sctp" class="headerlink" title="chapter2:传输层：tcp/udp/sctp"></a>chapter2:传输层：tcp/udp/sctp</h2><p>主要讲了UDP／TCP／SCTP三种协议，SCTP日常用的少，以后再了解，重点讲了TCP编程，部分笔记来自第三章(方便总结)</p>
+<h3 id="TCP-UDP协议族"><a href="#TCP-UDP协议族" class="headerlink" title="TCP/UDP协议族"></a>TCP/UDP协议族</h3><p><img src="../images/net/2.1总图.png" alt="总图"></p>
+<ol>
+<li>ipv4/ipv6对上层协议提供了分组递送的能力，不具有可靠性(丢包可能)</li>
+<li>tcp是面向连接的流式套接字(stream socket)，关心确认／超时／重传的细节<ul>
+<li>需要三次握手建立连接</li>
+<li>源端数据发送需要对端确认，一段时间内(超时时间:RTT)收不到确认应答则重传，多次重传失败则终止传输<ul>
+<li>RTT(round-trip time)一次客户端和服务器端往返时间</li>
+</ul>
+</li>
+<li>流量控制：接收方可以告诉发送方下一次我能接受的数据量，防止接收方缓冲区溢出</li>
+<li>tcp是全双工的</li>
+</ul>
+</li>
+<li>udp是一种无连接的数据包报套接字(datagram socket)：<ul>
+<li>不保证是否到达</li>
+<li>不保证到达顺序</li>
+<li>没有自动重传</li>
+<li>没有超时概念</li>
+<li>每个数据包都都有报文头标示长度等</li>
+</ul>
+</li>
+</ol>
+<h3 id="三次握手和四次挥手"><a href="#三次握手和四次挥手" class="headerlink" title="三次握手和四次挥手"></a>三次握手和四次挥手</h3><h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><p><img src="../images/net/基本的tcp_socket函数.png" alt="基本socket函数for tcp"></p>
+<p>上图来自第五章，展示了基本的一个tcp客户端和服务端的socket系统调用函数的关系，具体每个系统调用的作用在下面总结。这里关心的是三次握手触发的时机:<em>服务端调用了accept，客户端调用connect主动打开</em></p>
+<p><img src="../images/net/tcp三次握手.png" alt="三次握手"></p>
+<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><p><img src="../images/net/tcp四次挥手.png" alt="四次挥手"></p>
+<ol>
+<li>主动关闭方(客户端)发送fin分节，意思是我该说的说完了，服务器收到立马回复说我收到了,然后这个分节放到服务端的缓冲区的末尾，等待应用程序处理</li>
+<li>应用程序处理完了，服务端也需要发一个fin告诉客户端我也完事了</li>
+<li>在服务端发送这两个分节的过程中，服务端仍然可以向客户端发送数据</li>
+<li>缓冲队列没有数据，服务端也不需要发送数据的时候，服务端会合并发送<code>ack m+1</code>和<code>fin n</code>分节，这时候就是三次挥手了。</li>
+<li>主动关闭方(客户端)响应了服务端的fin分节之后，会再等一段时间，进入<code>time_wait</code>状态，</li>
+</ol>
+<h2 id="chapter3-套接字编程简介"><a href="#chapter3-套接字编程简介" class="headerlink" title="chapter3:套接字编程简介"></a>chapter3:套接字编程简介</h2><h2 id="chapter4-基本tcp套接字编程"><a href="#chapter4-基本tcp套接字编程" class="headerlink" title="chapter4:基本tcp套接字编程"></a>chapter4:基本tcp套接字编程</h2><h2 id="chapter5-tcp客户／服务程序示例"><a href="#chapter5-tcp客户／服务程序示例" class="headerlink" title="chapter5:tcp客户／服务程序示例"></a>chapter5:tcp客户／服务程序示例</h2><h2 id="chapter30-客户／服务器程序设计范式"><a href="#chapter30-客户／服务器程序设计范式" class="headerlink" title="chapter30:客户／服务器程序设计范式"></a>chapter30:客户／服务器程序设计范式</h2><blockquote>
 <p>《unix网络编程卷一》<br>《图解tcp/ip》</p>
 </blockquote>
 
