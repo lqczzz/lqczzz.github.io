@@ -28,8 +28,8 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/1.1.png">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/21/images/net/bug_coreserver.png">
-<meta property="og:updated_time" content="2018-10-21T08:56:57.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/bug_coreserver.png">
+<meta property="og:updated_time" content="2018-10-21T11:20:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unix网络编程笔记（1）">
 <meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
@@ -430,7 +430,7 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
 <h5 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h5><ol>
 <li>原因1:</li>
 </ol>
-<p><img src="../images/net/bug_coreserver.png" alt="bug"><br>socket上的read和write(操作系统的系统调用)不同于通常的文件读写，可能的到的字节数比预期的要少，原因在于内核缓冲区可能数据不够(read)或者缓冲区已经满了(non block write),上面的主要问题是read的时候缓冲区的数据不够，在项目中，由于网络原因，当我们</p>
+<p><img src="/images/net/bug_coreserver.png" alt="bug"><br>socket上的read和write(操作系统的系统调用)不同于通常的文件读写，可能的到的字节数比预期的要少，原因在于内核缓冲区可能数据不够(read)或者缓冲区已经满了(non block write),上面的主要问题是read的时候缓冲区的数据不够，在项目中，由于网络原因，当我们</p>
 <pre><code>var recvData = make([]byte, Size)
 conn.Read(recvData)
 </code></pre><p>这样获取数据，由于网络不稳定，可能缓冲区的数据足够，可能不够，所以出现了调用20次成功一次的情况<br>既然如此,为什么go实现<code>conn.Read()</code>为什么不帮我们阻塞去等待数据的到来呢</p>
