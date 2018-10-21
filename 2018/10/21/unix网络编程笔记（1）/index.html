@@ -28,8 +28,9 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/1.1.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/osi和网际协议的对应关系.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/bug_coreserver.png">
-<meta property="og:updated_time" content="2018-10-21T11:20:46.000Z">
+<meta property="og:updated_time" content="2018-10-21T11:39:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unix网络编程笔记（1）">
 <meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
@@ -408,6 +409,16 @@
 </ul>
 </li>
 <li>ip报文的SDU最大是65535，所以tcp一次发送的报文大小不会超过64k<br> 对于平常实用的<code>conn.Write([]byte)</code>，我们是不用考虑这些，操作系统会对这类阻塞写操作进行自动分片并且不用考虑缓冲区写满的情况</li>
+<li>套接字编程是应用层进入传输层的接口<ul>
+<li>这样设计由两个理由：<ol>
+<li>应用层对通信细节很少关心，而底下四层对应用协议不关心，只关心如何通信</li>
+<li>应用层常构成用户进程，地下四层作为操作系统和内核的机制，存在与内核态</li>
+</ol>
+</li>
+<li>socket可以绕过tcp和udp直接实用ipv4/ipv6，这种socket称为原始套接字(raw socket)<br><img src="/images/net/osi和网际协议的对应关系.png" alt="osi和网际协议的对应关系"></li>
+</ul>
+</li>
+<li><code>netstat</code>和<code>ifconfig</code>可以很方便的查看网络的细节</li>
 </ol>
 <h4 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h4><h5 id="bug"><a href="#bug" class="headerlink" title="bug"></a>bug</h5><p>这里记录一个工作中遇到的bug：</p>
 <pre><code>// 没有for循环读取数据
