@@ -25,12 +25,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/img/goroutine-leak.png">
-<meta property="og:updated_time" content="2018-10-16T05:52:42.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/images/goroutine-leak.png">
+<meta property="og:updated_time" content="2018-10-21T05:55:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一次goroutine内存泄漏问题定位">
 <meta name="twitter:description" content="定位过程问题：  Dump goroutines: ps aux | grep &amp;apos;content_svr&amp;apos; #43 kill -USR2 43 比较两小时间的Diff：两小时前: $ grep &amp;apos;cron/hashtag_suggestion&amp;apos; /proc/43/fd/1 1 $ grep &amp;apos;producer&amp;apos; /proc/43/fd1">
-<meta name="twitter:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/img/goroutine-leak.png">
+<meta name="twitter:image" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/images/goroutine-leak.png">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/index.html">
   
@@ -240,7 +240,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">10</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">9</span></li></ul>
     </div>
   </div>
 
@@ -252,21 +252,6 @@
     <div class="widget-body">
       <ul class="recent-post-list list-unstyled no-thumbnail">
         
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2018/10/18/redis笔记/" class="title">redis笔记</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2018-10-18T08:10:11.000Z" itemprop="datePublished">2018-10-18</time>
-              </p>
-            </div>
-          </li>
-          
           <li>
             
             <div class="item-inner">
@@ -327,6 +312,21 @@
             </div>
           </li>
           
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/16/一次goroutine内存泄漏问题定位/" class="title">一次goroutine内存泄漏问题定位</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-16T05:38:08.000Z" itemprop="datePublished">2018-10-16</time>
+              </p>
+            </div>
+          </li>
+          
       </ul>
     </div>
   </div>
@@ -371,7 +371,7 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <h2 id="定位过程"><a href="#定位过程" class="headerlink" title="定位过程"></a>定位过程</h2><p>问题：</p>
-<p><img src="./img/goroutine-leak.png" alt="goroutine-leak"></p>
+<p><img src="./images/goroutine-leak.png" alt="goroutine-leak"></p>
 <p>Dump goroutines:</p>
 <pre><code>ps aux | grep &apos;content_svr&apos; #43
 kill -USR2 43
