@@ -18,18 +18,18 @@
   
   
   <title>pprof性能监控和gc调优 | Hexo</title>
-  <meta name="description" content="参考godoc-DiagnosticsGolang使用pprof监控性能及GC调优">
+  <meta name="description" content="参考godoc-DiagnosticsGolang使用pprof监控性能及GC调优[golang]pprof性能分析工具">
 <meta name="keywords" content="性能优化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pprof性能监控和gc调优">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/18/pprof性能监控和gc调优/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="参考godoc-DiagnosticsGolang使用pprof监控性能及GC调优">
+<meta property="og:description" content="参考godoc-DiagnosticsGolang使用pprof监控性能及GC调优[golang]pprof性能分析工具">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-18T07:16:56.000Z">
+<meta property="og:updated_time" content="2018-10-18T07:40:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pprof性能监控和gc调优">
-<meta name="twitter:description" content="参考godoc-DiagnosticsGolang使用pprof监控性能及GC调优">
+<meta name="twitter:description" content="参考godoc-DiagnosticsGolang使用pprof监控性能及GC调优[golang]pprof性能分析工具">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/10/18/pprof性能监控和gc调优/index.html">
   
@@ -239,7 +239,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">10</span></li></ul>
     </div>
   </div>
 
@@ -251,6 +251,36 @@
     <div class="widget-body">
       <ul class="recent-post-list list-unstyled no-thumbnail">
         
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/18/redis笔记/" class="title">redis笔记</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-18T08:10:11.000Z" itemprop="datePublished">2018-10-18</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/18/优秀的博文记录/" class="title">优秀的博文记录</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-18T07:46:41.000Z" itemprop="datePublished">2018-10-18</time>
+              </p>
+            </div>
+          </li>
+          
           <li>
             
             <div class="item-inner">
@@ -292,36 +322,6 @@
               </p>
               <p class="item-date">
                 <time datetime="2018-10-17T14:01:43.000Z" itemprop="datePublished">2018-10-17</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2018/10/16/一次goroutine内存泄漏问题定位/" class="title">一次goroutine内存泄漏问题定位</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2018-10-16T05:38:08.000Z" itemprop="datePublished">2018-10-16</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2018/10/14/知识管理/" class="title">知识管理</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2018-10-14T03:06:31.000Z" itemprop="datePublished">2018-10-14</time>
               </p>
             </div>
           </li>
@@ -375,7 +375,7 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <blockquote>
-<p>参考<br><a href="https://golang.org/doc/diagnostics.html" target="_blank" rel="noopener">godoc-Diagnostics</a><br><a href="https://studygolang.com/articles/5527" target="_blank" rel="noopener">Golang使用pprof监控性能及GC调优</a><br><a href=""></a><br><a href=""></a></p>
+<p>参考<br><a href="https://golang.org/doc/diagnostics.html" target="_blank" rel="noopener">godoc-Diagnostics</a><br><a href="https://studygolang.com/articles/5527" target="_blank" rel="noopener">Golang使用pprof监控性能及GC调优</a><br><a href="https://blog.csdn.net/moxiaomomo/article/details/77096814" target="_blank" rel="noopener">[golang]pprof性能分析工具</a><br><a href=""></a></p>
 </blockquote>
 
       
@@ -431,6 +431,10 @@
   <div class="bar-inner">
   
   <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/10/18/优秀的博文记录/" title="优秀的博文记录"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
     
     
     <li class="next">
