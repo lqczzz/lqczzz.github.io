@@ -18,20 +18,21 @@
   
   
   <title>unix网络编程笔记（1） | Hexo</title>
-  <meta name="description" content="前提假设你对OSI七层模型有所了解假设你用过golang做过tcp编程 简介 一般认为web服务器程序是长时间运行的程序，即所谓的守护程序 用户进程定义应用协议，tcp和ip协议的转换和包装在内核协议栈中，由操作系统提供支持  传输层：tcp/udp/sctp套接字编程简介基本tcp套接字编程 《unix网络编程卷一》《图解tcp/ip》">
+  <meta name="description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
 <meta name="keywords" content="tcp&#x2F;ip">
 <meta property="og:type" content="article">
 <meta property="og:title" content="unix网络编程笔记（1）">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前提假设你对OSI七层模型有所了解假设你用过golang做过tcp编程 简介 一般认为web服务器程序是长时间运行的程序，即所谓的守护程序 用户进程定义应用协议，tcp和ip协议的转换和包装在内核协议栈中，由操作系统提供支持  传输层：tcp/udp/sctp套接字编程简介基本tcp套接字编程 《unix网络编程卷一》《图解tcp/ip》">
+<meta property="og:description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/1.1.png">
-<meta property="og:updated_time" content="2018-10-21T06:17:33.000Z">
+<meta property="og:updated_time" content="2018-10-21T07:07:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unix网络编程笔记（1）">
-<meta name="twitter:description" content="前提假设你对OSI七层模型有所了解假设你用过golang做过tcp编程 简介 一般认为web服务器程序是长时间运行的程序，即所谓的守护程序 用户进程定义应用协议，tcp和ip协议的转换和包装在内核协议栈中，由操作系统提供支持  传输层：tcp/udp/sctp套接字编程简介基本tcp套接字编程 《unix网络编程卷一》《图解tcp/ip》">
-<meta name="twitter:image" content="http://lqczzz.github.io/images/net/1.1.png">
+<meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在">
+<meta name="twitter:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/index.html">
   
@@ -376,10 +377,31 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>假设你对OSI七层模型有所了解<br>假设你用过golang做过tcp编程</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
+        <h2 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h2><p>假设你对OSI七层模型有所了解</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="从现代交换技术说起"><a href="#从现代交换技术说起" class="headerlink" title="从现代交换技术说起"></a>从现代交换技术说起</h3><p>《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～</p>
+<p>现代交换技术的分类：</p>
+<ol>
+<li>电路交换</li>
+<li>分组交换</li>
+</ol>
+<p>计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以很方便地通信，现在最广泛的应用就是电话网络了。<br>从打电话也可以看出来，电路交换一定是：</p>
+<ol>
+<li>面向连接；(分组交换则不一定，如udp协议)</li>
+<li>同步时分复用；</li>
+<li>信息传送无差错控制；</li>
+</ol>
+<h3 id="分组交换协议"><a href="#分组交换协议" class="headerlink" title="分组交换协议"></a>分组交换协议</h3><p><img src="/images/net/分组交换协议.png" alt="分组交换协议"></p>
+<ol>
+<li>PDU: 协议数据单元，即对等实体(处于同一层)之间的交换单元信息</li>
+<li>SDU: 下一层承载上一层数据的单元，比如tcp层传输的tcp报文(报文头+报文体)数据在tcp层就是一个PDU，传给ip层之后，ip层认为它是SDU（ip层在tcp报文之外加入ip报文头，类似俄罗斯套娃）</li>
+</ol>
+<p>不同协议之间的不同完全取决于协议头（废话～）</p>
+<h3 id="tcp／ip简介"><a href="#tcp／ip简介" class="headerlink" title="tcp／ip简介"></a>tcp／ip简介</h3><ol>
 <li>一般认为web服务器程序是长时间运行的程序，即所谓的守护程序</li>
 <li>用户进程定义应用协议，tcp和ip协议的转换和包装在内核协议栈中，由操作系统提供支持<br><img src="/images/net/1.1.png" alt=""></li>
+<li><p>tcp是没有记录边界的字节流协议</p>
+<p> 我们知道</p>
+</li>
 </ol>
 <h2 id="传输层：tcp-udp-sctp"><a href="#传输层：tcp-udp-sctp" class="headerlink" title="传输层：tcp/udp/sctp"></a>传输层：tcp/udp/sctp</h2><h2 id="套接字编程简介"><a href="#套接字编程简介" class="headerlink" title="套接字编程简介"></a>套接字编程简介</h2><h2 id="基本tcp套接字编程"><a href="#基本tcp套接字编程" class="headerlink" title="基本tcp套接字编程"></a>基本tcp套接字编程</h2><blockquote>
 <p>《unix网络编程卷一》<br>《图解tcp/ip》</p>
