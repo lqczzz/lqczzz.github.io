@@ -17,14 +17,14 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>unix网络编程笔记（1） | Hexo</title>
-  <meta name="description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
+  <title>unix网络编程笔记-tcp编程基础 | Hexo</title>
+  <meta name="description" content="关于《unix网络编程》unix网络编程这书分为两册：  一册讲socket编程，700多页，31章 二册讲进程之间的通信，400页，16章  看目录可以看出，最基础最核心的知识在：  chapter1: 简介 chapter2: tcp／udp和stcp(这玩意不管) chapter3: 套接字编程简介 chapter4: 基本tcp套接字编程 chapter5: tcp客户／服务端程序实例">
 <meta name="keywords" content="tcp&#x2F;ip">
 <meta property="og:type" content="article">
-<meta property="og:title" content="unix网络编程笔记（1）">
+<meta property="og:title" content="unix网络编程笔记-tcp编程基础">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
+<meta property="og:description" content="关于《unix网络编程》unix网络编程这书分为两册：  一册讲socket编程，700多页，31章 二册讲进程之间的通信，400页，16章  看目录可以看出，最基础最核心的知识在：  chapter1: 简介 chapter2: tcp／udp和stcp(这玩意不管) chapter3: 套接字编程简介 chapter4: 基本tcp套接字编程 chapter5: tcp客户／服务端程序实例">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/1.1.png">
@@ -34,10 +34,16 @@
 <meta property="og:image" content="http://lqczzz.github.io/images/net/基本的tcp_socket函数.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/tcp三次握手.png">
 <meta property="og:image" content="http://lqczzz.github.io/images/net/tcp四次挥手.png">
-<meta property="og:updated_time" content="2018-10-21T13:03:52.000Z">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/tcp状态转换.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/tcp连接分组交换.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/并发服务器.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/socket_family.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/socket_type.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/net/socket_protocol.png">
+<meta property="og:updated_time" content="2018-10-22T17:39:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="unix网络编程笔记（1）">
-<meta name="twitter:description" content="阅读前提假设你对OSI七层模型有所了解 chapter0:简介从现代交换技术说起《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～ 现代交换技术的分类：  电路交换 分组交换  计算机网络的协议用的就是分组交换技术，我们发送的信息会像快递包裹一样一个个的传送到接收方。而电路交换很简单，就是每个通信实体都连接到交换机上，而交换机使用交换的方法，让实体之间可以">
+<meta name="twitter:title" content="unix网络编程笔记-tcp编程基础">
+<meta name="twitter:description" content="关于《unix网络编程》unix网络编程这书分为两册：  一册讲socket编程，700多页，31章 二册讲进程之间的通信，400页，16章  看目录可以看出，最基础最核心的知识在：  chapter1: 简介 chapter2: tcp／udp和stcp(这玩意不管) chapter3: 套接字编程简介 chapter4: 基本tcp套接字编程 chapter5: tcp客户／服务端程序实例">
 <meta name="twitter:image" content="http://lqczzz.github.io/images/net/分组交换协议.png">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/index.html">
@@ -267,7 +273,7 @@
                 
               </p>
               <p class="item-title">
-                <a href="/2018/10/21/unix网络编程笔记（1）/" class="title">unix网络编程笔记（1）</a>
+                <a href="/2018/10/21/unix网络编程笔记（1）/" class="title">unix网络编程笔记-tcp编程基础</a>
               </p>
               <p class="item-date">
                 <time datetime="2018-10-21T06:00:26.000Z" itemprop="datePublished">2018-10-21</time>
@@ -355,7 +361,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      unix网络编程笔记（1）
+      unix网络编程笔记-tcp编程基础
     </h1>
   
 
@@ -383,7 +389,22 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h2><p>假设你对OSI七层模型有所了解</p>
+        <h2 id="关于《unix网络编程》"><a href="#关于《unix网络编程》" class="headerlink" title="关于《unix网络编程》"></a>关于《unix网络编程》</h2><p>unix网络编程这书分为两册：</p>
+<ol>
+<li>一册讲socket编程，700多页，31章</li>
+<li>二册讲进程之间的通信，400页，16章</li>
+</ol>
+<p>看目录可以看出，最基础最核心的知识在：</p>
+<ul>
+<li>chapter1: 简介</li>
+<li>chapter2: tcp／udp和stcp(这玩意不管)</li>
+<li>chapter3: 套接字编程简介</li>
+<li>chapter4: 基本tcp套接字编程</li>
+<li>chapter5: tcp客户／服务端程序实例</li>
+<li>chapter30: 客户／服务程序设计范式</li>
+</ul>
+<p>感觉这几章学完了就差不多够了，其他章节需要再读～</p>
+<h2 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h2><p>假设你对OSI七层模型有所了解</p>
 <h2 id="chapter0-简介"><a href="#chapter0-简介" class="headerlink" title="chapter0:简介"></a>chapter0:简介</h2><h3 id="从现代交换技术说起"><a href="#从现代交换技术说起" class="headerlink" title="从现代交换技术说起"></a>从现代交换技术说起</h3><p>《现代交换技术》是通信专业的必修课，嗯嗯，好歹我也是通信专业的学生，就先把知识脉络拓展一下～</p>
 <p>现代交换技术的分类：</p>
 <ol>
@@ -524,8 +545,42 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
 <li>在服务端发送这两个分节的过程中，服务端仍然可以向客户端发送数据</li>
 <li>缓冲队列没有数据，服务端也不需要发送数据的时候，服务端会合并发送<code>ack m+1</code>和<code>fin n</code>分节，这时候就是三次挥手了。</li>
 <li>主动关闭方(客户端)响应了服务端的fin分节之后，会再等一段时间，进入<code>time_wait</code>状态，</li>
+<li>tcp是全双工的，任何一方都可以关闭，通常是客户端关闭</li>
 </ol>
-<h2 id="chapter3-套接字编程简介"><a href="#chapter3-套接字编程简介" class="headerlink" title="chapter3:套接字编程简介"></a>chapter3:套接字编程简介</h2><h2 id="chapter4-基本tcp套接字编程"><a href="#chapter4-基本tcp套接字编程" class="headerlink" title="chapter4:基本tcp套接字编程"></a>chapter4:基本tcp套接字编程</h2><h2 id="chapter5-tcp客户／服务程序示例"><a href="#chapter5-tcp客户／服务程序示例" class="headerlink" title="chapter5:tcp客户／服务程序示例"></a>chapter5:tcp客户／服务程序示例</h2><h2 id="chapter30-客户／服务器程序设计范式"><a href="#chapter30-客户／服务器程序设计范式" class="headerlink" title="chapter30:客户／服务器程序设计范式"></a>chapter30:客户／服务器程序设计范式</h2><blockquote>
+<h4 id="tcp状态转换"><a href="#tcp状态转换" class="headerlink" title="tcp状态转换"></a>tcp状态转换</h4><p><img src="/images/net/tcp状态转换.png" alt="tcp状态转换"></p>
+<p><img src="/images/net/tcp连接分组交换.png" alt="tcp连接分组交换"></p>
+<h4 id="time-wait状态"><a href="#time-wait状态" class="headerlink" title="time_wait状态"></a>time_wait状态</h4><ol>
+<li>可靠的实现全双工连接的终止：<br> 如果最后一个ack n+1没有发送给服务端，服务端会重新发送FIN N，这种情况<strong>至少</strong>花费一次来回(&gt;=2MSL)，因此time_wait需要有至少2MSL的时间间隔</li>
+<li>允许老的重复分节消逝，主要是防止新的连接如果用了同样的ip和端口，被认为和上一次是同一个连接</li>
+</ol>
+<h4 id="socket-pair"><a href="#socket-pair" class="headerlink" title="socket pair"></a>socket pair</h4><p>socket pair即<code>(src_ip, src_port, dest_ip, dest_port)</code>唯一确认一个tcp连接</p>
+<p><img src="/images/net/并发服务器.png" alt="并发服务器"></p>
+<p>如上图，当两个客户端连接同一个socket的时候，无法通过服务端socket的ip和port唯一确认一个连接。详细原因看chapter4</p>
+<h2 id="chapter3-套接字编程简介"><a href="#chapter3-套接字编程简介" class="headerlink" title="chapter3:套接字编程简介"></a>chapter3:套接字编程简介</h2><ol>
+<li>网际协议采用大端字节传递多字节数（网络字节序）<ul>
+<li>大端字节序：高位内存地址对应高序字节</li>
+<li>小端字节序：低位内存地址对应高序字节</li>
+</ul>
+</li>
+</ol>
+<h2 id="chapter4-基本tcp套接字编程"><a href="#chapter4-基本tcp套接字编程" class="headerlink" title="chapter4:基本tcp套接字编程"></a>chapter4:基本tcp套接字编程</h2><ol>
+<li><p><code>socket</code>函数</p>
+<pre><code>// 执行网络io前的第一步：socket()
+#include&lt;sys/socket.h&gt;
+int socket(int family, int type, int protocol)
+</code></pre><ul>
+<li>family<br>  <img src="/images/net/socket_family.png" alt=""></li>
+<li>type<br>  <img src="/images/net/socket_type.png" alt=""></li>
+<li>protocol<br>  <img src="/images/net/socket_protocol.png" alt=""></li>
+</ul>
+</li>
+<li><p><code>connect</code>函数</p>
+</li>
+<li><code>bind</code>函数</li>
+<li><code>listen</code>函数</li>
+<li><code>accept</code>函数</li>
+</ol>
+<h2 id="chapter5-tcp客户／服务程序示例"><a href="#chapter5-tcp客户／服务程序示例" class="headerlink" title="chapter5:tcp客户／服务程序示例"></a>chapter5:tcp客户／服务程序示例</h2><h2 id="chapter30-客户／服务器程序设计范式"><a href="#chapter30-客户／服务器程序设计范式" class="headerlink" title="chapter30:客户／服务器程序设计范式"></a>chapter30:客户／服务器程序设计范式</h2><blockquote>
 <p>《unix网络编程卷一》<br>《图解tcp/ip》</p>
 </blockquote>
 
@@ -537,7 +592,7 @@ func request(conn net.Conn, buffer bytes.Buffer, command []byte) error {
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/" title="unix网络编程笔记（1）" target="_blank" rel="external">http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/</a>
+      <a href="http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/" title="unix网络编程笔记-tcp编程基础" target="_blank" rel="external">http://lqczzz.github.io/2018/10/21/unix网络编程笔记（1）/</a>
     </li>
     
     <li class="post-copyright-license">
