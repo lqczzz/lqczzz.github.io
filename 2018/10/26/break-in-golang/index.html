@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="golang的break和continue挺好用的，和别的语言不太一样 breakgolang的break关键字for,switch,select会跳出三个关键字的包裹  A “break” statement terminates execution of the innermost “for”, “switch”, or “select” statement within the same">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-26T13:36:28.000Z">
+<meta property="og:updated_time" content="2018-10-26T13:40:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="break 和 continue">
 <meta name="twitter:description" content="golang的break和continue挺好用的，和别的语言不太一样 breakgolang的break关键字for,switch,select会跳出三个关键字的包裹  A “break” statement terminates execution of the innermost “for”, “switch”, or “select” statement within the same">
@@ -395,11 +395,11 @@
 // 4
 // 5
 </code></pre><p>如果想跳出更上一层的<code>for</code>关键字，需要指定<code>label</code></p>
-<pre><code>Label:
+<pre><code>forLoop:
     for i := 0; i &lt; 6; i++ {
         switch i {
         case 2:
-            break Label
+            break forLoop
         default:
             fmt.Println(i)
         }
@@ -409,11 +409,11 @@
 // 0
 // 1
 </code></pre><h1 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h1><p><code>continue</code>也可以指定label</p>
-<pre><code>Label:
+<pre><code>forLoop:
     for i := 0; i &lt; 6; i++ {
         switch i {
         case 2:
-            continue Label
+            continue forLoop
         default:
             fmt.Println(i)
         }
