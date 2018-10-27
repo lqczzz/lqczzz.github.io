@@ -17,16 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Hexo</title>
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://lqczzz.github.io/index.html">
+  <title>模版模式在golang的使用 | Hexo</title>
+  <meta name="description" content="从需求说起还是timeline（微博／朋友圈etc）的业务场景。timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类型：">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模版模式在golang的使用">
+<meta property="og:url" content="http://lqczzz.github.io/2018/10/27/golang组合和继承/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="从需求说起还是timeline（微博／朋友圈etc）的业务场景。timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类型：">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-27T11:12:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="模版模式在golang的使用">
+<meta name="twitter:description" content="从需求说起还是timeline（微博／朋友圈etc）的业务场景。timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类型：">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://lqczzz.github.io/index.html">
+  <link rel="canonical" href="http://lqczzz.github.io/2018/10/27/golang组合和继承/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -331,339 +336,343 @@
 </aside>
 
   
-  <main class="main" role="main">
   
-  <div class="content article-list">
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-golang组合和继承" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
+    <div class="article-header">
+      
+        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/27/golang组合和继承/">模版模式在golang的使用</a>
+    <h1 class="article-title" itemprop="name">
+      模版模式在golang的使用
     </h1>
   
 
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
+      
+      <div class="article-meta">
+        <span class="article-date">
     <i class="icon icon-calendar-check"></i>
 	<a href="/2018/10/27/golang组合和继承/" class="article-date">
-	  <time datetime="2018-10-27T10:05:57.000Z" itemprop="datePublished">10月 27</time>
+	  <time datetime="2018-10-27T10:05:57.000Z" itemprop="datePublished">2018-10-27</time>
 	</a>
 </span>
-    
-    
+        
+        
   <span class="article-tag">
     <i class="icon icon-tags"></i>
 	<a class="article-tag-link" href="/tags/golang/">golang</a>
   </span>
 
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/27/golang组合和继承/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
+        
 
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/27/kafka快速使用-golang/">kafka快速使用(golang)</a>
-    </h1>
-  
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/27/golang组合和继承/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="从需求说起"><a href="#从需求说起" class="headerlink" title="从需求说起"></a>从需求说起</h2><p>还是timeline（微博／朋友圈etc）的业务场景。<br>timeline业务从步骤上考虑，无非就是几个步骤：</p>
+<ol>
+<li>获取不同的数据队列（通常是meta信息)</li>
+<li>根据一定的算法合并和截取数据</li>
+<li>根据合并后的meta数据获取详细的信息（content信息)</li>
+<li>返回</li>
+</ol>
+<p><em>如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多</em></p>
+<p>另外，timeline可能会分成很多类型：</p>
+<ol>
+<li>用户未登录看到的</li>
+<li>用户登录看到的</li>
+<li>推荐列表</li>
+<li>etc</li>
+</ol>
+<p>这种场景最适合用模版模式实现了<br>在java里面：</p>
+<pre><code>public asbtract class BaseTimeline {
+    public void Do() {
+        this.doRetrieve()
+        this.doMerge()
+        this.doGetContent()
+    }
 
+    abstract void doRetrieve()
+    abstract void doMerge()
+    abstract void doGetContent()
+}
+
+class LoginedTimeline extends BaseTimeline {
+    public void doRetrieve() {}
+    public void doMerge() {}
+    public void doGetContent() {}
+}
+
+class UnLoginedTimeline extends BaseTimeline {
+    public void doRetrieve() {}
+    public void doMerge() {}
+    public void doGetContent() {}
+}
+
+
+// 场景类
+public class Server {
+    private BaseTimeline timeline 
+    public static void main([]string args) {
+        if args[0] == &quot;&quot; {
+            timeline = new LoginedTimeline()
+        } else {
+            timeline = new UnLoginedTimeline()
+        }
+
+        timeline.Do()
+    }
+}
+</code></pre><p>通过模版模式可以很方便的实现对timeline的扩展，新增不同的展示方式直接新增timeline类。在java servlet编程和图形界面开发(android view, html5 vue .etc)中是很常见的设计模式</p>
+<p>可是golang的组合的方式没办法支持抽象方法</p>
+<pre><code>type ITimeline interface {
+    doRetrieve()   // 获取不同的队列
+    doMerge()      // 合并
+    doGetContent() // 获取详情
+    Do()
+}
+
+type BaseTimeline struct{}
+
+func (bt *BaseTimeline) doRetrieve()   { fmt.Println(&quot;base retrieve&quot;) }
+func (bt *BaseTimeline) doMerge()      { fmt.Println(&quot;base merge&quot;) }
+func (bt *BaseTimeline) doGetContent() { fmt.Println(&quot;base content&quot;) }
+func (bt *BaseTimeline) Do() {
+    bt.doRetrieve()
+    bt.doMerge()
+    bt.doGetContent()
+}
+
+type LoginedTimeline struct {
+    BaseTimeline
+}
+
+func (bt *LoginedTimeline) doRetrieve()   { fmt.Println(&quot;LoginedTimeline retrieve&quot;) }
+func (bt *LoginedTimeline) doMerge()      { fmt.Println(&quot;LoginedTimeline merge&quot;) }
+func (bt *LoginedTimeline) doGetContent() { fmt.Println(&quot;LoginedTimeline content&quot;) }
+
+type UnLoginedTimeline struct {
+    BaseTimeline
+}
+
+func (bt *UnLoginedTimeline) doRetrieve()   { fmt.Println(&quot;UnLoginedTimeline retrieve&quot;) }
+func (bt *UnLoginedTimeline) doMerge()      { fmt.Println(&quot;UnLoginedTimeline merge&quot;) }
+func (bt *UnLoginedTimeline) doGetContent() { fmt.Println(&quot;UnLoginedTimeline content&quot;) }
+
+// 使用
+type GetTimelineRequest struct {
+    UserID uint64
+}
+
+func server(request, response interface{}) {
+    // GetTimelineRequest is a struct
+    var timeline ITimeline
+    switch UserID := request.(*GetTimelineRequest).UserID; {
+    case UserID != uint64(0):
+        timeline = &amp;LoginedTimeline{}
+    default:
+        timeline = &amp;UnLoginedTimeline{}
+    }
+
+    timeline.Do()
+}
+
+func main() {
+    req := &amp;GetTimelineRequest{}
+    server(req, nil)
+}
+
+// 输出：
+// base retrieve
+// base merge
+// base content
+</code></pre><p>原因是因为组合方式不支持方法覆盖<br>可以把Do单独出来：</p>
+<pre><code>type ITimeline interface {
+    doRetrieve()   // 获取不同的队列
+    doMerge()      // 合并
+    doGetContent() // 获取详情
+}
+
+type BaseTimeline struct{}
+
+func (bt *BaseTimeline) doRetrieve()   { fmt.Println(&quot;base retrieve&quot;) }
+func (bt *BaseTimeline) doMerge()      { fmt.Println(&quot;base merge&quot;) }
+func (bt *BaseTimeline) doGetContent() { fmt.Println(&quot;base content&quot;) }
+
+// !!! 这里Do不再是具有接收者的方法了，调用方式也会不一样
+func Do(bt ITimeline) {
+    bt.doRetrieve()
+    bt.doMerge()
+    bt.doGetContent()
+}
+
+type LoginedTimeline struct {
+    BaseTimeline
+}
+
+func (bt *LoginedTimeline) doRetrieve()   { fmt.Println(&quot;LoginedTimeline retrieve&quot;) }
+func (bt *LoginedTimeline) doMerge()      { fmt.Println(&quot;LoginedTimeline merge&quot;) }
+func (bt *LoginedTimeline) doGetContent() { fmt.Println(&quot;LoginedTimeline content&quot;) }
+
+type UnLoginedTimeline struct {
+    BaseTimeline
+}
+
+func (bt *UnLoginedTimeline) doRetrieve()   { fmt.Println(&quot;UnLoginedTimeline retrieve&quot;) }
+func (bt *UnLoginedTimeline) doMerge()      { fmt.Println(&quot;UnLoginedTimeline merge&quot;) }
+func (bt *UnLoginedTimeline) doGetContent() { fmt.Println(&quot;UnLoginedTimeline content&quot;) }
+
+// 使用
+type GetTimelineRequest struct {
+    UserID uint64
+}
+
+func server(request, response interface{}) {
+    // GetTimelineRequest is a struct
+    var timeline ITimeline
+    switch UserID := request.(*GetTimelineRequest).UserID; {
+    case UserID != uint64(0):
+        timeline = &amp;LoginedTimeline{}
+    default:
+        timeline = &amp;UnLoginedTimeline{}
+    }
+
+    // 这里的调用方式也就变化了
+    Do(timeline)
+}
+
+func main() {
+    req := &amp;GetTimelineRequest{}
+    server(req, nil)
+}
+</code></pre>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://lqczzz.github.io/2018/10/27/golang组合和继承/" title="模版模式在golang的使用" target="_blank" rel="external">http://lqczzz.github.io/2018/10/27/golang组合和继承/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
   </div>
+</div>
+
+
+    </div>
+  </article>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/27/kafka快速使用-golang/" class="article-date">
-	  <time datetime="2018-10-27T07:20:39.000Z" itemprop="datePublished">10月 27</time>
-	</a>
-</span>
     
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
     
+  </section>
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/27/kafka快速使用-golang/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
 
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/26/break-in-golang/">break 和 continue</a>
-    </h1>
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
   
-
-  </div>
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2018/10/27/kafka快速使用-golang/" title="kafka快速使用(golang)"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/26/break-in-golang/" class="article-date">
-	  <time datetime="2018-10-26T10:49:42.000Z" itemprop="datePublished">10月 26</time>
-	</a>
-</span>
-    
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/golang思考/">golang思考</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/26/break-in-golang/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/26/slice的坑/">slice的坑</a>
-    </h1>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
   
-
-  </div>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/26/slice的坑/" class="article-date">
-	  <time datetime="2018-10-26T03:53:12.000Z" itemprop="datePublished">10月 26</time>
-	</a>
-</span>
+  <div class="bar-right">
     
-    
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/26/slice的坑/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/21/unix网络编程笔记-tcp编程基础/">unix网络编程笔记-tcp编程基础</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/21/unix网络编程笔记-tcp编程基础/" class="article-date">
-	  <time datetime="2018-10-21T06:00:26.000Z" itemprop="datePublished">10月 21</time>
-	</a>
-</span>
-    
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/tcp-ip/">tcp/ip</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/21/unix网络编程笔记-tcp编程基础/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/18/优秀的博文记录/">优秀的博文记录</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/18/优秀的博文记录/" class="article-date">
-	  <time datetime="2018-10-18T07:46:41.000Z" itemprop="datePublished">10月 18</time>
-	</a>
-</span>
-    
-    
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/18/优秀的博文记录/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/18/pprof性能监控和gc调优/">pprof性能监控和gc调优</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/18/pprof性能监控和gc调优/" class="article-date">
-	  <time datetime="2018-10-18T07:15:41.000Z" itemprop="datePublished">10月 18</time>
-	</a>
-</span>
-    
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/性能优化/">性能优化</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/18/pprof性能监控和gc调优/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/18/sync-Pool笔记/">sync.Pool笔记</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/18/sync-Pool笔记/" class="article-date">
-	  <time datetime="2018-10-18T03:04:01.000Z" itemprop="datePublished">10月 18</time>
-	</a>
-</span>
-    
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/timeline重构任重道远/">timeline重构任重道远</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/18/sync-Pool笔记/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/17/golang的fmt包入门手动内存管理/">从golang的fmt包入门手动内存管理</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/17/golang的fmt包入门手动内存管理/" class="article-date">
-	  <time datetime="2018-10-17T14:01:43.000Z" itemprop="datePublished">10月 17</time>
-	</a>
-</span>
-    
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/timeline重构任重道远/">timeline重构任重道远</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/17/golang的fmt包入门手动内存管理/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/16/一次goroutine内存泄漏问题定位/">一次goroutine内存泄漏问题定位</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/10/16/一次goroutine内存泄漏问题定位/" class="article-date">
-	  <time datetime="2018-10-16T05:38:08.000Z" itemprop="datePublished">10月 16</time>
-	</a>
-</span>
-    
-    
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/16/一次goroutine内存泄漏问题定位/#comments" class="article-comment-link">评论</a></span>
-    
-  </p>
-</article>
-
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
     
   </div>
-
+  </div>
+</nav>
   
-    
-    <nav class="bar bar-footer clearfix" data-stick-bottom>
-        <div class="bar-inner">
-        <ul class="pager pull-left">
-            
-            <li class="prev disabled">
-                <a href="javascript:;">
-                    <i class="icon icon-angle-left"></i>
-                    上一页
-                </a>
-            </li>
-            
-            
-            <li class="next">
-                <a href="/page/2/">
-                    下一页
-                    <i class="icon icon-angle-right"></i>
-                </a>
-            </li>
-            
-        </ul>
-        <div class="total-article bar-right">Page 1 of 2</div>
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </nav>
-    
- 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -722,6 +731,33 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
    
 
 
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
 
 
 
