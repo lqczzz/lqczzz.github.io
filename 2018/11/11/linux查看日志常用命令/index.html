@@ -18,17 +18,17 @@
   
   
   <title>linux查看日志常用命令 | Hexo</title>
-  <meta name="description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
+  <meta name="description" content="命令必须掌握 cat grep awk tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux查看日志常用命令">
 <meta property="og:url" content="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
+<meta property="og:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-11T09:09:02.000Z">
+<meta property="og:updated_time" content="2018-11-11T09:34:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux查看日志常用命令">
-<meta name="twitter:description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
+<meta name="twitter:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
   
@@ -371,6 +371,7 @@
         <h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><h3 id="必须掌握"><a href="#必须掌握" class="headerlink" title="必须掌握"></a>必须掌握</h3><ol>
 <li>cat</li>
 <li>grep</li>
+<li>awk</li>
 <li>tail</li>
 <li>head </li>
 <li>wc (word count)</li>
@@ -450,6 +451,17 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&ap
 <li>查看以**结尾的行 <code>cat test.txt |grep hat$</code></li>
 <li>查看不以**开头的行 <code>cat test.txt |grep ^[^u]</code></li>
 <li>查看有**或者**的行<code>cat test.txt |grep -E &quot;ed|at&quot;</code></li>
+</ol>
+</li>
+</ol>
+<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><ol>
+<li><p>功能：<br> awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。<br> 特别适合一行文本特别长的时候进行显示处理</p>
+</li>
+<li><p>用法：<br> awk ‘{pattern + action}’ {filenames}<br> 其中action支持多种操作，强大又复杂</p>
+</li>
+<li>常用参数:<br> -F：分割符</li>
+<li>demo<ol>
+<li>查看某一行的前面部分：<code>cat filename | awk -F &#39;|&#39; &#39;{print $1, $2}&#39;</code></li>
 </ol>
 </li>
 </ol>
