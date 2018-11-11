@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lqczzz.github.io/"/>
-  <updated>2018-10-27T11:12:20.000Z</updated>
+  <updated>2018-11-11T08:46:54.000Z</updated>
   <id>http://lqczzz.github.io/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux查看性能和网络常用命令</title>
+    <link href="http://lqczzz.github.io/2018/11/11/linux%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>http://lqczzz.github.io/2018/11/11/linux查看网络常用命令/</id>
+    <published>2018-11-11T08:27:01.000Z</published>
+    <updated>2018-11-11T08:46:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>占坑</p><ol><li>lsof</li></ol><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/peida/tag/linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">linux性能分析</a><br><a href="https://www.cnblogs.com/peida/tag/linux%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/" target="_blank" rel="noopener">linux网络分析</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;占坑&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;lsof&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;参考&quot;&gt;&lt;a href=&quot;#参考&quot; class=&quot;headerlink&quot; title=&quot;参考&quot;&gt;&lt;/a&gt;参考&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/pe
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>linux查看日志常用命令</title>
+    <link href="http://lqczzz.github.io/2018/11/11/linux%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/</id>
+    <published>2018-11-11T07:45:27.000Z</published>
+    <updated>2018-11-11T08:59:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><h3 id="必须掌握"><a href="#必须掌握" class="headerlink" title="必须掌握"></a>必须掌握</h3><ol><li>cat</li><li>grep</li><li>tail</li><li>head </li><li>wc (word count)</li></ol><h3 id="不太常用但是有用"><a href="#不太常用但是有用" class="headerlink" title="不太常用但是有用"></a>不太常用但是有用</h3><ol><li>sed</li><li>tac</li><li>nl</li></ol><h2 id="详细"><a href="#详细" class="headerlink" title="详细"></a>详细</h2><p>更详细用法可以 <code>man command</code></p><h3 id="1-cat"><a href="#1-cat" class="headerlink" title="1. cat"></a>1. cat</h3><ol><li>功能：<ol><li>查看一个文本所有信息（经常和grep结合）</li><li>黏合文件</li></ol></li><li>用法：<br> cat [-benstuv] [file …]</li><li>常用参数:<br> 共7个参数，常用的是-n<br> -n  带上行数</li><li>demo<ol><li>合并文件<br> cat test1 test2 &gt; test3 (&gt; 表示覆盖写，创建的意思)<br> cat test1 test2 &gt;&gt; test3 (&gt;&gt; 表示追加写)</li><li>带行数的查看文件<br> cat -n filename</li></ol></li></ol><h3 id="2-grep"><a href="#2-grep" class="headerlink" title="2. grep"></a>2. grep</h3><ol><li>功能：<br> 正则匹配的查找文件内容</li><li><p>用法：<br> grep </p><pre><code>[-abcdDEFGHhIiJLlmnOopqRSsUVvwxZ][-A num][-B num][-C[num]][-e pattern][-f file][--binary-files=value][--color[=when]][--colour[=when]][--context[=num]][--label][--line-buffered][--null][pattern]    [file ...]</code></pre></li><li><p>常用参数:<br> -a   –text   #不要忽略二进制的数据。<br> -A&lt;显示行数&gt;   –after-context=&lt;显示行数&gt;   #除了显示符合范本样式的那一列之外，并显示该行之后的内容。<br> -b   –byte-offset   #在显示符合样式的那一行之前，标示出该行第一个字符的编号。<br> -B&lt;显示行数&gt;   –before-context=&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前的内容。<br> -c    –count   #计算符合样式的列数。<br> -C&lt;显示行数&gt;    –context=&lt;显示行数&gt;或-&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前后的内容。<br> -d &lt;动作&gt;      –directories=&lt;动作&gt;   #当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。<br> -e&lt;范本样式&gt;  –regexp=&lt;范本样式&gt;   #指定字符串做为查找文件内容的样式。<br> -E      –extended-regexp   #将样式为延伸的普通表示法来使用。<br> -f&lt;规则文件&gt;  –file=&lt;规则文件&gt;   #指定规则文件，其内容含有一个或多个规则样式，让grep查找符合规则条件的文件内容，格式为每行一个规则样式。<br> -F   –fixed-regexp   #将样式视为固定字符串的列表。<br> -G   –basic-regexp   #将样式视为普通的表示法来使用。<br> -h   –no-filename   #在显示符合样式的那一行之前，不标示该行所属的文件名称。<br> -H   –with-filename   #在显示符合样式的那一行之前，表示该行所属的文件名称。<br> -i    –ignore-case   #忽略字符大小写的差别。<br> -l    –file-with-matches   #列出文件内容符合指定的样式的文件名称。<br> -L   –files-without-match   #列出文件内容不符合指定的样式的文件名称。<br> -n   –line-number   #在显示符合样式的那一行之前，标示出该行的列数编号。<br> -q   –quiet或–silent   #不显示任何信息。<br> -r   –recursive   #此参数的效果和指定“-d recurse”参数相同。<br> -s   –no-messages   #不显示错误信息。<br> -v   –revert-match   #显示不包含匹配文本的所有行。<br> -V   –version   #显示版本信息。<br> -w   –word-regexp   #只显示全字符合的列。<br> -x    –line-regexp   #只显示全列符合的列。<br> -y   #此参数的效果和指定“-i”参数相同。</p></li><li><p>demo</p><ol><li>查看进程 <code>ps -ef|grep svn</code></li><li>统计进程数 <code>ps -ef|grep svn -c</code></li><li>管道查看关键字的行 <code>cat test.txt | grep -f keyword</code></li><li>管道查看关键字的行并且打印行号<code>cat test.txt | grep -nf keyword</code></li><li>直接根据关键字查看行 <code>grep keyword filename</code></li><li>多文件 <code>grep keyword filename1 filename2</code></li><li>所有文件 <code>grep keyword *</code></li><li>查看以**开头的行 <code>cat test.txt |grep ^u</code></li><li>查看以**结尾的行 <code>cat test.txt |grep hat$</code></li><li>查看不以**开头的行 <code>cat test.txt |grep ^[^u]</code></li><li>查看有**或者**的行<code>cat test.txt |grep -E &quot;ed|at&quot;</code></li></ol></li></ol><h3 id="tail-head"><a href="#tail-head" class="headerlink" title="tail/head"></a>tail/head</h3><ol><li>功能：<br> tail 显示文件末尾/开始的内容</li><li>用法：<ul><li>tail [-F | -f | -r] [-q] [-b number | -c number | -n number] [file …]</li><li>head [-n count | -c bytes] [file …]</li></ul></li><li>常用参数:<br> -f：循环读取<br> -n&lt;行数&gt;： 显示行数</li><li>demo<ol><li>监控日志：<code>tail -f filename</code></li><li>从第n行开始查看文件：<code>tail -n +100 filename</code> (必须有<code>+</code>)</li><li>查看前n行的内容：<code>head -n 20 filename</code></li><li>查看n-m行之间的内容：<code>cat -n  info.log | tail -n +140 | head -n 2</code></li></ol></li></ol><h3 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h3><ol><li>功能：<br> wc – word, line, character, and byte count</li><li>用法：<br> wc [-clmw] [file …]</li><li>常用参数:<br> -c 统计字节数。<br> -l 统计行数。<br> -m 统计字符数。这个标志不能与 -c 标志一起使用。<br> -w 统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</li><li>demo<ol><li>统计行数: <code>wc -l filename</code></li><li>统计当前目录下的文件数: <code>ls -l | wc -l</code></li></ol></li></ol><h3 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h3><p>查看n-m行之间的内容： <code>sed -n &#39;5,10p&#39; filename</code></p><h3 id="tac"><a href="#tac" class="headerlink" title="tac"></a>tac</h3><p>和cat反着来的</p><h3 id="nl"><a href="#nl" class="headerlink" title="nl"></a>nl</h3><p>加强版 <code>cat -n</code>,使用参考 <code>man nl</code></p><h2 id="常用组合"><a href="#常用组合" class="headerlink" title="常用组合"></a>常用组合</h2><ol><li><p>实时监控日志：</p><pre><code>tail -f 20 filename</code></pre></li><li><p>显示一个文件的某几行</p><pre><code>1. `cat -n  info.log | tail -n +140 | head -n 2`2. `sed -n &quot;10,20p&quot; filename`</code></pre></li><li><p>统计行数：</p><pre><code>1. wc -l filename</code></pre></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;命令&quot;&gt;&lt;a href=&quot;#命令&quot; class=&quot;headerlink&quot; title=&quot;命令&quot;&gt;&lt;/a&gt;命令&lt;/h2&gt;&lt;h3 id=&quot;必须掌握&quot;&gt;&lt;a href=&quot;#必须掌握&quot; class=&quot;headerlink&quot; title=&quot;必须掌握&quot;&gt;&lt;/a&gt;必须掌握&lt;/h
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>模版模式在golang的使用</title>
