@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-11T09:05:17.000Z">
+<meta property="og:updated_time" content="2018-11-11T09:09:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux查看日志常用命令">
 <meta name="twitter:description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
@@ -415,13 +415,33 @@
 [pattern]
     [file ...]
 </code></pre></li>
-<li><p>常用参数:<br> -a   –text   #不要忽略二进制的数据。<br> -A&lt;显示行数&gt;   –after-context=&lt;显示行数&gt;   #除了显示符合范本样式的那一列之外，并显示该行之后的内容。<br> -b   –byte-offset   #在显示符合样式的那一行之前，标示出该行第一个字符的编号。<br> -B&lt;显示行数&gt;   –before-context=&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前的内容。<br> -c    –count   #计算符合样式的列数。<br> -C&lt;显示行数&gt;    –context=&lt;显示行数&gt;或-&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前后的内容。<br> -d &lt;动作&gt;      –directories=&lt;动作&gt;   #当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。<br> -e&lt;范本样式&gt;  –regexp=&lt;范本样式&gt;   #指定字符串做为查找文件内容的样式。<br> -E      –extended-regexp   #将样式为延伸的普通表示法来使用。<br> -f&lt;规则文件&gt;  –file=&lt;规则文件&gt;   #指定规则文件，其内容含有一个或多个规则样式，让grep查找符合规则条件的文件内容，格式为每行一个规则样式。<br> -F   –fixed-regexp   #将样式视为固定字符串的列表。<br> -G   –basic-regexp   #将样式视为普通的表示法来使用。<br> -h   –no-filename   #在显示符合样式的那一行之前，不标示该行所属的文件名称。<br> -H   –with-filename   #在显示符合样式的那一行之前，表示该行所属的文件名称。<br> -i    –ignore-case   #忽略字符大小写的差别。<br> -l    –file-with-matches   #列出文件内容符合指定的样式的文件名称。<br> -L   –files-without-match   #列出文件内容不符合指定的样式的文件名称。<br> -n   –line-number   #在显示符合样式的那一行之前，标示出该行的列数编号。<br> -q   –quiet或–silent   #不显示任何信息。<br> -r   –recursive   #此参数的效果和指定“-d recurse”参数相同。<br> -s   –no-messages   #不显示错误信息。<br> -v   –revert-match   #显示不包含匹配文本的所有行。<br> -V   –version   #显示版本信息。<br> -w   –word-regexp   #只显示全字符合的列。<br> -x    –line-regexp   #只显示全列符合的列。<br> -y   #此参数的效果和指定“-i”参数相同。</p>
+<li><p>常用参数:<br> -a   –text   #不要忽略二进制的数据。<br> -A&lt;显示行数&gt;   –after-context=&lt;显示行数&gt;   #除了显示符合范本样式的那一列之外，并显示该行之后的内容。<br> -b   –byte-offset   #在显示符合样式的那一行之前，标示出该行第一个字符的编号。<br> -B&lt;显示行数&gt;   –before-context=&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前的内容。<br> -c    –count   #计算符合样式的列数。<br> -C&lt;显示行数&gt;    –context=&lt;显示行数&gt;或-&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前后的内容。<br> -d &lt;动作&gt;      –directories=&lt;动作&gt;   #当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。<br> -e&lt;范本样式&gt;  –regexp=&lt;范本样式&gt;   #指定字符串做为查找文件内容的样式。<br> -E      –extended-regexp   #将样式为延伸的普通表示法来使用。<br> -F   –fixed-regexp   #将样式视为固定字符串的列表。<br> -G   –basic-regexp   #将样式视为普通的表示法来使用。<br> -h   –no-filename   #在显示符合样式的那一行之前，不标示该行所属的文件名称。<br> -H   –with-filename   #在显示符合样式的那一行之前，表示该行所属的文件名称。<br> -i    –ignore-case   #忽略字符大小写的差别。<br> -l    –file-with-matches   #列出文件内容符合指定的样式的文件名称。<br> -L   –files-without-match   #列出文件内容不符合指定的样式的文件名称。<br> -n   –line-number   #在显示符合样式的那一行之前，标示出该行的列数编号。<br> -q   –quiet或–silent   #不显示任何信息。<br> -r   –recursive   #此参数的效果和指定“-d recurse”参数相同。<br> -s   –no-messages   #不显示错误信息。<br> -v   –revert-match   #显示不包含匹配文本的所有行。<br> -V   –version   #显示版本信息。<br> -w   –word-regexp   #只显示全字符合的列。<br> -x    –line-regexp   #只显示全列符合的列。<br> -y   #此参数的效果和指定“-i”参数相同。</p>
 </li>
-<li><p>demo</p>
-<ol>
+<li><p>正则匹配规则</p>
+</li>
+</ol>
+<p>grep的规则表达式:</p>
+<pre><code>^  #锚定行的开始 如：&apos;^grep&apos;匹配所有以grep开头的行。    
+$  #锚定行的结束 如：&apos;grep$&apos;匹配所有以grep结尾的行。    
+.  #匹配一个非换行符的字符 如：&apos;gr.p&apos;匹配gr后接一个任意字符，然后是p。    
+*  #匹配零个或多个先前字符 如：&apos;*grep&apos;匹配所有一个或多个空格后紧跟grep的行。    
+.*   #一起用代表任意字符。   
+[]   #匹配一个指定范围内的字符，如&apos;[Gg]rep&apos;匹配Grep和grep。    
+[^]  #匹配一个不在指定范围内的字符，如：&apos;[^A-FH-Z]rep&apos;匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    
+\(..\)  #标记匹配字符，如&apos;\(love\)&apos;，love被标记为1。    
+\&lt;      #锚定单词的开始，如:&apos;\&lt;grep&apos;匹配包含以grep开头的单词的行。    
+\&gt;      #锚定单词的结束，如&apos;grep\&gt;&apos;匹配包含以grep结尾的单词的行。    
+x\{m\}  #重复字符x，m次，如：&apos;0\{5\}&apos;匹配包含5个o的行。    
+x\{m,\}  #重复字符x,至少m次，如：&apos;o\{5,\}&apos;匹配至少有5个o的行。    
+x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&apos;匹配5--10个o的行。   
+\w    #匹配文字和数字字符，也就是[A-Za-z0-9]，如：&apos;G\w*p&apos;匹配以G后跟零个或多个文字或数字字符，然后是p。   
+\W    #\w的反置形式，匹配一个或多个非单词字符，如点号句号等。   
+\b    #单词锁定符，如: &apos;\bgrep\b&apos;只匹配grep
+</code></pre><ol>
+<li>demo<ol>
 <li>查看进程 <code>ps -ef|grep svn</code></li>
 <li>统计进程数 <code>ps -ef|grep svn -c</code></li>
-<li>管道查看关键字的行 <code>cat test.txt | grep -f keyword</code></li>
+<li>管道查看关键字的行 <code>cat test.txt | grep -F keyword</code></li>
 <li>管道查看关键字的行并且打印行号<code>cat test.txt | grep -nf keyword</code></li>
 <li>直接根据关键字查看行 <code>grep keyword filename</code></li>
 <li>多文件 <code>grep keyword filename1 filename2</code></li>
