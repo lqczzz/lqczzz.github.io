@@ -18,17 +18,17 @@
   
   
   <title>linux查看日志常用命令 | Hexo</title>
-  <meta name="description" content="命令必须掌握 cat grep tail head  wc (word count)  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 cat tes">
+  <meta name="description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux查看日志常用命令">
 <meta property="og:url" content="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="命令必须掌握 cat grep tail head  wc (word count)  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 cat tes">
+<meta property="og:description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-11T08:59:09.000Z">
+<meta property="og:updated_time" content="2018-11-11T09:05:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux查看日志常用命令">
-<meta name="twitter:description" content="命令必须掌握 cat grep tail head  wc (word count)  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 cat tes">
+<meta name="twitter:description" content="命令必须掌握 cat grep tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文件 ca">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
   
@@ -374,6 +374,7 @@
 <li>tail</li>
 <li>head </li>
 <li>wc (word count)</li>
+<li>less</li>
 </ol>
 <h3 id="不太常用但是有用"><a href="#不太常用但是有用" class="headerlink" title="不太常用但是有用"></a>不太常用但是有用</h3><ol>
 <li>sed</li>
@@ -458,6 +459,7 @@
 </ol>
 </li>
 </ol>
+<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>less 命令（分页查看文件内容）分页查看日志，但是中文有乱码<br><code>less error.log</code><br>直接定位到第100行<br><code>less +100g xx.log</code><br>定位到最后一行<br><code>less +GG xx.log</code><br>查找并高亮关键字<br><code>less fis.log.2018-05-20  | grep 2018052019004984219071028 -A 5 --color=auto</code><br>移动日志<br>    G ：到日志最后<br>    g ：到日志最前面<br>    j/↑ ：向前移动一行<br>    k/↓ ：向后移动一行<br>    pgup ：向上翻页<br>    pgdn ：向下翻页</p>
 <h3 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h3><p>查看n-m行之间的内容： <code>sed -n &#39;5,10p&#39; filename</code></p>
 <h3 id="tac"><a href="#tac" class="headerlink" title="tac"></a>tac</h3><p>和cat反着来的</p>
 <h3 id="nl"><a href="#nl" class="headerlink" title="nl"></a>nl</h3><p>加强版 <code>cat -n</code>,使用参考 <code>man nl</code></p>
