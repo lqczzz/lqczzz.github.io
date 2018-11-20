@@ -18,17 +18,17 @@
   
   
   <title>linux查看日志常用命令 | Hexo</title>
-  <meta name="description" content="命令必须掌握 cat grep awk tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文">
+  <meta name="description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux查看日志常用命令">
 <meta property="og:url" content="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文">
+<meta property="og:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-11T09:34:58.000Z">
+<meta property="og:updated_time" content="2018-11-20T06:07:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux查看日志常用命令">
-<meta name="twitter:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用的是-n -n  带上行数 demo 合并文">
+<meta name="twitter:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
   <!-- Canonical links -->
   <link rel="canonical" href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
   
@@ -376,6 +376,8 @@
 <li>head </li>
 <li>wc (word count)</li>
 <li>less</li>
+<li>sort[todo]</li>
+<li>uniq[todo]</li>
 </ol>
 <h3 id="不太常用但是有用"><a href="#不太常用但是有用" class="headerlink" title="不太常用但是有用"></a>不太常用但是有用</h3><ol>
 <li>sed</li>
@@ -506,6 +508,14 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&ap
 <li><p>统计行数：</p>
 <pre><code>1. wc -l filename
 </code></pre></li>
+<li><p>现在有一万多条记录，其中包含重复的记录，每条记录占一行，问如何从这些记录中找到数量排名前10的记录:</p>
+<pre><code>sort data | uniq -c | sort -k 1 -n -r | head 10
+</code></pre><blockquote>
+<p>1) sort data<br>   表示对data文件中的内容进行排序。sort命令是对于每一行的内容根据字典序（ASCII码）进行排序，这样可以保证重复的记录时相邻的。<br>2) sort data | uniq -c<br>   这里，通过管道（|）将左边部分的命令的输出作为右边部分的输入。uniq -c 表示合并相邻的重复记录，并统计重复数。因为uniq -c 只会合并相邻的记录，所以在使用该命令之前需要先排序。<br>3) sort data | uniq -c | sort -k 1 -n -r<br>   经过uniq -c 处理之后的数据格式形如”2 data”，第一个字段是数字，表示重复的记录数；第二个字段为记录的内容。我们将对此内容进行排序。sort -k 1表示对于每行的第一个字段进行排序，这里即指代表重复记录数的那个字段。因为sort命令的默认排序是按照ASCII，这就会导致按从大到小进行排序时，数值2会排在数值11的前面，所以需要使用-n 参数指定sort命令按照数值大小进行排序。-r 表示逆序，即按照从大到小的顺序进行排序。<br>4) sort data | uniq -c | sort -k 1 -n -r | head 10</p>
+<pre><code>head 命令表示选取文本的前x行。通过head 10 就可以得到排序结果中前十行的内容
+</code></pre><p>来自<a href="http://eriol.iteye.com/blog/870641" target="_blank" rel="noopener">blog</a></p>
+</blockquote>
+</li>
 </ol>
 
       
