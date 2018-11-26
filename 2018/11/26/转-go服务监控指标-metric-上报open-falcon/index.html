@@ -17,20 +17,23 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>linux查看日志常用命令 | Hexo</title>
-  <meta name="description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
+  <title>[转]go服务监控指标(metric)上报open-falcon | Hexo</title>
+  <meta name="description" content="出处  1. 概述指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈．指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics.另外，这里只是将指标在内存中进行处理及计算，如果">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux查看日志常用命令">
-<meta property="og:url" content="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
+<meta property="og:title" content="[转]go服务监控指标(metric)上报open-falcon">
+<meta property="og:url" content="http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
+<meta property="og:description" content="出处  1. 概述指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈．指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics.另外，这里只是将指标在内存中进行处理及计算，如果">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-20T06:07:32.000Z">
+<meta property="og:image" content="https://segmentfault.com/img/remote/1460000014646208?w=1832&h=501">
+<meta property="og:image" content="https://segmentfault.com/img/remote/1460000014646209">
+<meta property="og:updated_time" content="2018-11-26T05:38:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux查看日志常用命令">
-<meta name="twitter:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
+<meta name="twitter:title" content="[转]go服务监控指标(metric)上报open-falcon">
+<meta name="twitter:description" content="出处  1. 概述指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈．指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics.另外，这里只是将指标在内存中进行处理及计算，如果">
+<meta name="twitter:image" content="https://segmentfault.com/img/remote/1460000014646208?w=1832&h=501">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
+  <link rel="canonical" href="http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -338,14 +341,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-linux查看日志常用命令" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-转-go服务监控指标-metric-上报open-falcon" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      linux查看日志常用命令
+      [转]go服务监控指标(metric)上报open-falcon
     </h1>
   
 
@@ -353,8 +356,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2018/11/11/linux查看日志常用命令/" class="article-date">
-	  <time datetime="2018-11-11T07:45:27.000Z" itemprop="datePublished">2018-11-11</time>
+	<a href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/" class="article-date">
+	  <time datetime="2018-11-26T05:20:30.000Z" itemprop="datePublished">2018-11-26</time>
 	</a>
 </span>
         
@@ -362,161 +365,121 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/11/11/linux查看日志常用命令/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><h3 id="必须掌握"><a href="#必须掌握" class="headerlink" title="必须掌握"></a>必须掌握</h3><ol>
-<li>cat</li>
-<li>grep</li>
-<li>awk</li>
-<li>tail</li>
-<li>head </li>
-<li>wc (word count)</li>
-<li>less</li>
-<li>sort[todo]</li>
-<li>uniq[todo]</li>
-</ol>
-<h3 id="不太常用但是有用"><a href="#不太常用但是有用" class="headerlink" title="不太常用但是有用"></a>不太常用但是有用</h3><ol>
-<li>sed</li>
-<li>tac</li>
-<li>nl</li>
-</ol>
-<h2 id="详细"><a href="#详细" class="headerlink" title="详细"></a>详细</h2><p>更详细用法可以 <code>man command</code></p>
-<h3 id="1-cat"><a href="#1-cat" class="headerlink" title="1. cat"></a>1. cat</h3><ol>
-<li>功能：<ol>
-<li>查看一个文本所有信息（经常和grep结合）</li>
-<li>黏合文件</li>
-</ol>
-</li>
-<li>用法：<br> cat [-benstuv] [file …]</li>
-<li>常用参数:<br> 共7个参数，常用的是-n<br> -n  带上行数</li>
-<li>demo<ol>
-<li>合并文件<br> cat test1 test2 &gt; test3 (&gt; 表示覆盖写，创建的意思)<br> cat test1 test2 &gt;&gt; test3 (&gt;&gt; 表示追加写)</li>
-<li>带行数的查看文件<br> cat -n filename</li>
-</ol>
-</li>
-</ol>
-<h3 id="2-grep"><a href="#2-grep" class="headerlink" title="2. grep"></a>2. grep</h3><ol>
-<li>功能：<br> 正则匹配的查找文件内容</li>
-<li><p>用法：<br> grep </p>
-<pre><code>[-abcdDEFGHhIiJLlmnOopqRSsUVvwxZ]
-[-A num]
-[-B num]
-[-C[num]]
-[-e pattern]
-[-f file]
-[--binary-files=value]
-[--color[=when]]
-[--colour[=when]]
-[--context[=num]]
-[--label]
-[--line-buffered]
-[--null]
-[pattern]
-    [file ...]
-</code></pre></li>
-<li><p>常用参数:<br> -a   –text   #不要忽略二进制的数据。<br> -A&lt;显示行数&gt;   –after-context=&lt;显示行数&gt;   #除了显示符合范本样式的那一列之外，并显示该行之后的内容。<br> -b   –byte-offset   #在显示符合样式的那一行之前，标示出该行第一个字符的编号。<br> -B&lt;显示行数&gt;   –before-context=&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前的内容。<br> -c    –count   #计算符合样式的列数。<br> -C&lt;显示行数&gt;    –context=&lt;显示行数&gt;或-&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前后的内容。<br> -d &lt;动作&gt;      –directories=&lt;动作&gt;   #当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。<br> -e&lt;范本样式&gt;  –regexp=&lt;范本样式&gt;   #指定字符串做为查找文件内容的样式。<br> -E      –extended-regexp   #将样式为延伸的普通表示法来使用。<br> -F   –fixed-regexp   #将样式视为固定字符串的列表。<br> -G   –basic-regexp   #将样式视为普通的表示法来使用。<br> -h   –no-filename   #在显示符合样式的那一行之前，不标示该行所属的文件名称。<br> -H   –with-filename   #在显示符合样式的那一行之前，表示该行所属的文件名称。<br> -i    –ignore-case   #忽略字符大小写的差别。<br> -l    –file-with-matches   #列出文件内容符合指定的样式的文件名称。<br> -L   –files-without-match   #列出文件内容不符合指定的样式的文件名称。<br> -n   –line-number   #在显示符合样式的那一行之前，标示出该行的列数编号。<br> -q   –quiet或–silent   #不显示任何信息。<br> -r   –recursive   #此参数的效果和指定“-d recurse”参数相同。<br> -s   –no-messages   #不显示错误信息。<br> -v   –revert-match   #显示不包含匹配文本的所有行。<br> -V   –version   #显示版本信息。<br> -w   –word-regexp   #只显示全字符合的列。<br> -x    –line-regexp   #只显示全列符合的列。<br> -y   #此参数的效果和指定“-i”参数相同。</p>
-</li>
-<li><p>正则匹配规则</p>
-</li>
-</ol>
-<p>grep的规则表达式:</p>
-<pre><code>^  #锚定行的开始 如：&apos;^grep&apos;匹配所有以grep开头的行。    
-$  #锚定行的结束 如：&apos;grep$&apos;匹配所有以grep结尾的行。    
-.  #匹配一个非换行符的字符 如：&apos;gr.p&apos;匹配gr后接一个任意字符，然后是p。    
-*  #匹配零个或多个先前字符 如：&apos;*grep&apos;匹配所有一个或多个空格后紧跟grep的行。    
-.*   #一起用代表任意字符。   
-[]   #匹配一个指定范围内的字符，如&apos;[Gg]rep&apos;匹配Grep和grep。    
-[^]  #匹配一个不在指定范围内的字符，如：&apos;[^A-FH-Z]rep&apos;匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    
-\(..\)  #标记匹配字符，如&apos;\(love\)&apos;，love被标记为1。    
-\&lt;      #锚定单词的开始，如:&apos;\&lt;grep&apos;匹配包含以grep开头的单词的行。    
-\&gt;      #锚定单词的结束，如&apos;grep\&gt;&apos;匹配包含以grep结尾的单词的行。    
-x\{m\}  #重复字符x，m次，如：&apos;0\{5\}&apos;匹配包含5个o的行。    
-x\{m,\}  #重复字符x,至少m次，如：&apos;o\{5,\}&apos;匹配至少有5个o的行。    
-x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&apos;匹配5--10个o的行。   
-\w    #匹配文字和数字字符，也就是[A-Za-z0-9]，如：&apos;G\w*p&apos;匹配以G后跟零个或多个文字或数字字符，然后是p。   
-\W    #\w的反置形式，匹配一个或多个非单词字符，如点号句号等。   
-\b    #单词锁定符，如: &apos;\bgrep\b&apos;只匹配grep
-</code></pre><ol>
-<li>demo<ol>
-<li>查看进程 <code>ps -ef|grep svn</code></li>
-<li>统计进程数 <code>ps -ef|grep svn -c</code></li>
-<li>管道查看关键字的行 <code>cat test.txt | grep -F keyword</code></li>
-<li>管道查看关键字的行并且打印行号<code>cat test.txt | grep -nf keyword</code></li>
-<li>直接根据关键字查看行 <code>grep keyword filename</code></li>
-<li>多文件 <code>grep keyword filename1 filename2</code></li>
-<li>所有文件 <code>grep keyword *</code></li>
-<li>查看以**开头的行 <code>cat test.txt |grep ^u</code></li>
-<li>查看以**结尾的行 <code>cat test.txt |grep hat$</code></li>
-<li>查看不以**开头的行 <code>cat test.txt |grep ^[^u]</code></li>
-<li>查看有**或者**的行<code>cat test.txt |grep -E &quot;ed|at&quot;</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><ol>
-<li><p>功能：<br> awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。<br> 特别适合一行文本特别长的时候进行显示处理</p>
-</li>
-<li><p>用法：<br> awk ‘{pattern + action}’ {filenames}<br> 其中action支持多种操作，强大又复杂</p>
-</li>
-<li>常用参数:<br> -F：分割符</li>
-<li>demo<ol>
-<li>查看某一行的前面部分：<code>cat filename | awk -F &#39;|&#39; &#39;{print $1, $2}&#39;</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="tail-head"><a href="#tail-head" class="headerlink" title="tail/head"></a>tail/head</h3><ol>
-<li>功能：<br> tail 显示文件末尾/开始的内容</li>
-<li>用法：<ul>
-<li>tail [-F | -f | -r] [-q] [-b number | -c number | -n number] [file …]</li>
-<li>head [-n count | -c bytes] [file …]</li>
-</ul>
-</li>
-<li>常用参数:<br> -f：循环读取<br> -n&lt;行数&gt;： 显示行数</li>
-<li>demo<ol>
-<li>监控日志：<code>tail -f filename</code></li>
-<li>从第n行开始查看文件：<code>tail -n +100 filename</code> (必须有<code>+</code>)</li>
-<li>查看前n行的内容：<code>head -n 20 filename</code></li>
-<li>查看n-m行之间的内容：<code>cat -n  info.log | tail -n +140 | head -n 2</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h3><ol>
-<li>功能：<br> wc – word, line, character, and byte count</li>
-<li>用法：<br> wc [-clmw] [file …]</li>
-<li>常用参数:<br> -c 统计字节数。<br> -l 统计行数。<br> -m 统计字符数。这个标志不能与 -c 标志一起使用。<br> -w 统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</li>
-<li>demo<ol>
-<li>统计行数: <code>wc -l filename</code></li>
-<li>统计当前目录下的文件数: <code>ls -l | wc -l</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>less 命令（分页查看文件内容）分页查看日志，但是中文有乱码<br><code>less error.log</code><br>直接定位到第100行<br><code>less +100g xx.log</code><br>定位到最后一行<br><code>less +GG xx.log</code><br>查找并高亮关键字<br><code>less fis.log.2018-05-20  | grep 2018052019004984219071028 -A 5 --color=auto</code><br>移动日志<br>    G ：到日志最后<br>    g ：到日志最前面<br>    j/↑ ：向前移动一行<br>    k/↓ ：向后移动一行<br>    pgup ：向上翻页<br>    pgdn ：向下翻页</p>
-<h3 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h3><p>查看n-m行之间的内容： <code>sed -n &#39;5,10p&#39; filename</code></p>
-<h3 id="tac"><a href="#tac" class="headerlink" title="tac"></a>tac</h3><p>和cat反着来的</p>
-<h3 id="nl"><a href="#nl" class="headerlink" title="nl"></a>nl</h3><p>加强版 <code>cat -n</code>,使用参考 <code>man nl</code></p>
-<h2 id="常用组合"><a href="#常用组合" class="headerlink" title="常用组合"></a>常用组合</h2><ol>
-<li><p>实时监控日志：</p>
-<pre><code>tail -f 20 filename
-</code></pre></li>
-<li><p>显示一个文件的某几行</p>
-<pre><code>1. `cat -n  info.log | tail -n +140 | head -n 2`
-2. `sed -n &quot;10,20p&quot; filename`
-</code></pre></li>
-<li><p>统计行数：</p>
-<pre><code>1. wc -l filename
-</code></pre></li>
-<li><p>现在有一万多条记录，其中包含重复的记录，每条记录占一行，问如何从这些记录中找到数量排名前10的记录:</p>
-<pre><code>sort data | uniq -c | sort -k 1 -n -r | head 10
-</code></pre><blockquote>
-<p>1) sort data<br>   表示对data文件中的内容进行排序。sort命令是对于每一行的内容根据字典序（ASCII码）进行排序，这样可以保证重复的记录时相邻的。<br>2) sort data | uniq -c<br>   这里，通过管道（|）将左边部分的命令的输出作为右边部分的输入。uniq -c 表示合并相邻的重复记录，并统计重复数。因为uniq -c 只会合并相邻的记录，所以在使用该命令之前需要先排序。<br>3) sort data | uniq -c | sort -k 1 -n -r<br>   经过uniq -c 处理之后的数据格式形如”2 data”，第一个字段是数字，表示重复的记录数；第二个字段为记录的内容。我们将对此内容进行排序。sort -k 1表示对于每行的第一个字段进行排序，这里即指代表重复记录数的那个字段。因为sort命令的默认排序是按照ASCII，这就会导致按从大到小进行排序时，数值2会排在数值11的前面，所以需要使用-n 参数指定sort命令按照数值大小进行排序。-r 表示逆序，即按照从大到小的顺序进行排序。<br>4) sort data | uniq -c | sort -k 1 -n -r | head 10</p>
-<pre><code>head 命令表示选取文本的前x行。通过head 10 就可以得到排序结果中前十行的内容
-</code></pre><p>来自<a href="http://eriol.iteye.com/blog/870641" target="_blank" rel="noopener">blog</a></p>
+        <blockquote>
+<p><a href="https://segmentfault.com/a/1190000014646203#articleHeader3" target="_blank" rel="noopener">出处</a></p>
 </blockquote>
-</li>
-</ol>
+<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈．<br>指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics.<br>另外，这里只是将指标在内存中进行处理及计算，如果我们想要展示，需要将数据抛出来，这里可以抛到日志里，也可以抛到时序数据库，最简单的做法就是直接抛到监控系统进行绘图或者报警．因此本文后面将讲解各指标的含义以及如何将计算好的数据抛到监控open-falcon</p>
+<h2 id="2-指标统计方式"><a href="#2-指标统计方式" class="headerlink" title="2.指标统计方式"></a>2.指标统计方式</h2><h3 id="2-1-Meters"><a href="#2-1-Meters" class="headerlink" title="2.1 Meters"></a>2.1 Meters</h3><p>用于计算一段时间内的计量，通常用于计算接口调用频率，如QPS(每秒的次数)，主要分为rateMean,Rate1/Rate5/Rate15等指标．</p>
+<p>RateMean<br>单位时间内发生的次数，如一分钟发送100次，则该值为100/60.</p>
+<p>Rate1/Rate5/Rate15<br>1分钟/5分钟/15分钟内的滑动平均值(moving average),</p>
+<h3 id="2-2-Gauges"><a href="#2-2-Gauges" class="headerlink" title="2.2 Gauges"></a>2.2 Gauges</h3><p>用于对瞬时值的测量，如我们可以过一段时间就对内存的使用量进行统计，并上报，那么所有的数据点集就是对应时间点的内存值，Gauges只有value指标．也就是上报的是什么就是什么．</p>
+<h3 id="2-3-Counter"><a href="#2-3-Counter" class="headerlink" title="2.3 Counter"></a>2.3 Counter</h3><p>计数类统计，可以进行加或减，也可以进行归零操作，所有的操作都是在旧值的基础上进行的．这里可以通过每天归零，然后新增注册用户时加1来统计每天的注册用户．</p>
+<h3 id="2-4-Histograms"><a href="#2-4-Histograms" class="headerlink" title="2.4 Histograms"></a>2.4 Histograms</h3><p>主要用于对数据集中的值分布情况进行统计，典型的应用场景为接口耗时，接口每次调用都会产生耗时，记录每次调用耗时来对接口耗时情况进行分析显然不现实．因此将接口一段时间内的耗时看做数据集，并采集Count，Min, Max, Mean, Median, 75%, 95%, 99%等指标．以相对较小的资源消耗，来尽可能反应数据集的真实情况．</p>
+<p><code>Count</code><br>距离上次清理后产生的样本数量．</p>
+<p><code>Min</code><br>样本中的最小值</p>
+<p><code>Max</code><br>样本中的最大值</p>
+<p><code>Mean</code><br>所有样本的求得的平均值</p>
+<p><code>Median</code><br>样本中的中间位置的值．</p>
+<p><code>75%</code><br>样本中的%75位置的值．</p>
+<p><code>95%</code><br>样本中的%95位置的值．</p>
+<p><code>99%</code><br>样本中的%99位置的值．</p>
+<h3 id="2-5-Timers"><a href="#2-5-Timers" class="headerlink" title="2.5 Timers"></a>2.5 Timers</h3><p>对某个代码模块同时进行统计调用频率以及调用耗时统计．指标就是Histograms以及Meters两种统计方式的合集．</p>
+<h2 id="3-使用方式"><a href="#3-使用方式" class="headerlink" title="3.使用方式"></a>3.使用方式</h2><p>更对详细用法见go-metric文档</p>
+<h3 id="3-1-Counter"><a href="#3-1-Counter" class="headerlink" title="3.1 Counter"></a>3.1 Counter</h3><pre><code>c := metrics.NewCounter()
+metrics.Register(&quot;foo&quot;, c)
+//进行加操作
+c.Inc(47)
+
+//进行减操作
+c.Dec(1)
+
+//获取出值
+c.Count()
+</code></pre><h3 id="3-2-Gauge"><a href="#3-2-Gauge" class="headerlink" title="3.2 Gauge"></a>3.2 Gauge</h3><pre><code>g := metrics.NewGauge()
+metrics.Register(&quot;bar&quot;, g)
+//更新瞬时值
+g.Update(47)
+
+//获取出瞬时值
+g.Value()
+</code></pre><h3 id="3-3-Meters"><a href="#3-3-Meters" class="headerlink" title="3.3 Meters"></a>3.3 Meters</h3><pre><code>m := metrics.NewMeter()
+metrics.Register(&quot;quux&quot;, m)
+//写入数据集
+m.Mark(47)
+//获取数据集只读快照
+m := metric.Snapshot()
+//数据集大小
+m.Count()
+//1分钟滑动平均值
+m.Rate1()
+//5分钟滑动平均值
+m.Rate5()
+//15分钟滑动平均值
+m.Rate15()
+//平均值
+m.RateMean()
+3.4 Histograms
+h := metrics.NewHistogram(s)
+metrics.Register(&quot;baz&quot;, h)
+//写入数据集
+h.Update(47)
+//获取数据集只读快照
+h := metric.Snapshot()
+//数据集大小
+h.Count()
+//最小值
+h.Min()
+//最大值
+h.Max()
+//平均值
+h.Mean()
+ps := h.Percentiles([]float64{0.5, 0.75, 0.95, 0.99})
+//中位数
+ps[0]
+//75%的数
+ps[1]
+//95%的数
+ps[2]
+//99%的数
+ps[3]
+3.5 Timer
+t := metrics.NewTimer()
+metrics.Register(&quot;bang&quot;, t)
+
+t.Time(func() {
+    //do some thing
+})
+t.Update(47)
+
+//获取方式同meter以及Histograms
+</code></pre><h2 id="4-指标上报到open-falcon"><a href="#4-指标上报到open-falcon" class="headerlink" title="4. 指标上报到open-falcon"></a>4. 指标上报到open-falcon</h2><h3 id="4-1-上报方式"><a href="#4-1-上报方式" class="headerlink" title="4.1 上报方式"></a>4.1 上报方式</h3><p>代码及使用方式见 go-metrics-falcon</p>
+<p>实现数据上报open-falcon，只需要将所有数据取出，按open-falcon格式上报即可，这里有涉及到上报json的定义，具体如下．</p>
+<pre><code>{
+    &quot;endpoint&quot;: &quot;$endpoint&quot;,
+    &quot;metric&quot;: &quot;$name&quot;,
+    &quot;value&quot;: 2.2,
+    &quot;step&quot;: 60,
+    &quot;counterType&quot;: &quot;GAUGE&quot;,
+    &quot;tags&quot;: &quot;project=$projectName,metricType=meter,valueType=ratemean&quot;,
+    &quot;timestamp&quot;: 1524724608
+}
+</code></pre><ul>
+<li>endpoint: 这一个一般是主机hostname，用于标注是哪台机器．</li>
+<li>metric: 指标名，由用户定义</li>
+<li>value: 指标的值</li>
+<li>step: 上报的时间周期</li>
+<li>counterType: 上报的类型,这里open-falcon只支持GAUGE以及COUNTER,因此统一使用GAUGE.</li>
+<li>tags: 标签，用于却别指标，包含指标类型，值类型，项目名三项．</li>
+<li>timestamp: 指标上报的时间戳，单位秒．</li>
+</ul>
+<h3 id="4-2-效果"><a href="#4-2-效果" class="headerlink" title="4.2 效果"></a>4.2 效果</h3><p>如图，输入endpoint, 然后在counter部分输入项目名就可以过滤出该项目上报的所有指标．<br><img src="https://segmentfault.com/img/remote/1460000014646208?w=1832&amp;h=501" alt=""><br>点击指标，进入查询该指标的大图．<br><img src="https://segmentfault.com/img/remote/1460000014646209" alt=""></p>
+<p>同时我们可以对指标设置监控，具体见open-falcon文档．</p>
 
       
     </div>
@@ -526,7 +489,7 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&ap
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/" title="linux查看日志常用命令" target="_blank" rel="external">http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/</a>
+      <a href="http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/" title="[转]go服务监控指标(metric)上报open-falcon" target="_blank" rel="external">http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -572,13 +535,9 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&ap
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2018/11/11/linux查看网络常用命令/" title="linux查看性能和网络常用命令"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2018/10/27/golang组合和继承/" title="模版模式在golang的使用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2018/11/11/linux查看网络常用命令/" title="linux查看性能和网络常用命令"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
