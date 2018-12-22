@@ -17,20 +17,20 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>linux查看日志常用命令 | Hexo</title>
-  <meta name="description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
+  <title>可插拔式代码结构思考 | Hexo</title>
+  <meta name="description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux查看日志常用命令">
-<meta property="og:url" content="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
+<meta property="og:title" content="可插拔式代码结构思考">
+<meta property="og:url" content="http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
+<meta property="og:description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-20T06:07:32.000Z">
+<meta property="og:updated_time" content="2018-12-13T02:07:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux查看日志常用命令">
-<meta name="twitter:description" content="命令必须掌握 cat grep awk tail head  wc (word count) less sort[todo] uniq[todo]  不太常用但是有用 sed tac nl  详细更详细用法可以 man command 1. cat 功能： 查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file …] 常用参数: 共7个参数，常用">
+<meta name="twitter:title" content="可插拔式代码结构思考">
+<meta name="twitter:description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
+  <link rel="canonical" href="http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -338,14 +338,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-linux查看日志常用命令" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-可插拔式代码结构思考" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      linux查看日志常用命令
+      可插拔式代码结构思考
     </h1>
   
 
@@ -353,8 +353,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2018/11/11/linux查看日志常用命令/" class="article-date">
-	  <time datetime="2018-11-11T07:45:27.000Z" itemprop="datePublished">2018-11-11</time>
+	<a href="/2018/12/12/可插拔式代码结构思考/" class="article-date">
+	  <time datetime="2018-12-12T11:10:36.000Z" itemprop="datePublished">2018-12-12</time>
 	</a>
 </span>
         
@@ -362,161 +362,130 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/11/11/linux查看日志常用命令/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/12/12/可插拔式代码结构思考/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><h3 id="必须掌握"><a href="#必须掌握" class="headerlink" title="必须掌握"></a>必须掌握</h3><ol>
-<li>cat</li>
-<li>grep</li>
-<li>awk</li>
-<li>tail</li>
-<li>head </li>
-<li>wc (word count)</li>
-<li>less</li>
-<li>sort[todo]</li>
-<li>uniq[todo]</li>
-</ol>
-<h3 id="不太常用但是有用"><a href="#不太常用但是有用" class="headerlink" title="不太常用但是有用"></a>不太常用但是有用</h3><ol>
-<li>sed</li>
-<li>tac</li>
-<li>nl</li>
-</ol>
-<h2 id="详细"><a href="#详细" class="headerlink" title="详细"></a>详细</h2><p>更详细用法可以 <code>man command</code></p>
-<h3 id="1-cat"><a href="#1-cat" class="headerlink" title="1. cat"></a>1. cat</h3><ol>
-<li>功能：<ol>
-<li>查看一个文本所有信息（经常和grep结合）</li>
-<li>黏合文件</li>
-</ol>
-</li>
-<li>用法：<br> cat [-benstuv] [file …]</li>
-<li>常用参数:<br> 共7个参数，常用的是-n<br> -n  带上行数</li>
-<li>demo<ol>
-<li>合并文件<br> cat test1 test2 &gt; test3 (&gt; 表示覆盖写，创建的意思)<br> cat test1 test2 &gt;&gt; test3 (&gt;&gt; 表示追加写)</li>
-<li>带行数的查看文件<br> cat -n filename</li>
-</ol>
-</li>
-</ol>
-<h3 id="2-grep"><a href="#2-grep" class="headerlink" title="2. grep"></a>2. grep</h3><ol>
-<li>功能：<br> 正则匹配的查找文件内容</li>
-<li><p>用法：<br> grep </p>
-<pre><code>[-abcdDEFGHhIiJLlmnOopqRSsUVvwxZ]
-[-A num]
-[-B num]
-[-C[num]]
-[-e pattern]
-[-f file]
-[--binary-files=value]
-[--color[=when]]
-[--colour[=when]]
-[--context[=num]]
-[--label]
-[--line-buffered]
-[--null]
-[pattern]
-    [file ...]
-</code></pre></li>
-<li><p>常用参数:<br> -a   –text   #不要忽略二进制的数据。<br> -A&lt;显示行数&gt;   –after-context=&lt;显示行数&gt;   #除了显示符合范本样式的那一列之外，并显示该行之后的内容。<br> -b   –byte-offset   #在显示符合样式的那一行之前，标示出该行第一个字符的编号。<br> -B&lt;显示行数&gt;   –before-context=&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前的内容。<br> -c    –count   #计算符合样式的列数。<br> -C&lt;显示行数&gt;    –context=&lt;显示行数&gt;或-&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前后的内容。<br> -d &lt;动作&gt;      –directories=&lt;动作&gt;   #当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。<br> -e&lt;范本样式&gt;  –regexp=&lt;范本样式&gt;   #指定字符串做为查找文件内容的样式。<br> -E      –extended-regexp   #将样式为延伸的普通表示法来使用。<br> -F   –fixed-regexp   #将样式视为固定字符串的列表。<br> -G   –basic-regexp   #将样式视为普通的表示法来使用。<br> -h   –no-filename   #在显示符合样式的那一行之前，不标示该行所属的文件名称。<br> -H   –with-filename   #在显示符合样式的那一行之前，表示该行所属的文件名称。<br> -i    –ignore-case   #忽略字符大小写的差别。<br> -l    –file-with-matches   #列出文件内容符合指定的样式的文件名称。<br> -L   –files-without-match   #列出文件内容不符合指定的样式的文件名称。<br> -n   –line-number   #在显示符合样式的那一行之前，标示出该行的列数编号。<br> -q   –quiet或–silent   #不显示任何信息。<br> -r   –recursive   #此参数的效果和指定“-d recurse”参数相同。<br> -s   –no-messages   #不显示错误信息。<br> -v   –revert-match   #显示不包含匹配文本的所有行。<br> -V   –version   #显示版本信息。<br> -w   –word-regexp   #只显示全字符合的列。<br> -x    –line-regexp   #只显示全列符合的列。<br> -y   #此参数的效果和指定“-i”参数相同。</p>
-</li>
-<li><p>正则匹配规则</p>
-</li>
-</ol>
-<p>grep的规则表达式:</p>
-<pre><code>^  #锚定行的开始 如：&apos;^grep&apos;匹配所有以grep开头的行。    
-$  #锚定行的结束 如：&apos;grep$&apos;匹配所有以grep结尾的行。    
-.  #匹配一个非换行符的字符 如：&apos;gr.p&apos;匹配gr后接一个任意字符，然后是p。    
-*  #匹配零个或多个先前字符 如：&apos;*grep&apos;匹配所有一个或多个空格后紧跟grep的行。    
-.*   #一起用代表任意字符。   
-[]   #匹配一个指定范围内的字符，如&apos;[Gg]rep&apos;匹配Grep和grep。    
-[^]  #匹配一个不在指定范围内的字符，如：&apos;[^A-FH-Z]rep&apos;匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    
-\(..\)  #标记匹配字符，如&apos;\(love\)&apos;，love被标记为1。    
-\&lt;      #锚定单词的开始，如:&apos;\&lt;grep&apos;匹配包含以grep开头的单词的行。    
-\&gt;      #锚定单词的结束，如&apos;grep\&gt;&apos;匹配包含以grep结尾的单词的行。    
-x\{m\}  #重复字符x，m次，如：&apos;0\{5\}&apos;匹配包含5个o的行。    
-x\{m,\}  #重复字符x,至少m次，如：&apos;o\{5,\}&apos;匹配至少有5个o的行。    
-x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&apos;匹配5--10个o的行。   
-\w    #匹配文字和数字字符，也就是[A-Za-z0-9]，如：&apos;G\w*p&apos;匹配以G后跟零个或多个文字或数字字符，然后是p。   
-\W    #\w的反置形式，匹配一个或多个非单词字符，如点号句号等。   
-\b    #单词锁定符，如: &apos;\bgrep\b&apos;只匹配grep
-</code></pre><ol>
-<li>demo<ol>
-<li>查看进程 <code>ps -ef|grep svn</code></li>
-<li>统计进程数 <code>ps -ef|grep svn -c</code></li>
-<li>管道查看关键字的行 <code>cat test.txt | grep -F keyword</code></li>
-<li>管道查看关键字的行并且打印行号<code>cat test.txt | grep -nf keyword</code></li>
-<li>直接根据关键字查看行 <code>grep keyword filename</code></li>
-<li>多文件 <code>grep keyword filename1 filename2</code></li>
-<li>所有文件 <code>grep keyword *</code></li>
-<li>查看以**开头的行 <code>cat test.txt |grep ^u</code></li>
-<li>查看以**结尾的行 <code>cat test.txt |grep hat$</code></li>
-<li>查看不以**开头的行 <code>cat test.txt |grep ^[^u]</code></li>
-<li>查看有**或者**的行<code>cat test.txt |grep -E &quot;ed|at&quot;</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><ol>
-<li><p>功能：<br> awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。<br> 特别适合一行文本特别长的时候进行显示处理</p>
-</li>
-<li><p>用法：<br> awk ‘{pattern + action}’ {filenames}<br> 其中action支持多种操作，强大又复杂</p>
-</li>
-<li>常用参数:<br> -F：分割符</li>
-<li>demo<ol>
-<li>查看某一行的前面部分：<code>cat filename | awk -F &#39;|&#39; &#39;{print $1, $2}&#39;</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="tail-head"><a href="#tail-head" class="headerlink" title="tail/head"></a>tail/head</h3><ol>
-<li>功能：<br> tail 显示文件末尾/开始的内容</li>
-<li>用法：<ul>
-<li>tail [-F | -f | -r] [-q] [-b number | -c number | -n number] [file …]</li>
-<li>head [-n count | -c bytes] [file …]</li>
-</ul>
-</li>
-<li>常用参数:<br> -f：循环读取<br> -n&lt;行数&gt;： 显示行数</li>
-<li>demo<ol>
-<li>监控日志：<code>tail -f filename</code></li>
-<li>从第n行开始查看文件：<code>tail -n +100 filename</code> (必须有<code>+</code>)</li>
-<li>查看前n行的内容：<code>head -n 20 filename</code></li>
-<li>查看n-m行之间的内容：<code>cat -n  info.log | tail -n +140 | head -n 2</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h3><ol>
-<li>功能：<br> wc – word, line, character, and byte count</li>
-<li>用法：<br> wc [-clmw] [file …]</li>
-<li>常用参数:<br> -c 统计字节数。<br> -l 统计行数。<br> -m 统计字符数。这个标志不能与 -c 标志一起使用。<br> -w 统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</li>
-<li>demo<ol>
-<li>统计行数: <code>wc -l filename</code></li>
-<li>统计当前目录下的文件数: <code>ls -l | wc -l</code></li>
-</ol>
-</li>
-</ol>
-<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>less 命令（分页查看文件内容）分页查看日志，但是中文有乱码<br><code>less error.log</code><br>直接定位到第100行<br><code>less +100g xx.log</code><br>定位到最后一行<br><code>less +GG xx.log</code><br>查找并高亮关键字<br><code>less fis.log.2018-05-20  | grep 2018052019004984219071028 -A 5 --color=auto</code><br>移动日志<br>    G ：到日志最后<br>    g ：到日志最前面<br>    j/↑ ：向前移动一行<br>    k/↓ ：向后移动一行<br>    pgup ：向上翻页<br>    pgdn ：向下翻页</p>
-<h3 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h3><p>查看n-m行之间的内容： <code>sed -n &#39;5,10p&#39; filename</code></p>
-<h3 id="tac"><a href="#tac" class="headerlink" title="tac"></a>tac</h3><p>和cat反着来的</p>
-<h3 id="nl"><a href="#nl" class="headerlink" title="nl"></a>nl</h3><p>加强版 <code>cat -n</code>,使用参考 <code>man nl</code></p>
-<h2 id="常用组合"><a href="#常用组合" class="headerlink" title="常用组合"></a>常用组合</h2><ol>
-<li><p>实时监控日志：</p>
-<pre><code>tail -f 20 filename
-</code></pre></li>
-<li><p>显示一个文件的某几行</p>
-<pre><code>1. `cat -n  info.log | tail -n +140 | head -n 2`
-2. `sed -n &quot;10,20p&quot; filename`
-</code></pre></li>
-<li><p>统计行数：</p>
-<pre><code>1. wc -l filename
-</code></pre></li>
-<li><p>现在有一万多条记录，其中包含重复的记录，每条记录占一行，问如何从这些记录中找到数量排名前10的记录:</p>
-<pre><code>sort data | uniq -c | sort -k 1 -n -r | head 10
-</code></pre><blockquote>
-<p>1) sort data<br>   表示对data文件中的内容进行排序。sort命令是对于每一行的内容根据字典序（ASCII码）进行排序，这样可以保证重复的记录时相邻的。<br>2) sort data | uniq -c<br>   这里，通过管道（|）将左边部分的命令的输出作为右边部分的输入。uniq -c 表示合并相邻的重复记录，并统计重复数。因为uniq -c 只会合并相邻的记录，所以在使用该命令之前需要先排序。<br>3) sort data | uniq -c | sort -k 1 -n -r<br>   经过uniq -c 处理之后的数据格式形如”2 data”，第一个字段是数字，表示重复的记录数；第二个字段为记录的内容。我们将对此内容进行排序。sort -k 1表示对于每行的第一个字段进行排序，这里即指代表重复记录数的那个字段。因为sort命令的默认排序是按照ASCII，这就会导致按从大到小进行排序时，数值2会排在数值11的前面，所以需要使用-n 参数指定sort命令按照数值大小进行排序。-r 表示逆序，即按照从大到小的顺序进行排序。<br>4) sort data | uniq -c | sort -k 1 -n -r | head 10</p>
-<pre><code>head 命令表示选取文本的前x行。通过head 10 就可以得到排序结果中前十行的内容
-</code></pre><p>来自<a href="http://eriol.iteye.com/blog/870641" target="_blank" rel="noopener">blog</a></p>
-</blockquote>
-</li>
-</ol>
+        <h2 id="什么是可插拔式框架"><a href="#什么是可插拔式框架" class="headerlink" title="什么是可插拔式框架"></a>什么是可插拔式框架</h2><p>最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。</p>
+<p>思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接池。而这种可替换在于抽象，golang标准库给我们提供了一套标准的sql操作接口，不同数据库只要实现这个接口。</p>
+<p>这样想，pluggable也是离不开抽象的。抽空研究了一下micro的代码，发现，确实如此。</p>
+<h2 id="可默认，可替换"><a href="#可默认，可替换" class="headerlink" title="可默认，可替换"></a>可默认，可替换</h2><h3 id="1-默认参数"><a href="#1-默认参数" class="headerlink" title="1. 默认参数"></a>1. 默认参数</h3><p><code>pluggable</code>,最直观的理解大概就是“可以替换，不替换也行”。在编码中，很多语言天生有一项能力和这个类似——默认参数：</p>
+<pre><code># python
+def test(name=&quot;lqczzz&quot;):
+    print(name)
+
+# 使用默认参数
+test()  # &quot;lqczzz&quot;
+
+# 使用自定义的参数
+test(&quot;jack&quot;)  # &quot;jack&quot;
+</code></pre><p>这里，name这个变量是可以替换的，某种意义上也可以说是“pluggable”</p>
+<h3 id="2-可选参数-默认值"><a href="#2-可选参数-默认值" class="headerlink" title="2. 可选参数 + 默认值"></a>2. 可选参数 + 默认值</h3><p>默认参数很方便，可是对于没有默认参数的语言，怎么做呢，以golang为例子</p>
+<pre><code>const DefaultName = &quot;lqczzz&quot;
+
+func test(args ...string) {
+    name := DefaultName
+    if len(args) != 0 { name = args[0] }
+
+    fmt.Println(name)
+}
+
+// 不传参数
+test() // &quot;lqczzz&quot;
+
+// 传参数
+test(&quot;jack&quot;) // &quot;jack&quot;
+</code></pre><h3 id="3-接口——"><a href="#3-接口——" class="headerlink" title="3. 接口——"></a>3. 接口——</h3><h2 id="公司场景"><a href="#公司场景" class="headerlink" title="公司场景"></a>公司场景</h2><pre><code>package main
+
+import &quot;fmt&quot;
+
+// PM
+type iPM interface {
+    AddFeature()
+}
+
+type pmZhangxiaolong struct{}
+
+func (zxl *pmZhangxiaolong) AddFeature() { fmt.Println(&quot;zhangiaolong add feature&quot;) }
+
+// QA
+type iQA interface {
+    DiscoveryBug()
+}
+
+type qaZhouwai struct{}
+
+func (zw *qaZhouwai) DiscoveryBug() { fmt.Println(&quot;zhouwai discovery bugs&quot;) }
+
+// BE
+type iBE interface {
+    FeatureImpl()
+    ProvideAPI()
+    BugFix()
+}
+
+type qczzzl struct {
+    opts beOption
+}
+
+func (qc *qczzzl) FeatureImpl() {
+    qc.opts.pm.AddFeature()
+    fmt.Println(&quot;qczzzl will implement it!&quot;)
+}
+
+func (qc *qczzzl) ProvideAPI() { fmt.Println(&quot;qczzzl will provide api!&quot;) }
+
+func (qc *qczzzl) BugFix() {
+    qc.opts.qa.DiscoveryBug()
+    fmt.Println(&quot;qczzzl will fix bug!&quot;)
+}
+
+type beOption struct {
+    pm iPM
+    qa iQA
+}
+
+// FE
+type iFE interface {
+    BuildWebPage()
+}
+
+type xiaoyou struct {
+    opts feOption
+}
+
+func (xy *xiaoyou) BuildWebPage() {
+    xy.opts.be.ProvideAPI()
+    fmt.Println(&quot;xiaoyou will build web page!&quot;)
+}
+
+type feOption struct {
+    be iBE
+}
+
+var (
+    pm = &amp;pmZhangxiaolong{}
+    qa = &amp;qaZhouwai{}
+    be = &amp;qczzzl{opts: beOption{pm: pm, qa: qa}}
+    fe = &amp;xiaoyou{opts: feOption{be: be}}
+)
+
+type pmLiyunlong struct{}
+
+func (lxl *pmLiyunlong) AddFeature() { fmt.Println(&quot;liyunlong add feature&quot;) }
+func main() {
+    be.FeatureImpl()
+    newPm := &amp;pmLiyunlong{}
+
+    be.opts.pm = newPm // 换pm
+    be.FeatureImpl()
+}
+</code></pre><p>默认值+函数修改可选参数</p>
+<p>变化和不变</p>
+<p>接口<br>契约不变<br>实现方式变化</p>
+<p>struct<br>封装依赖的变化（不变的契约依赖）<br>封装通用数据（不变的数据依赖）</p>
 
       
     </div>
@@ -526,7 +495,7 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&ap
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/" title="linux查看日志常用命令" target="_blank" rel="external">http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/</a>
+      <a href="http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/" title="可插拔式代码结构思考" target="_blank" rel="external">http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -572,13 +541,9 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：&apos;o\{5,10\}&ap
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/" title="[转]go服务监控指标(metric)上报open-falcon"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2018/10/27/golang组合和继承/" title="模版模式在golang的使用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/" title="[转]go服务监控指标(metric)上报open-falcon"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     

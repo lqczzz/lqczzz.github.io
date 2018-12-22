@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lqczzz.github.io/"/>
-  <updated>2018-11-26T05:38:22.000Z</updated>
+  <updated>2018-12-13T02:07:13.000Z</updated>
   <id>http://lqczzz.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>可插拔式代码结构思考</title>
+    <link href="http://lqczzz.github.io/2018/12/12/%E5%8F%AF%E6%8F%92%E6%8B%94%E5%BC%8F%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E6%80%9D%E8%80%83/"/>
+    <id>http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/</id>
+    <published>2018-12-12T11:10:36.000Z</published>
+    <updated>2018-12-13T02:07:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是可插拔式框架"><a href="#什么是可插拔式框架" class="headerlink" title="什么是可插拔式框架"></a>什么是可插拔式框架</h2><p>最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。</p><p>思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接池。而这种可替换在于抽象，golang标准库给我们提供了一套标准的sql操作接口，不同数据库只要实现这个接口。</p><p>这样想，pluggable也是离不开抽象的。抽空研究了一下micro的代码，发现，确实如此。</p><h2 id="可默认，可替换"><a href="#可默认，可替换" class="headerlink" title="可默认，可替换"></a>可默认，可替换</h2><h3 id="1-默认参数"><a href="#1-默认参数" class="headerlink" title="1. 默认参数"></a>1. 默认参数</h3><p><code>pluggable</code>,最直观的理解大概就是“可以替换，不替换也行”。在编码中，很多语言天生有一项能力和这个类似——默认参数：</p><pre><code># pythondef test(name=&quot;lqczzz&quot;):    print(name)# 使用默认参数test()  # &quot;lqczzz&quot;# 使用自定义的参数test(&quot;jack&quot;)  # &quot;jack&quot;</code></pre><p>这里，name这个变量是可以替换的，某种意义上也可以说是“pluggable”</p><h3 id="2-可选参数-默认值"><a href="#2-可选参数-默认值" class="headerlink" title="2. 可选参数 + 默认值"></a>2. 可选参数 + 默认值</h3><p>默认参数很方便，可是对于没有默认参数的语言，怎么做呢，以golang为例子</p><pre><code>const DefaultName = &quot;lqczzz&quot;func test(args ...string) {    name := DefaultName    if len(args) != 0 { name = args[0] }    fmt.Println(name)}// 不传参数test() // &quot;lqczzz&quot;// 传参数test(&quot;jack&quot;) // &quot;jack&quot;</code></pre><h3 id="3-接口——"><a href="#3-接口——" class="headerlink" title="3. 接口——"></a>3. 接口——</h3><h2 id="公司场景"><a href="#公司场景" class="headerlink" title="公司场景"></a>公司场景</h2><pre><code>package mainimport &quot;fmt&quot;// PMtype iPM interface {    AddFeature()}type pmZhangxiaolong struct{}func (zxl *pmZhangxiaolong) AddFeature() { fmt.Println(&quot;zhangiaolong add feature&quot;) }// QAtype iQA interface {    DiscoveryBug()}type qaZhouwai struct{}func (zw *qaZhouwai) DiscoveryBug() { fmt.Println(&quot;zhouwai discovery bugs&quot;) }// BEtype iBE interface {    FeatureImpl()    ProvideAPI()    BugFix()}type qczzzl struct {    opts beOption}func (qc *qczzzl) FeatureImpl() {    qc.opts.pm.AddFeature()    fmt.Println(&quot;qczzzl will implement it!&quot;)}func (qc *qczzzl) ProvideAPI() { fmt.Println(&quot;qczzzl will provide api!&quot;) }func (qc *qczzzl) BugFix() {    qc.opts.qa.DiscoveryBug()    fmt.Println(&quot;qczzzl will fix bug!&quot;)}type beOption struct {    pm iPM    qa iQA}// FEtype iFE interface {    BuildWebPage()}type xiaoyou struct {    opts feOption}func (xy *xiaoyou) BuildWebPage() {    xy.opts.be.ProvideAPI()    fmt.Println(&quot;xiaoyou will build web page!&quot;)}type feOption struct {    be iBE}var (    pm = &amp;pmZhangxiaolong{}    qa = &amp;qaZhouwai{}    be = &amp;qczzzl{opts: beOption{pm: pm, qa: qa}}    fe = &amp;xiaoyou{opts: feOption{be: be}})type pmLiyunlong struct{}func (lxl *pmLiyunlong) AddFeature() { fmt.Println(&quot;liyunlong add feature&quot;) }func main() {    be.FeatureImpl()    newPm := &amp;pmLiyunlong{}    be.opts.pm = newPm // 换pm    be.FeatureImpl()}</code></pre><p>默认值+函数修改可选参数</p><p>变化和不变</p><p>接口<br>契约不变<br>实现方式变化</p><p>struct<br>封装依赖的变化（不变的契约依赖）<br>封装通用数据（不变的数据依赖）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;什么是可插拔式框架&quot;&gt;&lt;a href=&quot;#什么是可插拔式框架&quot; class=&quot;headerlink&quot; title=&quot;什么是可插拔式框架&quot;&gt;&lt;/a&gt;什么是可插拔式框架&lt;/h2&gt;&lt;p&gt;最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>[转]go服务监控指标(metric)上报open-falcon</title>
@@ -32,31 +53,6 @@
         &lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000014646203#articleHeader3&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;出处&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>linux查看性能和网络常用命令</title>
-    <link href="http://lqczzz.github.io/2018/11/11/linux%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>http://lqczzz.github.io/2018/11/11/linux查看网络常用命令/</id>
-    <published>2018-11-11T08:27:01.000Z</published>
-    <updated>2018-11-11T08:46:54.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>占坑</p><ol><li>lsof</li></ol><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/peida/tag/linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">linux性能分析</a><br><a href="https://www.cnblogs.com/peida/tag/linux%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/" target="_blank" rel="noopener">linux网络分析</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;占坑&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;lsof&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&quot;参考&quot;&gt;&lt;a href=&quot;#参考&quot; class=&quot;headerlink&quot; title=&quot;参考&quot;&gt;&lt;/a&gt;参考&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/pe
       
     
     </summary>
@@ -109,32 +105,6 @@
   </entry>
   
   <entry>
-    <title>kafka快速使用(golang)</title>
-    <link href="http://lqczzz.github.io/2018/10/27/kafka%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8-golang/"/>
-    <id>http://lqczzz.github.io/2018/10/27/kafka快速使用-golang/</id>
-    <published>2018-10-27T07:20:39.000Z</published>
-    <updated>2018-10-27T07:21:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<ol><li>创建topic</li></ol><p>kafka-topics –create –zookeeper localhost:2181 –replication-factor 1 –partitions 1 –topic test</p><ol><li>消费者</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;创建topic&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;kafka-topics –create –zookeeper localhost:2181 –replication-factor 1 –partitions 1 –topic test&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;消
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>break 和 continue</title>
     <link href="http://lqczzz.github.io/2018/10/26/break-in-golang/"/>
     <id>http://lqczzz.github.io/2018/10/26/break-in-golang/</id>
@@ -155,29 +125,6 @@
     
     
       <category term="golang思考" scheme="http://lqczzz.github.io/tags/golang%E6%80%9D%E8%80%83/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>slice的坑</title>
-    <link href="http://lqczzz.github.io/2018/10/26/slice%E7%9A%84%E5%9D%91/"/>
-    <id>http://lqczzz.github.io/2018/10/26/slice的坑/</id>
-    <published>2018-10-26T03:53:12.000Z</published>
-    <updated>2018-10-26T03:54:31.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="坑1"><a href="#坑1" class="headerlink" title="坑1:"></a>坑1:</h3><pre><code>type sli struct{ a []int }func (s *sli) sliceRet() []int {    return s.a}func TestSliceTest(t *testing.T) {    // what if case 1    // sl := &amp;sli{a: make([]int, 0, 3)}    // what if case 2    sl := &amp;sli{a: make([]int, 3)}    fmt.Printf(&quot;sl.a: %v, addr: %p\n&quot;, sl.a, sl.a)    b := sl.sliceRet()    json.Unmarshal([]byte(&quot;[3,4,5]&quot;), &amp;b)    fmt.Printf(&quot;b: %v, addr: %p\n&quot;, b, b)    fmt.Printf(&quot;sl.a: %v, addr: %p\n&quot;, sl.a, sl.a)}</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h3 id=&quot;坑1&quot;&gt;&lt;a href=&quot;#坑1&quot; class=&quot;headerlink&quot; title=&quot;坑1:&quot;&gt;&lt;/a&gt;坑1:&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;type sli struct{ a []int }
-
-func (s *sli) sliceRet() []int {
-      
-    
-    </summary>
-    
     
   </entry>
   
@@ -228,54 +175,6 @@ func (s *sli) sliceRet() []int {
   </entry>
   
   <entry>
-    <title>pprof性能监控和gc调优</title>
-    <link href="http://lqczzz.github.io/2018/10/18/pprof%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8Cgc%E8%B0%83%E4%BC%98/"/>
-    <id>http://lqczzz.github.io/2018/10/18/pprof性能监控和gc调优/</id>
-    <published>2018-10-18T07:15:41.000Z</published>
-    <updated>2018-10-18T07:40:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>参考<br><a href="https://golang.org/doc/diagnostics.html" target="_blank" rel="noopener">godoc-Diagnostics</a><br><a href="https://studygolang.com/articles/5527" target="_blank" rel="noopener">Golang使用pprof监控性能及GC调优</a><br><a href="https://blog.csdn.net/moxiaomomo/article/details/77096814" target="_blank" rel="noopener">[golang]pprof性能分析工具</a><br><a href=""></a></p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;blockquote&gt;
-&lt;p&gt;参考&lt;br&gt;&lt;a href=&quot;https://golang.org/doc/diagnostics.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;godoc-Diagnostics&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;htt
-      
-    
-    </summary>
-    
-    
-      <category term="性能优化" scheme="http://lqczzz.github.io/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>sync.Pool笔记</title>
-    <link href="http://lqczzz.github.io/2018/10/18/sync-Pool%E7%AC%94%E8%AE%B0/"/>
-    <id>http://lqczzz.github.io/2018/10/18/sync-Pool笔记/</id>
-    <published>2018-10-18T03:04:01.000Z</published>
-    <updated>2018-10-18T07:24:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>参考<br><a href="https://studygolang.com/articles/3506" target="_blank" rel="noopener">1. o语言的官方包sync.Pool的实现原理和适用场景</a><br><a href="https://github.com/funny/slab/blob/master/sync_pool.go" target="_blank" rel="noopener">2. github-slab</a></p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;blockquote&gt;
-&lt;p&gt;参考&lt;br&gt;&lt;a href=&quot;https://studygolang.com/articles/3506&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;1. o语言的官方包sync.Pool的实现原理和适用场景&lt;/a&gt;&lt;br&gt;&lt;a
-      
-    
-    </summary>
-    
-    
-      <category term="timeline重构任重道远" scheme="http://lqczzz.github.io/tags/timeline%E9%87%8D%E6%9E%84%E4%BB%BB%E9%87%8D%E9%81%93%E8%BF%9C/"/>
-    
-  </entry>
-  
-  <entry>
     <title>从golang的fmt包入门手动内存管理</title>
     <link href="http://lqczzz.github.io/2018/10/17/golang%E7%9A%84fmt%E5%8C%85%E5%85%A5%E9%97%A8%E6%89%8B%E5%8A%A8%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
     <id>http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/</id>
@@ -321,29 +220,6 @@ func (s *sli) sliceRet() []int {
   </entry>
   
   <entry>
-    <title>知识管理</title>
-    <link href="http://lqczzz.github.io/2018/10/14/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/"/>
-    <id>http://lqczzz.github.io/2018/10/14/知识管理/</id>
-    <published>2018-10-14T03:06:31.000Z</published>
-    <updated>2018-10-14T11:48:01.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="为什么这样分类"><a href="#为什么这样分类" class="headerlink" title="为什么这样分类"></a>为什么这样分类</h2><p>笔记用于我对知识的掌握，工作快两年了我才发现了知识的几个特点：</p><ol><li><p>很多知识机靠记忆是没办法持久化存储的</p><ul><li>比如前端vue框架，我用了大半年了，发现才转后台3个月，vue的很多东西就忘的差不多了</li><li>比如spring相关的框架，从大学开始使用到现在，断断续续，每次重新使用都得重新学习一遍，虽然每次学习的时间会越来越缩短。</li><li>比如开发工具，使用的编辑器的快捷键的使用等，都是很容易遗忘但是有没必要刻意去记住的</li></ul></li><li><p>很多知识是细枝末节的</p><ul><li><p>比如某种框架，框架其实是一种架构良好的工具，提供了某种不变的东西，让你快速实现某种变化，来适应不同的业务场景。比如spring系的的框架，模版设计模式就很常用，你只要继承某种基类，然后实现特定的抽象函数（钩子函数），就能完成一个不同的功能，而前端框架vue的组件化就是最明显的模板模式的应用。框架是一种工具，工具的实现和接口都是细枝末节的，就算完全忘记了，只要拿上一个上午的时间甚者更短，就能再次掌握起来了。</p></li><li><p>在华为曾做过一个项目，后台开始是用node实现的，领导觉得node不安全，于是让我们用java重构，并且做好服务化，我们把微服务当作银弹，结果重构之后更加难部署了，项目的规模也没有达到必须使用服务化的必要。这就是锤子理论，拿起锤子，觉得什么都是钉子。</p></li></ul></li></ol><ol><li><p>很多知识是可以进行类比的</p><ul><li>比如web框架，不管是node的koa，python的flask还是golang的gin，都是有很多通用的概念，常用的套路，相同的业务场景和解决方案，举一反三对掌握新的工具是很有用的</li></ul></li><li><p>很多知识是可以快速掌握和应用的</p></li></ol><h2 id="分类的策略"><a href="#分类的策略" class="headerlink" title="分类的策略"></a>分类的策略</h2><ol><li>入门类：对概念和基本流程有一个基本的认识</li><li>笔记类：<ul><li>常用的用法的记录</li></ul></li><li>原理类：<ul><li>对入门类有更详细的认识</li></ul></li><li>实战类：<ul><li>具体场景下的使用</li></ul></li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;为什么这样分类&quot;&gt;&lt;a href=&quot;#为什么这样分类&quot; class=&quot;headerlink&quot; title=&quot;为什么这样分类&quot;&gt;&lt;/a&gt;为什么这样分类&lt;/h2&gt;&lt;p&gt;笔记用于我对知识的掌握，工作快两年了我才发现了知识的几个特点：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;很多
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>elasticSearch学习笔记</title>
     <link href="http://lqczzz.github.io/2018/10/13/elasticSearch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/</id>
@@ -361,35 +237,6 @@ func (s *sli) sliceRet() []int {
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>记timeline重构</title>
-    <link href="http://lqczzz.github.io/2018/10/13/%E8%AE%B0timeline%E9%87%8D%E6%9E%84/"/>
-    <id>http://lqczzz.github.io/2018/10/13/记timeline重构/</id>
-    <published>2018-10-12T22:28:45.000Z</published>
-    <updated>2018-10-18T07:24:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>timeline重构任重道远</p><p>所以，接下来很多笔记大概都会和timeline相关</p><ol><li>内存管理: 周四周五</li><li>golang性能分析工具：周末<ul><li>pprof</li><li>go bentch test</li></ul></li><li></li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;timeline重构任重道远&lt;/p&gt;
-&lt;p&gt;所以，接下来很多笔记大概都会和timeline相关&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;内存管理: 周四周五&lt;/li&gt;
-&lt;li&gt;golang性能分析工具：周末&lt;ul&gt;
-&lt;li&gt;pprof&lt;/li&gt;
-&lt;li&gt;go bentch test&lt;/l
-      
-    
-    </summary>
-    
-    
-      <category term="timeline重构任重道远" scheme="http://lqczzz.github.io/tags/timeline%E9%87%8D%E6%9E%84%E4%BB%BB%E9%87%8D%E9%81%93%E8%BF%9C/"/>
     
   </entry>
   
