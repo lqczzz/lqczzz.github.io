@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-13T02:07:13.000Z">
+<meta property="og:updated_time" content="2018-12-23T17:04:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可插拔式代码结构思考">
 <meta name="twitter:description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
@@ -238,7 +238,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -250,6 +250,21 @@
     <div class="widget-body">
       <ul class="recent-post-list list-unstyled no-thumbnail">
         
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/24/怎样设计golang友好的api/" class="title">怎样设计golang友好的api</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-23T17:08:47.000Z" itemprop="datePublished">2018-12-24</time>
+              </p>
+            </div>
+          </li>
+          
           <li>
             
             <div class="item-inner">
@@ -310,21 +325,6 @@
             </div>
           </li>
           
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2018/10/26/break-in-golang/" class="title">break 和 continue</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2018-10-26T10:49:42.000Z" itemprop="datePublished">2018-10-26</time>
-              </p>
-            </div>
-          </li>
-          
       </ul>
     </div>
   </div>
@@ -376,13 +376,10 @@
 def test(name=&quot;lqczzz&quot;):
     print(name)
 
-# 使用默认参数
 test()  # &quot;lqczzz&quot;
-
-# 使用自定义的参数
 test(&quot;jack&quot;)  # &quot;jack&quot;
 </code></pre><p>这里，name这个变量是可以替换的，某种意义上也可以说是“pluggable”</p>
-<h3 id="2-可选参数-默认值"><a href="#2-可选参数-默认值" class="headerlink" title="2. 可选参数 + 默认值"></a>2. 可选参数 + 默认值</h3><p>默认参数很方便，可是对于没有默认参数的语言，怎么做呢，以golang为例子</p>
+<h3 id="2-可选参数-默认值"><a href="#2-可选参数-默认值" class="headerlink" title="2. 可选参数 + 默认值"></a>2. 可选参数 + 默认值</h3><p>默认参数很方便，<code>golang</code>没有默认参数,可以通过可选参数和默认值来实现</p>
 <pre><code>const DefaultName = &quot;lqczzz&quot;
 
 func test(args ...string) {
@@ -397,33 +394,14 @@ test() // &quot;lqczzz&quot;
 
 // 传参数
 test(&quot;jack&quot;) // &quot;jack&quot;
-</code></pre><h3 id="3-接口——"><a href="#3-接口——" class="headerlink" title="3. 接口——"></a>3. 接口——</h3><h2 id="公司场景"><a href="#公司场景" class="headerlink" title="公司场景"></a>公司场景</h2><pre><code>package main
-
-import &quot;fmt&quot;
-
-// PM
-type iPM interface {
-    AddFeature()
-}
-
-type pmZhangxiaolong struct{}
-
-func (zxl *pmZhangxiaolong) AddFeature() { fmt.Println(&quot;zhangiaolong add feature&quot;) }
-
-// QA
-type iQA interface {
-    DiscoveryBug()
-}
-
-type qaZhouwai struct{}
-
-func (zw *qaZhouwai) DiscoveryBug() { fmt.Println(&quot;zhouwai discovery bugs&quot;) }
-
-// BE
+</code></pre><p>micro的可插拔式的实现本质上也是如此。</p>
+<pre><code>// eg:
 type iBE interface {
     FeatureImpl()
-    ProvideAPI()
-    BugFix()
+}
+
+type beOption struct {
+    pm iPM
 }
 
 type qczzzl struct {
@@ -435,55 +413,21 @@ func (qc *qczzzl) FeatureImpl() {
     fmt.Println(&quot;qczzzl will implement it!&quot;)
 }
 
-func (qc *qczzzl) ProvideAPI() { fmt.Println(&quot;qczzzl will provide api!&quot;) }
+pm = &amp;defaultPM{}
+be = &amp;qczzzl{opts: beOption{pm: pm}}
+be.FeatureImpl()
+// output:
+// zhangiaolong add feature
+// qczzzl will implement it!
 
-func (qc *qczzzl) BugFix() {
-    qc.opts.qa.DiscoveryBug()
-    fmt.Println(&quot;qczzzl will fix bug!&quot;)
-}
-
-type beOption struct {
-    pm iPM
-    qa iQA
-}
-
-// FE
-type iFE interface {
-    BuildWebPage()
-}
-
-type xiaoyou struct {
-    opts feOption
-}
-
-func (xy *xiaoyou) BuildWebPage() {
-    xy.opts.be.ProvideAPI()
-    fmt.Println(&quot;xiaoyou will build web page!&quot;)
-}
-
-type feOption struct {
-    be iBE
-}
-
-var (
-    pm = &amp;pmZhangxiaolong{}
-    qa = &amp;qaZhouwai{}
-    be = &amp;qczzzl{opts: beOption{pm: pm, qa: qa}}
-    fe = &amp;xiaoyou{opts: feOption{be: be}}
-)
-
-type pmLiyunlong struct{}
-
-func (lxl *pmLiyunlong) AddFeature() { fmt.Println(&quot;liyunlong add feature&quot;) }
-func main() {
-    be.FeatureImpl()
-    newPm := &amp;pmLiyunlong{}
-
-    be.opts.pm = newPm // 换pm
-    be.FeatureImpl()
-}
-</code></pre><p>默认值+函数修改可选参数</p>
-<p>变化和不变</p>
+// 换pm
+newPm := &amp;pmLiyunlong{}
+be.opts.pm = newPm 
+be.FeatureImpl()
+// output:
+// liyunlong add feature
+// qczzzl will implement it!
+</code></pre><h3 id="3-接口"><a href="#3-接口" class="headerlink" title="3. 接口"></a>3. 接口</h3><h2 id="函数式参数"><a href="#函数式参数" class="headerlink" title="函数式参数"></a>函数式参数</h2><h2 id="模块的抽象"><a href="#模块的抽象" class="headerlink" title="模块的抽象"></a>模块的抽象</h2><p>变化和不变</p>
 <p>接口<br>契约不变<br>实现方式变化</p>
 <p>struct<br>封装依赖的变化（不变的契约依赖）<br>封装通用数据（不变的数据依赖）</p>
 
@@ -540,6 +484,10 @@ func main() {
   <div class="bar-inner">
   
   <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/12/24/怎样设计golang友好的api/" title="怎样设计golang友好的api"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
     
     
     <li class="next">
