@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="这篇文章是在shopee参与feed项目设计和开发过程的一些思考。在feed系统设计中，很多设计算是实践了《DDIA》里面的一些论点。自认为《DDIA》中谈及的理论和在项目中得意实践其中的部分理论，让我在这两年里成长不少。 什么是数据系统现在的互联网产品，大部分都可以归纳为是这样一种数据系统：它使用了多种数据存储系统：mysql/redis/kafka/es/hdfs涉及到关系数据库，缓存，消息队">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-20T08:00:16.057Z">
+<meta property="og:updated_time" content="2019-11-20T08:03:47.260Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对数据系统架构设计权衡的思考">
 <meta name="twitter:description" content="这篇文章是在shopee参与feed项目设计和开发过程的一些思考。在feed系统设计中，很多设计算是实践了《DDIA》里面的一些论点。自认为《DDIA》中谈及的理论和在项目中得意实践其中的部分理论，让我在这两年里成长不少。 什么是数据系统现在的互联网产品，大部分都可以归纳为是这样一种数据系统：它使用了多种数据存储系统：mysql/redis/kafka/es/hdfs涉及到关系数据库，缓存，消息队">
@@ -214,7 +214,7 @@
 <li>网络超时</li>
 </ol>
 <p>使用逐步推断的方式建立一个正确的数据系统(如果一下子假设三种情况都成立，则考虑的分支太多，不利于思考)<br>然后思考哪些一致性是需要得到保证的</p>
-<h4 id="正确性"><a href="#正确性" class="headerlink" title="正确性"></a>正确性</h4><p>如持久化保证<br>顺序保证对于持久化也很重要<br>比如CDC(change data capture)为核心的数据总线系统，使用binlog解析，导入kafka，消费者消费kafka到异构数据系统实现全文索引/推荐等功能，这时候，消息的顺序就显得很重要<br>顺序可以通过id发号期</p>
+<h4 id="正确性"><a href="#正确性" class="headerlink" title="正确性"></a>正确性</h4><p>如持久化保证<br>顺序保证对于持久化也很重要<br>比如CDC(change data capture)为核心的数据总线系统，使用binlog解析，导入kafka，消费者消费kafka到异构数据系统实现全文索引/推荐等功能，这时候，消息的顺序就显得很重要<br>顺序可以通过id发号器来保证，分布式系统中，兰伯特时间序就是很重要的一个结论</p>
 <h4 id="时效性"><a href="#时效性" class="headerlink" title="时效性"></a>时效性</h4><p>只有强一致性才能保证实时生效，在异构系统里，时效性的保证需要牺牲性能。而且大部分业务场景其实并不需要这么强的时效性，这时候就需要做权衡了。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>无论是分布式系统，还是其他架构的设计，都是一种权衡的艺术，分布式面临的很多问题其实在古老的操作系统，数据库中早就有了类似的场景。</p>
 
