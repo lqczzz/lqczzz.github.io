@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="最近打算通过手写一个数据库的方式，来达到掌握数据库的原理的目的，同时，以此为脉络，把数据库设计涉及的一些知识形成脉络，另外还对自己的薄弱的知识块进行查漏补缺，从初级开发到高级开发那些短板都能补齐。也不好承诺一周能拿出多少时间去做这个事情，毕竟身后已满是旗帜（flag）。一步步来吧，万丈高楼平地起嘛。 这篇笔记属于知识脉络梳理的，一方面可以让知识系统化，另一方面可以细化任务，让学习的目的和方向更清晰">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近打算通过手写一个数据库的方式，来达到掌握数据库的原理的目的，同时，以此为脉络，把数据库设计涉及的一些知识形成脉络，另外还对自己的薄弱的知识块进行查漏补缺，从初级开发到高级开发那些短板都能补齐。也不好承诺一周能拿出多少时间去做这个事情，毕竟身后已满是旗帜（flag）。一步步来吧，万丈高楼平地起嘛。 这篇笔记属于知识脉络梳理的，一方面可以让知识系统化，另一方面可以细化任务，让学习的目的和方向更清晰">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-27T08:55:30.171Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="最近打算通过手写一个数据库的方式，来达到掌握数据库的原理的目的，同时，以此为脉络，把数据库设计涉及的一些知识形成脉络，另外还对自己的薄弱的知识块进行查漏补缺，从初级开发到高级开发那些短板都能补齐。也不好承诺一周能拿出多少时间去做这个事情，毕竟身后已满是旗帜（flag）。一步步来吧，万丈高楼平地起嘛。 这篇笔记属于知识脉络梳理的，一方面可以让知识系统化，另一方面可以细化任务，让学习的目的和方向更清晰">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Hexo</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/11/20/对数据系统架构设计权衡的思考/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/08/17/一个入行两年的菜鸟程序员的思考 /"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#stanford-CS346"><span class="toc-number">1.</span> <span class="toc-text">stanford CS346</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库的诞生和发展"><span class="toc-number"></span> <span class="toc-text">数据库的诞生和发展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库和文件系统"><span class="toc-number"></span> <span class="toc-text">数据库和文件系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库和树"><span class="toc-number"></span> <span class="toc-text">数据库和树</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Hexo</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-08-27T08:22:29.723Z" itemprop="datePublished">2019-08-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>最近打算通过手写一个数据库的方式，来达到掌握数据库的原理的目的，同时，以此为脉络，把数据库设计涉及的一些知识形成脉络，另外还对自己的薄弱的知识块进行查漏补缺，从初级开发到高级开发那些短板都能补齐。也不好承诺一周能拿出多少时间去做这个事情，毕竟身后已满是旗帜（flag）。一步步来吧，万丈高楼平地起嘛。</p>
+<p>这篇笔记属于知识脉络梳理的，一方面可以让知识系统化，另一方面可以细化任务，让学习的目的和方向更清晰，更可控。</p>
+<h3 id="stanford-CS346"><a href="#stanford-CS346" class="headerlink" title="stanford CS346"></a>stanford CS346</h3><p>stanford CS346 课程作业是实现一个简单的数据库系统，具体拆分为以下几步：</p>
+<ol>
+<li><p>RM（record manager 数据管理）</p>
+</li>
+<li><p>IX（index system）</p>
+</li>
+<li><p>SM（system manager）</p>
+</li>
+<li><p>QL（sql 查询语言实现）</p>
+</li>
+<li><p>EX（选一个方向然后实现）</p>
+</li>
+</ol>
+<p>这篇笔记算是对RM和IX的抛砖引玉。</p>
+<h2 id="数据库的诞生和发展"><a href="#数据库的诞生和发展" class="headerlink" title="数据库的诞生和发展"></a><strong>数据库的诞生和发展</strong></h2><p>鲁迅说过，计算机主要完成两件事：计算和存储（鲁迅：那是周树人说的与我何干）。翻阅图灵奖的历史，至今有四位图灵奖获得者因为在数据库领域的杰出贡献而获奖，足以见得，数据库诞生的重要意义。</p>
+<p>1956年，在计算机诞生将近20年的时候，IBM公司成功推出磁盘存储方案，相较于在那之间的磁带技术，磁盘<strong>支持随机读取，容量大</strong>，计算机开始逐渐活跃在数据处理领域。最开始，数据处理软件只有文件管理，后来出现了文件系统，但是磁盘的数据冗余问题非常严重，据说阿波罗登月计划用的磁盘有60%以上是冗余数据，后来，一个老家伙倒腾出了网状数据库，并且于1971年推动CODASYL提出了DTBG模型，直接影响了后续的数据库技术，同年，unix的缔造者们开始撸unix-kernal，<strong>数据库的诞生完全和操作系统是同时进行的</strong>。</p>
+<p>注意，<strong>数据库最初的诞生完全是为了解决磁盘数据冗余的问题</strong>！！所以wangyin在<a href="http://www.yinwang.org/blog-cn/2014/04/24/relational" target="_blank" rel="noopener">关系式模型的实质</a>对数据库和关系模型的吐槽显得站不住脚，当然不是说他说的东西有问题，他说关系模型表现力不如基础的数据结构，说查询语言，sql，cyber之类的不如普通的编程语言，这当然是在扯淡了。</p>
+<ol>
+<li>关系模型只能等价于别的数据结构，比如用关系模型去模拟1:1/1:m/n:m关系都是ojbk的。</li>
+<li>sql，cypher之类的语言本身是图灵不完备的语言，编程语言基本上都是图灵完备的语言，表现力不足不是板上钉钉的吗？</li>
+</ol>
+<p>用今天的观点去看待历史，批评数据库，关系模型，何不食肉糜？</p>
+<h2 id="数据库和文件系统"><a href="#数据库和文件系统" class="headerlink" title="数据库和文件系统"></a>数据库和文件系统</h2><p>CS346在RM一节中的任务主要介绍了</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PF_Manager</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">       PF_Manager    ();                           <span class="comment">// Constructor</span></span><br><span class="line">       ~PF_Manager   ();                           <span class="comment">// Destructor</span></span><br><span class="line">    <span class="function">RC <span class="title">CreateFile</span>    <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *fileName)</span></span>;       <span class="comment">// Create a new file</span></span><br><span class="line">    <span class="function">RC <span class="title">DestroyFile</span>   <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *fileName)</span></span>;       <span class="comment">// Destroy a file</span></span><br><span class="line">    <span class="function">RC <span class="title">OpenFile</span>      <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *fileName, PF_FileHandle &amp;fileHandle)</span></span>;  </span><br><span class="line">                                                   <span class="comment">// Open a file</span></span><br><span class="line">    <span class="function">RC <span class="title">CloseFile</span>     <span class="params">(PF_FileHandle &amp;fileHandle)</span></span>;  <span class="comment">// Close a file</span></span><br><span class="line">    <span class="function">RC <span class="title">AllocateBlock</span> <span class="params">(<span class="keyword">char</span> *&amp;buffer)</span></span>;              <span class="comment">// Allocate a new scratch page in buffer</span></span><br><span class="line">    <span class="function">RC <span class="title">DisposeBlock</span>  <span class="params">(<span class="keyword">char</span> *buffer)</span></span>;               <span class="comment">// Dispose of a scratch page</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="数据库和树"><a href="#数据库和树" class="headerlink" title="数据库和树"></a>数据库和树</h2><p>参考资料：</p>
+<p>《图灵和ACM图灵奖》</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#stanford-CS346"><span class="toc-number">1.</span> <span class="toc-text">stanford CS346</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库的诞生和发展"><span class="toc-number"></span> <span class="toc-text">数据库的诞生和发展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库和文件系统"><span class="toc-number"></span> <span class="toc-text">数据库和文件系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库和树"><span class="toc-number"></span> <span class="toc-text">数据库和树</span></a>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2019/08/27/树,文件系统和数据库/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 lqczzz
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
