@@ -13,39 +13,39 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="面向开发人员的kubernetes笔记这边笔记涵盖了以下内容：  容器虚拟化的原理 容器编排的基本概念 k8s的容器编排对象 k8s的集群架构和基本原理 容器编排的实践  参考学习材料  《docker进阶与实战》 《kubernetes in action》ch1-ch11  极客时间《深入剖析Kubernetes》    容器&amp;amp;dockerdocker的虚拟化原理Namespace 做">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200329213121557.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200329220457602.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200329221527443.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200329223022331.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200330003811291.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200330005629376.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200330005650536.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200330005740322.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200330010423544.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402213710432.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402213019107.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402213121550.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402213743308.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402213913111.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402213913111.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200329213556137.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402223335663.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402223352288.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200403011056624.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402231301311.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402231314698.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402231908550.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402232325392.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402232551057.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402234517386.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200402235448264.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200403000010564.png">
-<meta property="og:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200403002417215.png">
-<meta property="og:updated_time" content="2020-04-02T17:31:53.947Z">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329213121557.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329220457602.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329221527443.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329223022331.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330003811291.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330005629376.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330005650536.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330005740322.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330010423544.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213710432.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213019107.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213121550.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213743308.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213913111.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213913111.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329213556137.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402223335663.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402223352288.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200403011056624.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402231301311.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402231314698.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402231908550.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402232325392.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402232551057.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402234517386.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402235448264.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200403000010564.png">
+<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200403002417215.png">
+<meta property="og:updated_time" content="2020-04-02T17:35:32.500Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面向开发人员的kubernetes笔记">
 <meta name="twitter:description" content="面向开发人员的kubernetes笔记这边笔记涵盖了以下内容：  容器虚拟化的原理 容器编排的基本概念 k8s的容器编排对象 k8s的集群架构和基本原理 容器编排的实践  参考学习材料  《docker进阶与实战》 《kubernetes in action》ch1-ch11  极客时间《深入剖析Kubernetes》    容器&amp;amp;dockerdocker的虚拟化原理Namespace 做">
-<meta name="twitter:image" content="http://lqczzz.github.io/public/images/k8s_1/image-20200329213121557.png">
+<meta name="twitter:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329213121557.png">
     
     
         
@@ -233,7 +233,7 @@
 <p>Networks关注集群的网络模型（L3/L4)/DNS/service discovery/load balance</p>
 <p>存储主要分为volumn &amp; persistence volumn</p>
 <p>kubernetes是起源于google的borg&amp;omega的容器编排工具</p>
-<p><img src="/public/images/k8s_1/image-20200329213121557.png" alt="image-20200329213121557"></p>
+<p><img src="/images/k8s_1/image-20200329213121557.png" alt="image-20200329213121557"></p>
 <h3 id="kubernetes的集群架构"><a href="#kubernetes的集群架构" class="headerlink" title="kubernetes的集群架构"></a>kubernetes的集群架构</h3><p>从硬件角度看，一个kubernetes集群有很多节点(node)组成，每个节点可以是物理机/虚拟机，这些节点被分为两种类型：</p>
 <ul>
 <li><p>master：集群的管理</p>
@@ -241,7 +241,7 @@
 <li><p>worker：运行用户实际部署的应用</p>
 </li>
 </ul>
-<p>  <img src="/public/images/k8s_1/image-20200329220457602.png" alt="image-20200329220457602"></p>
+<p>  <img src="/images/k8s_1/image-20200329220457602.png" alt="image-20200329220457602"></p>
 <p>master主要有四个组件</p>
 <ul>
 <li>etcd：提供线性一致性的存储，用于存储集群的配置信息/leader 选举</li>
@@ -259,11 +259,11 @@
 </li>
 </ul>
 <h3 id="kubernetes的资源对象"><a href="#kubernetes的资源对象" class="headerlink" title="kubernetes的资源对象"></a>kubernetes的资源对象</h3><p>kubernetes的资源对象包括了pod/deployment/service等等各种各样的资源。</p>
-<p><img src="/public/images/k8s_1/image-20200329221527443.png" alt="image-20200329221527443"></p>
+<p><img src="/images/k8s_1/image-20200329221527443.png" alt="image-20200329221527443"></p>
 <p>kubernetes的资源对象都是通过yaml或者json描述文件来创建的，<code>kubebctl</code>也提供了一些简单的命令创建一组属性有限的资源对象。</p>
 <h4 id="1-pod-最小的调度单位-workloads"><a href="#1-pod-最小的调度单位-workloads" class="headerlink" title="1. pod - 最小的调度单位(workloads)"></a>1. pod - 最小的调度单位(workloads)</h4><h5 id="pod的结构"><a href="#pod的结构" class="headerlink" title="pod的结构"></a>pod的结构</h5><p>kubernetes使用pod作为最小调度单位，pod是一组共享了某些资源的容器</p>
 <p>具体的说，共享了net/uts/ipc/pid namespace，所以具有相同的loopback网络接口，可以进行ipc通信等，但是挂载文件系统是隔离的（文件系统来自于容器镜像）</p>
-<p><img src="/public/images/k8s_1/image-20200329223022331.png" alt="image-20200329223022331"></p>
+<p><img src="/images/k8s_1/image-20200329223022331.png" alt="image-20200329223022331"></p>
 <ul>
 <li>pod里的容器必须运行在相同的节点，解决了成组调度的问题</li>
 <li>Infra 容器是一个非常特殊的镜像，叫作：k8s.gcr.io/pause。这个镜像是一个用汇编语言编写的、永远处于“暂停”状态的容器，解压后的大小也只有 100~200 KB 左右</li>
@@ -285,7 +285,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spec:</span><br><span class="line">	nodeSelector:</span><br><span class="line">		labelKey: labelValue</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h4 id="2-deployment-声明式的升级应用"><a href="#2-deployment-声明式的升级应用" class="headerlink" title="2. deployment - 声明式的升级应用"></a>2. deployment - 声明式的升级应用</h4><h5 id="从replicationController-rc-说起"><a href="#从replicationController-rc-说起" class="headerlink" title="从replicationController(rc)说起"></a>从replicationController(rc)说起</h5><p><img src="/public/images/k8s_1/image-20200330003811291.png" alt="image-20200330003811291"></p>
+<h4 id="2-deployment-声明式的升级应用"><a href="#2-deployment-声明式的升级应用" class="headerlink" title="2. deployment - 声明式的升级应用"></a>2. deployment - 声明式的升级应用</h4><h5 id="从replicationController-rc-说起"><a href="#从replicationController-rc-说起" class="headerlink" title="从replicationController(rc)说起"></a>从replicationController(rc)说起</h5><p><img src="/images/k8s_1/image-20200330003811291.png" alt="image-20200330003811291"></p>
 <p>通过给pod配置存活探针，kubernetes检测pod本身的状态</p>
 <ul>
 <li>当pod出现问题，replicationController会自动拉起一个新的pod</li>
@@ -298,17 +298,17 @@
 <ol>
 <li>使用一个rc，停机升级：先修改template，删除旧pod，然后创建新的pod</li>
 </ol>
-<p><img src="/public/images/k8s_1/image-20200330005629376.png" alt="image-20200330005629376"></p>
+<p><img src="/images/k8s_1/image-20200330005629376.png" alt="image-20200330005629376"></p>
 <ol>
 <li>使用两个rc，不停机升级：先修改template，删除旧pod，然后创建新的pod</li>
 </ol>
-<p><img src="/public/images/k8s_1/image-20200330005650536.png" alt="image-20200330005650536"></p>
+<p><img src="/images/k8s_1/image-20200330005650536.png" alt="image-20200330005650536"></p>
 <ol>
 <li>手动执行滚动升级</li>
 </ol>
-<p><img src="/public/images/k8s_1/image-20200330005740322.png" alt="image-20200330005740322"></p>
+<p><img src="/images/k8s_1/image-20200330005740322.png" alt="image-20200330005740322"></p>
 <p>使用了deployment实现自动滚动升级(kubernetes自动控制)</p>
-<p><img src="/public/images/k8s_1/image-20200330010423544.png" alt="image-20200330010423544"></p>
+<p><img src="/images/k8s_1/image-20200330010423544.png" alt="image-20200330010423544"></p>
 <ul>
 <li>deployment滚动升级过程也是通过创建新的rs逐步替换旧pod，旧的rs不删除</li>
 <li>保留旧的rs，方便回滚</li>
@@ -344,18 +344,18 @@
 <p>eg：kubia.default.svc.cluster.local</p>
 </li>
 </ul>
-<h5 id="连接外部服务"><a href="#连接外部服务" class="headerlink" title="连接外部服务"></a>连接外部服务</h5><p><img src="/public/images/k8s_1/image-20200402213710432.png" alt="image-20200402213710432"></p>
+<h5 id="连接外部服务"><a href="#连接外部服务" class="headerlink" title="连接外部服务"></a>连接外部服务</h5><p><img src="/images/k8s_1/image-20200402213710432.png" alt="image-20200402213710432"></p>
 <p>连接service和pod的是一种叫做endpoint的资源，endpoint资源是一组服务的ip地址和端口列表</p>
 <p>手动配置endpoint指向外部的ip/域名，可以使得服务得以访问相应的外部服务</p>
 <h5 id="对外暴露服务"><a href="#对外暴露服务" class="headerlink" title="对外暴露服务"></a>对外暴露服务</h5><h6 id="nodeport"><a href="#nodeport" class="headerlink" title="nodeport"></a>nodeport</h6><p>把任意集群节点的端口的流量转发到内部的service ip端口</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-nodeport</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80 # service 端口</span><br><span class="line">    targetPort: 8080 # pod容器端口</span><br><span class="line">    nodePort: 30123 # 集群的节点的端口</span><br><span class="line">  selector:</span><br><span class="line">    app: kubia</span><br></pre></td></tr></table></figure>
-<p><img src="/public/images/k8s_1/image-20200402213019107.png" alt="image-20200402213019107"></p>
+<p><img src="/images/k8s_1/image-20200402213019107.png" alt="image-20200402213019107"></p>
 <h6 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h6><p>在nodeport基础上做了一层负载均衡</p>
-<p><img src="/public/images/k8s_1/image-20200402213121550.png" alt="image-20200402213121550"></p>
+<p><img src="/images/k8s_1/image-20200402213121550.png" alt="image-20200402213121550"></p>
 <h6 id="ingress"><a href="#ingress" class="headerlink" title="ingress"></a>ingress</h6><p>ingress提供多个服务的负载均衡，本质上是k8s对反向代理的一种抽象(nginx/haproxy…)</p>
-<p><img src="/public/images/k8s_1/image-20200402213743308.png" alt="image-20200402213743308"></p>
+<p><img src="/images/k8s_1/image-20200402213743308.png" alt="image-20200402213743308"></p>
 <p>ingress不转发请求给service，而是通过service来选择一个pod</p>
-<p><img src="/public/images/k8s_1/image-20200402213913111.png" alt="image-20200402213913111"></p>
+<p><img src="/images/k8s_1/image-20200402213913111.png" alt="image-20200402213913111"></p>
 <h5 id="headless服务"><a href="#headless服务" class="headerlink" title="headless服务"></a>headless服务</h5><p>通过讲服务的spec配置项clusterIP设置为none，DNS查询不返回service的vip，而是返回多个A记录（每个pod一个）</p>
 <h4 id="4-volume-将磁盘挂在到pod中"><a href="#4-volume-将磁盘挂在到pod中" class="headerlink" title="4. volume - 将磁盘挂在到pod中"></a>4. volume - 将磁盘挂在到pod中</h4><p>docker的文件系统来自于镜像，通过volume实现pod中多个容器的文件共享</p>
 <h5 id="常用volume"><a href="#常用volume" class="headerlink" title="常用volume"></a>常用volume</h5><h6 id="emptyDir"><a href="#emptyDir" class="headerlink" title="emptyDir"></a>emptyDir</h6><p>磁盘临时文件，pod删除，卷内容会被回收</p>
@@ -365,14 +365,14 @@
 <p>pvc：持久卷声明，面向用户(开发)，类似于接口。是用户需求清单的抽象</p>
 <p>pv：持久卷，面向运维，类似实现了pvc的对象，运维可以随意替换存储介质的实现</p>
 <p>storage class：实现了pvc的类，可以通过storage class模版化的生成pv</p>
-<p><img src="/public/images/k8s_1/image-20200402213913111.png" alt="image-20200402215322964"></p>
+<p><img src="/images/k8s_1/image-20200402213913111.png" alt="image-20200402215322964"></p>
 <h5 id="Projected-Volume"><a href="#Projected-Volume" class="headerlink" title="Projected Volume"></a>Projected Volume</h5><p>常用配置应用程序的方式有：命令行参数/配置文件读取/环境变量读取。</p>
 <p>projected volume是配置资源的抽象，但是最终让用户/应用进程所感知的方式同样是上面三种</p>
 <p>抽象配置资源，可以独立配置声明的yaml文件和部署资源的yaml文件</p>
 <h6 id="configmap"><a href="#configmap" class="headerlink" title="configmap"></a>configmap</h6><p>存储非敏感的文本配置数据</p>
 <h6 id="secret"><a href="#secret" class="headerlink" title="secret"></a>secret</h6><p>用于传递证书/私钥之类的敏感数据</p>
 <h6 id="downward-api"><a href="#downward-api" class="headerlink" title="downward api"></a>downward api</h6><p>用来和k8s通信/获取pod元数据的</p>
-<h6 id="ServiceAccountToken"><a href="#ServiceAccountToken" class="headerlink" title="ServiceAccountToken"></a>ServiceAccountToken</h6><h3 id="kubernetes运行原理"><a href="#kubernetes运行原理" class="headerlink" title="kubernetes运行原理"></a>kubernetes运行原理</h3><h4 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h4><p><img src="/public/images/k8s_1/image-20200329213556137.png" alt="image-20200329213556137"></p>
+<h6 id="ServiceAccountToken"><a href="#ServiceAccountToken" class="headerlink" title="ServiceAccountToken"></a>ServiceAccountToken</h6><h3 id="kubernetes运行原理"><a href="#kubernetes运行原理" class="headerlink" title="kubernetes运行原理"></a>kubernetes运行原理</h3><h4 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h4><p><img src="/images/k8s_1/image-20200329213556137.png" alt="image-20200329213556137"></p>
 <p>k8s组件主要分为：</p>
 <ul>
 <li>控制面板<ul>
@@ -407,12 +407,12 @@
 </ul>
 <h5 id="1-etcd-存储介质"><a href="#1-etcd-存储介质" class="headerlink" title="1) etcd - 存储介质"></a>1) etcd - 存储介质</h5><h5 id="2-apiserver-k8s的api，类似系统调用之于于操作系统"><a href="#2-apiserver-k8s的api，类似系统调用之于于操作系统" class="headerlink" title="2) apiserver - k8s的api，类似系统调用之于于操作系统"></a>2) apiserver - k8s的api，类似系统调用之于于操作系统</h5><ol>
 <li><p>集群资源和状态的crud</p>
-<p><img src="/public/images/k8s_1/image-20200402223335663.png" alt="image-20200402223335663"></p>
+<p><img src="/images/k8s_1/image-20200402223335663.png" alt="image-20200402223335663"></p>
 </li>
 <li><p>资源变更的通知</p>
 </li>
 </ol>
-<p><img src="/public/images/k8s_1/image-20200402223352288.png" alt="image-20200402223352288"></p>
+<p><img src="/images/k8s_1/image-20200402223352288.png" alt="image-20200402223352288"></p>
 <h5 id="3-调度器-分配节点"><a href="#3-调度器-分配节点" class="headerlink" title="3) 调度器 - 分配节点"></a>3) 调度器 - 分配节点</h5><p>调度器调度流程：</p>
 <ol>
 <li>调度器监听api server中所有更新的pod的定义</li>
@@ -441,22 +441,22 @@
 </li>
 </ol>
 <h5 id="6）kube-proxy"><a href="#6）kube-proxy" class="headerlink" title="6）kube-proxy"></a>6）kube-proxy</h5><p>Cluster IP与NodePort等概念是kube-proxy服务通过iptables的NAT转换实现的，kube-proxy在运行过程中动态创建与Service相关的iptables规则，这些规则实现了将访问服务（Cluster IP或NodePort）的请求负载分发到后端Pod的功能</p>
-<p><img src="/public/images/k8s_1/image-20200403011056624.png" alt="image-20200403011056624"></p>
-<h6 id="运行模式"><a href="#运行模式" class="headerlink" title="运行模式"></a>运行模式</h6><p><img src="/public/images/k8s_1/image-20200402231301311.png" alt="image-20200402231301311"></p>
+<p><img src="/images/k8s_1/image-20200403011056624.png" alt="image-20200403011056624"></p>
+<h6 id="运行模式"><a href="#运行模式" class="headerlink" title="运行模式"></a>运行模式</h6><p><img src="/images/k8s_1/image-20200402231301311.png" alt="image-20200402231301311"></p>
 <p>最开始用于修改iptable规则，同时作为proxy组件代理请求进出，所以叫kube-proxy(性能差， 内核和用户态之间传输数据)</p>
-<p><img src="/public/images/k8s_1/image-20200402231314698.png" alt="image-20200402231314698"></p>
+<p><img src="/images/k8s_1/image-20200402231314698.png" alt="image-20200402231314698"></p>
 <p>完全iptable模式，性能较高</p>
 <h5 id="7-插件"><a href="#7-插件" class="headerlink" title="7) 插件"></a>7) 插件</h5><p>通过yaml声明，作为daemonset/deployment/replicationController资源部署</p>
-<h4 id="控制器工作流"><a href="#控制器工作流" class="headerlink" title="控制器工作流"></a>控制器工作流</h4><p><img src="/public/images/k8s_1/image-20200402231908550.png" alt="image-20200402231908550"></p>
+<h4 id="控制器工作流"><a href="#控制器工作流" class="headerlink" title="控制器工作流"></a>控制器工作流</h4><p><img src="/images/k8s_1/image-20200402231908550.png" alt="image-20200402231908550"></p>
 <p>所有组件执行动作的时候都会生成一个事件资源发送给apiserver，可以直接观测到</p>
 <h4 id="跨pod网络-service-DNS-服务发现"><a href="#跨pod网络-service-DNS-服务发现" class="headerlink" title="跨pod网络(service/DNS/服务发现)"></a>跨pod网络(service/DNS/服务发现)</h4><p>k8s的网络的原则：</p>
 <ol>
 <li>每个pod具有唯一的ip</li>
 <li>pod之间的通信没有NAT</li>
 </ol>
-<p><img src="/public/images/k8s_1/image-20200402232325392.png" alt="image-20200402232325392"></p>
+<p><img src="/images/k8s_1/image-20200402232325392.png" alt="image-20200402232325392"></p>
 <h5 id="1-同一个pod内不同的容器通信"><a href="#1-同一个pod内不同的容器通信" class="headerlink" title="1. 同一个pod内不同的容器通信"></a>1. 同一个pod内不同的容器通信</h5><p>同一个pod内的容器共享net namespace，共享协议栈，等同于在相同主机通信</p>
-<h5 id="2-同一节点的通信原理（和docker的CNM一样"><a href="#2-同一节点的通信原理（和docker的CNM一样" class="headerlink" title="2. 同一节点的通信原理（和docker的CNM一样"></a>2. 同一节点的通信原理（和docker的CNM一样</h5><p><img src="/public/images/k8s_1/image-20200402232551057.png" alt="image-20200402232551057"></p>
+<h5 id="2-同一节点的通信原理（和docker的CNM一样"><a href="#2-同一节点的通信原理（和docker的CNM一样" class="headerlink" title="2. 同一节点的通信原理（和docker的CNM一样"></a>2. 同一节点的通信原理（和docker的CNM一样</h5><p><img src="/images/k8s_1/image-20200402232551057.png" alt="image-20200402232551057"></p>
 <h6 id="桥接网络模式"><a href="#桥接网络模式" class="headerlink" title="桥接网络模式"></a>桥接网络模式</h6><p>Pod a ping pod b:</p>
 <ol>
 <li>ping进程构造ICMP echo请求包，并通过socket发给协议栈，</li>
@@ -469,7 +469,7 @@
 <li>eth0把arp包往上抛给协议栈，协议栈发现自己的设备有这个ip，返回arp应答（没有就抛弃</li>
 </ol>
 <p>ps：公司使用的是host网络（容器和宿主机具有相同的ip地址</p>
-<h5 id="3-跨节点的通信原理"><a href="#3-跨节点的通信原理" class="headerlink" title="3. 跨节点的通信原理"></a>3. 跨节点的通信原理</h5><p><img src="/public/images/k8s_1/image-20200402234517386.png" alt="image-20200402234517386"></p>
+<h5 id="3-跨节点的通信原理"><a href="#3-跨节点的通信原理" class="headerlink" title="3. 跨节点的通信原理"></a>3. 跨节点的通信原理</h5><p><img src="/images/k8s_1/image-20200402234517386.png" alt="image-20200402234517386"></p>
 <p>不同节点之间的网桥以某种形式连接</p>
 <ul>
 <li><p>三层网络</p>
@@ -487,7 +487,7 @@
 </ul>
 </li>
 </ul>
-<h6 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h6><p><img src="/public/images/k8s_1/image-20200402235448264.png" alt="image-20200402235448264"></p>
+<h6 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h6><p><img src="/images/k8s_1/image-20200402235448264.png" alt="image-20200402235448264"></p>
 <ul>
 <li>Docker0（br）通过host机器上的路由表，转发请求到flannel0</li>
 <li>flannel0是一个tun设备，把请求转发到用户空间的flanneld程序</li>
@@ -496,14 +496,14 @@
 <li>通过宿主机etho0转发udp包到公网</li>
 <li>…</li>
 </ul>
-<h6 id="vxlan"><a href="#vxlan" class="headerlink" title="vxlan"></a>vxlan</h6><p><img src="/public/images/k8s_1/image-20200403000010564.png" alt="image-20200403000010564"></p>
+<h6 id="vxlan"><a href="#vxlan" class="headerlink" title="vxlan"></a>vxlan</h6><p><img src="/images/k8s_1/image-20200403000010564.png" alt="image-20200403000010564"></p>
 <ul>
 <li><p>在现有的三层网络之上，“覆盖”一层虚拟的、由内核 VXLAN 模块负责维护的二层网络，使得连接在这个 VXLAN 二层网络上的“主机”（虚拟机或者容器都可以）之间，可以像在同一个局域网（LAN）里那样自由通信</p>
 </li>
 <li><p>目的 VTEP 设备的arp表在节点创建的时候生成</p>
 </li>
 </ul>
-<h6 id="host-gw"><a href="#host-gw" class="headerlink" title="host-gw"></a>host-gw</h6><p><img src="/public/images/k8s_1/image-20200403002417215.png" alt="image-20200403002417215"></p>
+<h6 id="host-gw"><a href="#host-gw" class="headerlink" title="host-gw"></a>host-gw</h6><p><img src="/images/k8s_1/image-20200403002417215.png" alt="image-20200403002417215"></p>
 <ul>
 <li>路径更短，性能更高</li>
 <li>但是节点之间必须是二层联通的（通过路由表吓一跳mac地址设置目的地址，通过二层网络传输</li>
