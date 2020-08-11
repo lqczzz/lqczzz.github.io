@@ -6,17 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
+    <meta name="description" content="什么是可插拔式框架 最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连">
 <meta property="og:type" content="article">
 <meta property="og:title" content="可插拔式代码结构思考">
 <meta property="og:url" content="http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
+<meta property="og:description" content="什么是可插拔式框架 最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-12-23T17:04:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可插拔式代码结构思考">
-<meta name="twitter:description" content="什么是可插拔式框架最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接">
+<meta name="twitter:description" content="什么是可插拔式框架 最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连">
     
     
         
@@ -102,7 +102,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是可插拔式框架"><span class="toc-number">1.</span> <span class="toc-text">什么是可插拔式框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可默认，可替换"><span class="toc-number">2.</span> <span class="toc-text">可默认，可替换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-默认参数"><span class="toc-number">2.1.</span> <span class="toc-text">1. 默认参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-可选参数-默认值"><span class="toc-number">2.2.</span> <span class="toc-text">2. 可选参数 + 默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-接口"><span class="toc-number">2.3.</span> <span class="toc-text">3. 接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数式参数"><span class="toc-number">3.</span> <span class="toc-text">函数式参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模块的抽象"><span class="toc-number">4.</span> <span class="toc-text">模块的抽象</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">什么是可插拔式框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">可默认，可替换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">1. 默认参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2. 可选参数 + 默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">3. 接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">函数式参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">模块的抽象</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -141,18 +141,23 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="什么是可插拔式框架"><a href="#什么是可插拔式框架" class="headerlink" title="什么是可插拔式框架"></a>什么是可插拔式框架</h2><p>最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。</p>
+    <h2>什么是可插拔式框架</h2>
+<p>最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。</p>
 <p>思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接池。而这种可替换在于抽象，golang标准库给我们提供了一套标准的sql操作接口，不同数据库只要实现这个接口。</p>
 <p>这样想，pluggable也是离不开抽象的。抽空研究了一下micro的代码，发现，确实如此。</p>
-<h2 id="可默认，可替换"><a href="#可默认，可替换" class="headerlink" title="可默认，可替换"></a>可默认，可替换</h2><h3 id="1-默认参数"><a href="#1-默认参数" class="headerlink" title="1. 默认参数"></a>1. 默认参数</h3><p><code>pluggable</code>,最直观的理解大概就是“可以替换，不替换也行”。在编码中，很多语言天生有一项能力和这个类似——默认参数：</p>
+<h2>可默认，可替换</h2>
+<h3>1. 默认参数</h3>
+<p><code>pluggable</code>,最直观的理解大概就是“可以替换，不替换也行”。在编码中，很多语言天生有一项能力和这个类似——默认参数：</p>
 <pre><code># python
 def test(name=&quot;lqczzz&quot;):
     print(name)
 
 test()  # &quot;lqczzz&quot;
 test(&quot;jack&quot;)  # &quot;jack&quot;
-</code></pre><p>这里，name这个变量是可以替换的，某种意义上也可以说是“pluggable”</p>
-<h3 id="2-可选参数-默认值"><a href="#2-可选参数-默认值" class="headerlink" title="2. 可选参数 + 默认值"></a>2. 可选参数 + 默认值</h3><p>默认参数很方便，<code>golang</code>没有默认参数,可以通过可选参数和默认值来实现</p>
+</code></pre>
+<p>这里，name这个变量是可以替换的，某种意义上也可以说是“pluggable”</p>
+<h3>2. 可选参数 + 默认值</h3>
+<p>默认参数很方便，<code>golang</code>没有默认参数,可以通过可选参数和默认值来实现</p>
 <pre><code>const DefaultName = &quot;lqczzz&quot;
 
 func test(args ...string) {
@@ -167,7 +172,8 @@ test() // &quot;lqczzz&quot;
 
 // 传参数
 test(&quot;jack&quot;) // &quot;jack&quot;
-</code></pre><p>micro的可插拔式的实现本质上也是如此。</p>
+</code></pre>
+<p>micro的可插拔式的实现本质上也是如此。</p>
 <pre><code>// eg:
 type iBE interface {
     FeatureImpl()
@@ -200,9 +206,17 @@ be.FeatureImpl()
 // output:
 // liyunlong add feature
 // qczzzl will implement it!
-</code></pre><h3 id="3-接口"><a href="#3-接口" class="headerlink" title="3. 接口"></a>3. 接口</h3><h2 id="函数式参数"><a href="#函数式参数" class="headerlink" title="函数式参数"></a>函数式参数</h2><h2 id="模块的抽象"><a href="#模块的抽象" class="headerlink" title="模块的抽象"></a>模块的抽象</h2><p>变化和不变</p>
-<p>接口<br>契约不变<br>实现方式变化</p>
-<p>struct<br>封装依赖的变化（不变的契约依赖）<br>封装通用数据（不变的数据依赖）</p>
+</code></pre>
+<h3>3. 接口</h3>
+<h2>函数式参数</h2>
+<h2>模块的抽象</h2>
+<p>变化和不变</p>
+<p>接口
+契约不变
+实现方式变化</p>
+<p>struct
+封装依赖的变化（不变的契约依赖）
+封装通用数据（不变的数据依赖）</p>
 
   </div>
 </article>
@@ -228,7 +242,7 @@ be.FeatureImpl()
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是可插拔式框架"><span class="toc-number">1.</span> <span class="toc-text">什么是可插拔式框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可默认，可替换"><span class="toc-number">2.</span> <span class="toc-text">可默认，可替换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-默认参数"><span class="toc-number">2.1.</span> <span class="toc-text">1. 默认参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-可选参数-默认值"><span class="toc-number">2.2.</span> <span class="toc-text">2. 可选参数 + 默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-接口"><span class="toc-number">2.3.</span> <span class="toc-text">3. 接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数式参数"><span class="toc-number">3.</span> <span class="toc-text">函数式参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模块的抽象"><span class="toc-number">4.</span> <span class="toc-text">模块的抽象</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">什么是可插拔式框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">可默认，可替换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">1. 默认参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2. 可选参数 + 默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">3. 接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">函数式参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">模块的抽象</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

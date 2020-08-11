@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。 我想用一个故事作为开头。 在2014年的晚些时">
+    <meta name="description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。  我想用一个故事作为开头。 在2014年的晚些">
 <meta property="og:type" content="article">
 <meta property="og:title" content="怎样设计golang友好的api">
 <meta property="og:url" content="http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。 我想用一个故事作为开头。 在2014年的晚些时">
+<meta property="og:description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。  我想用一个故事作为开头。 在2014年的晚些">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://btfak.com/images/api-design1.png">
 <meta property="og:image" content="http://btfak.com/images/api-design2.png">
@@ -27,7 +27,7 @@
 <meta property="og:updated_time" content="2018-12-23T17:13:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="怎样设计golang友好的api">
-<meta name="twitter:description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。 我想用一个故事作为开头。 在2014年的晚些时">
+<meta name="twitter:description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。  我想用一个故事作为开头。 在2014年的晚些">
 <meta name="twitter:image" content="http://btfak.com/images/api-design1.png">
     
     
@@ -156,7 +156,8 @@
     <p>这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里</p>
 <p>正文开始：</p>
 <p>下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。</p>
-<p><img src="http://btfak.com/images/api-design1.png" alt=""><br>我想用一个故事作为开头。</p>
+<p><img src="http://btfak.com/images/api-design1.png" alt="">
+我想用一个故事作为开头。</p>
 <p>在2014年的晚些时候，你的公司发布了一款革命性的分布式社交网络工具，很明智的，你选择了Go来开发你的产品。</p>
 <p>你分配到的任务是编写极为重要的服务端组件，看起来可能像这样</p>
 <p><img src="http://btfak.com/images/api-design2.png" alt=""></p>

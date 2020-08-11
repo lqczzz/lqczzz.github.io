@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel channel可以单独创建，在进程之间传递 channel是线程安全队">
+    <meta name="description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel   channel可以单独创建，在进程之间传递   channel是线">
 <meta name="keywords" content="golang,并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="golang并发学习笔记">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/13/golang并发/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel channel可以单独创建，在进程之间传递 channel是线程安全队">
+<meta property="og:description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel   channel可以单独创建，在进程之间传递   channel是线">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-10-14T16:03:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang并发学习笔记">
-<meta name="twitter:description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel channel可以单独创建，在进程之间传递 channel是线程安全队">
+<meta name="twitter:description" content="golang的并发模型叫做CSP（communicating sequential process），称为通信顺序进程模型，模型由独立并发执行的实体组成（go块），模型之间的通信通过channel来实现。因此，golang的并发模型哲学是：万物皆通信！！golang的核心概念主要是：  channel go块  channel   channel可以单独创建，在进程之间传递   channel是线">
     
     
         
@@ -101,7 +101,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#channel"><span class="toc-number">1.</span> <span class="toc-text">channel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#goroutine"><span class="toc-number">2.</span> <span class="toc-text">goroutine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程模型的缺点"><span class="toc-number">2.1.</span> <span class="toc-text">线程模型的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#goroutine调度机制和状态机"><span class="toc-number">2.2.</span> <span class="toc-text">goroutine调度机制和状态机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#goroutine和线程"><span class="toc-number">2.2.1.</span> <span class="toc-text">goroutine和线程</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">channel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">goroutine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">线程模型的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">goroutine调度机制和状态机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.1.</span> <span class="toc-text">goroutine和线程</span></a></li></ol></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -150,40 +150,55 @@
 <li>channel</li>
 <li>go块</li>
 </ol>
-<h2 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h2><ul>
-<li>channel可以单独创建，在进程之间传递</li>
-<li>channel是<code>线程安全</code>队列，任何持有channel引用的任务(go块)都可以读写channel</li>
-<li>channel默认是无缓冲区的，也就是channel本身是同步的，一端写数据操作必然会阻塞直到channel的数据被别的地方读取</li>
-<li><p>channel可以关闭，向关闭的channel读数据会读到的默认值，向关闭的channel写数据会导致panic！！</p>
-<pre><code>func main() {
-    ch := make(chan int)
+<h2>channel</h2>
+<ul>
+<li>
+<p>channel可以单独创建，在进程之间传递</p>
+</li>
+<li>
+<p>channel是<code>线程安全</code>队列，任何持有channel引用的任务(go块)都可以读写channel</p>
+</li>
+<li>
+<p>channel默认是无缓冲区的，也就是channel本身是同步的，一端写数据操作必然会阻塞直到channel的数据被别的地方读取</p>
+</li>
+<li>
+<p>channel可以关闭，向关闭的channel读数据会读到的默认值，向关闭的channel写数据会导致panic！！</p>
+<pre><code>  func main() {
+      ch := make(chan int)
 
-    go func() {
-        ch &lt;- 20
-        close(ch)
-        ch &lt;- 30 //panic: send on closed channel
-    }()
-    println(&lt;-ch) // 20
-    println(&lt;-ch) // 0(默认值)
-}
-</code></pre></li>
-<li><p>有缓冲区的channel，根据缓冲区已满时候的策略，可以分为</p>
+      go func() {
+          ch &lt;- 20
+          close(ch)
+          ch &lt;- 30 //panic: send on closed channel
+      }()
+      println(&lt;-ch) // 20
+      println(&lt;-ch) // 0(默认值)
+  }
+</code></pre>
+</li>
+<li>
+<p>有缓冲区的channel，根据缓冲区已满时候的策略，可以分为</p>
 <ul>
 <li>阻塞型：写入阻塞</li>
 <li>弃用新值：新值写入被抛弃</li>
 <li>移除旧值：太旧的数据被channel抛弃</li>
 </ul>
 </li>
-<li><p>channel和队列很像<br>  在 <code>golang</code>里，channel可以用 <code>for i := range channelName {}</code>循环获取channel信息</p>
+<li>
+<p>channel和队列很像
+在 <code>golang</code>里，channel可以用 <code>for i := range channelName {}</code>循环获取channel信息</p>
 </li>
 </ul>
-<h2 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h2><h3 id="线程模型的缺点"><a href="#线程模型的缺点" class="headerlink" title="线程模型的缺点"></a>线程模型的缺点</h3><p>java和c++的并发模型都是线程模型，它的好处是直接对硬件的抽象，大多数语言，包括python，它的线程模型都是操作系统线程，但是坏处是使用复杂。</p>
+<h2>goroutine</h2>
+<h3>线程模型的缺点</h3>
+<p>java和c++的并发模型都是线程模型，它的好处是直接对硬件的抽象，大多数语言，包括python，它的线程模型都是操作系统线程，但是坏处是使用复杂。</p>
 <p>但是线程模型有三个危害</p>
 <blockquote>
 <ol>
 <li>竞态条件</li>
 <li>死锁</li>
-<li>内存可见性问题<br>引用自《七周七并发编程模型》</li>
+<li>内存可见性问题
+引用自《七周七并发编程模型》</li>
 </ol>
 </blockquote>
 <pre><code>public class Test {
@@ -215,9 +230,11 @@
         t2.join();
     }
 }
-</code></pre><p>尽管线程模型问题很多，但是线程模型是其他模型的基础，比如nodejs的异步io模型，本质上也是基于线程池技术实现的，java的nio底层实现也是基于线程池。</p>
+</code></pre>
+<p>尽管线程模型问题很多，但是线程模型是其他模型的基础，比如nodejs的异步io模型，本质上也是基于线程池技术实现的，java的nio底层实现也是基于线程池。</p>
 <p>线程池是多线程模型的改良，线程的启动和运行都有一定的开销，为了避免直接创建线程，才有了线程池，线程池方便了线程的复用，但是涉及线程通信的时候，如果线程被阻塞，那这个线程的资源永远都被占用者，线程池就显得鸡肋了。nodejs的决绝方法是限制程序员的代码风格，使之变成<code>事件驱动</code>的形式。</p>
-<h3 id="goroutine调度机制和状态机"><a href="#goroutine调度机制和状态机" class="headerlink" title="goroutine调度机制和状态机"></a>goroutine调度机制和状态机</h3><p>所谓事件驱动是指node.js会把所有的异步操作使用事件机制解决，有个线程在不断地循环检测事件队列。</p>
+<h3>goroutine调度机制和状态机</h3>
+<p>所谓事件驱动是指node.js会把所有的异步操作使用事件机制解决，有个线程在不断地循环检测事件队列。</p>
 <p>node.js中所有的逻辑都是事件的回调函数，所以node.js始终在事件循环中，程序入口就是事件循环第一个事件的回调函数。事件的回调函数中可能会发出I/O请求或直接发射（ emit）事件，执行完毕后返回事件循环。事件循环会检查事件队列中有没有未处理的事件，直到程序结束，因此，node.js 是单线程，异步非阻塞</p>
 <p>node的这种方式有几个问题：</p>
 <ol>
@@ -226,8 +243,9 @@
 <li>代码变得难以阅读</li>
 <li>回调函数保存数据需要经常用到全局变量</li>
 </ol>
-<p>golang本质上也是使用了事件驱动的机制，但是这个过程对我们是透明的，主要解决了第三个问题，原理是把每个go块(<code>go func(){}()</code>)当层成了一个状态机，当go块从channel里读写，遇到阻塞的时候，go块进入暂停状态，让出线程控制权，代码可以继续进行的时候，状态扭转，go块继续运行(可能不在原来的线程上了) </p>
-<h4 id="goroutine和线程"><a href="#goroutine和线程" class="headerlink" title="goroutine和线程"></a>goroutine和线程</h4><ul>
+<p>golang本质上也是使用了事件驱动的机制，但是这个过程对我们是透明的，主要解决了第三个问题，原理是把每个go块(<code>go func(){}()</code>)当层成了一个状态机，当go块从channel里读写，遇到阻塞的时候，go块进入暂停状态，让出线程控制权，代码可以继续进行的时候，状态扭转，go块继续运行(可能不在原来的线程上了)</p>
+<h4>goroutine和线程</h4>
+<ul>
 <li>每个os线程有一个固定大小的栈内存（通常2MB）</li>
 <li>goroutine的栈空间大小不固定，开始通常是2KB，按需扩展，最大可达1GB</li>
 <li>go运行时候有自己的goroutine调度算法，称为m：n调度，m个goroutine运行在n个线程上</li>
@@ -239,7 +257,8 @@
 <li>os调度是硬件时钟中断触发的，goroutine调度的触发是channel读写阻塞或者<code>time.Sleep()</code>来实现的，因此不需要切换到内核态。</li>
 </ol>
 <blockquote>
-<p>goroutine没有标识，线程是有自己的标识的，因此可以方便的实现一个线程局部变量(<code>map[thread_symbol]object</code>),在web服务器上，线程局部变量通常会被用来存储http请求信息。在goroutine上没有这种机制，鼓励更简单的编程风格。<br>——《go程序设计语言》</p>
+<p>goroutine没有标识，线程是有自己的标识的，因此可以方便的实现一个线程局部变量(<code>map[thread_symbol]object</code>),在web服务器上，线程局部变量通常会被用来存储http请求信息。在goroutine上没有这种机制，鼓励更简单的编程风格。
+——《go程序设计语言》</p>
 </blockquote>
 
   </div>
@@ -266,7 +285,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#channel"><span class="toc-number">1.</span> <span class="toc-text">channel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#goroutine"><span class="toc-number">2.</span> <span class="toc-text">goroutine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程模型的缺点"><span class="toc-number">2.1.</span> <span class="toc-text">线程模型的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#goroutine调度机制和状态机"><span class="toc-number">2.2.</span> <span class="toc-text">goroutine调度机制和状态机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#goroutine和线程"><span class="toc-number">2.2.1.</span> <span class="toc-text">goroutine和线程</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">channel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">goroutine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">线程模型的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">goroutine调度机制和状态机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.1.</span> <span class="toc-text">goroutine和线程</span></a></li></ol></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

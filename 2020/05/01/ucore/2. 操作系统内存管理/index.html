@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="当我们谈论操作系统的内存管理的时候，我们需要意识到，内存的管理本质上就是操作系统提供的一种对RAM内存的管理机制。通过空分复用技术来实现有限的内存空间的访问，毕竟现实中并没有图灵机假象的那一条无穷的指令条，即便存在，人类也无法掌控。 这里主要介绍了物理内存管理和虚拟内存管理，前者主要还是对空间内存空间的管理，后者是对多级存储的黑盒化，把内存和硬盘结合在一起，让你得到更大的内存，后者 更多的是对前者">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="当我们谈论操作系统的内存管理的时候，我们需要意识到，内存的管理本质上就是操作系统提供的一种对RAM内存的管理机制。通过空分复用技术来实现有限的内存空间的访问，毕竟现实中并没有图灵机假象的那一条无穷的指令条，即便存在，人类也无法掌控。 这里主要介绍了物理内存管理和虚拟内存管理，前者主要还是对空间内存空间的管理，后者是对多级存储的黑盒化，把内存和硬盘结合在一起，让你得到更大的内存，后者 更多的是对前者">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-01T14:43:58.988Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="当我们谈论操作系统的内存管理的时候，我们需要意识到，内存的管理本质上就是操作系统提供的一种对RAM内存的管理机制。通过空分复用技术来实现有限的内存空间的访问，毕竟现实中并没有图灵机假象的那一条无穷的指令条，即便存在，人类也无法掌控。 这里主要介绍了物理内存管理和虚拟内存管理，前者主要还是对空间内存空间的管理，后者是对多级存储的黑盒化，把内存和硬盘结合在一起，让你得到更大的内存，后者 更多的是对前者">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Hexo</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/05/01/ucore/3. 现代编程语言里的内存管理/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2020/03/30/面向开发人员的kubernetes笔记/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">物理内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.</span> <span class="toc-text">物理内存布局的探索</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.2.</span> <span class="toc-text">页式的内存管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.3.</span> <span class="toc-text">物理页分配算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.4.</span> <span class="toc-text">实现分页机制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">虚拟内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">多核时代的内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.1.</span> <span class="toc-text">可见性和一致性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Hexo</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-30T16:31:15.912Z" itemprop="datePublished">2020-05-01</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>当我们谈论操作系统的内存管理的时候，我们需要意识到，内存的管理本质上就是操作系统提供的一种对RAM内存的管理机制。通过空分复用技术来实现有限的内存空间的访问，毕竟现实中并没有图灵机假象的那一条无穷的指令条，即便存在，人类也无法掌控。</p>
+<p>这里主要介绍了物理内存管理和虚拟内存管理，前者主要还是对空间内存空间的管理，后者是对多级存储的黑盒化，把内存和硬盘结合在一起，让你得到更大的内存，后者 更多的是对前者的补充，试想，如果物理内存无限大，那何必要去做内存虚拟化，何必要把一些内存页置换到硬盘上呢。</p>
+<h2>物理内存管理</h2>
+<p>物理内存管理主要需要两个“能力”</p>
+<p>一个是管理物理页的链表，用来分配内存</p>
+<p>一个是启动段页式内存映射关系，用来做地址转化</p>
+<p>在虚拟内存管理中，经常需要在缺页异常之后，通过1来获得一个物理内存，通过2建立虚拟内存和物理内存的映射关系</p>
+<h4>物理内存布局的探索</h4>
+<p>实模式下，bootloader调用BIOS的中断来把内存信息写入到固定位置的一块内存区域中</p>
+<p>bootloader加载ucore之后，ucore从这块区域中获取到具体的内存布局信息</p>
+<h4>页式的内存管理</h4>
+<p>这一步主要是建立一个数据结构用于管理内存，我们用PageFrame表示一块4k大小的物理内存的话，而PageFrame结构体存储需要4字节的话，意味着4G的内存空间需要4MB的内存来建立映射（索引），这部分映射的数据结构存储在操作系统内核空间之上。</p>
+<h4>物理页分配算法</h4>
+<p>算法有很多种，但是算法框架的核心在于：</p>
+<ul>
+<li>
+<p>Init() - 初始化物理内存管理组件，通常是一块空闲链表</p>
+</li>
+<li>
+<p>Alloc()</p>
+</li>
+<li>
+<p>Free()</p>
+</li>
+</ul>
+<h4>实现分页机制</h4>
+<p>把一级页目录表的地址放在cr3寄存器中，每个进程有自己的二级页表。也就是说，分页机制需要在操作系统完成物理内存嗅探，建立好数据结构用于空闲内存管理之后才能启动分页机制（建立页表)，</p>
+<h2>虚拟内存管理</h2>
+<p>物理内存让用户看到的内存不再是实际的物理内存，通过页表项来限定程序的运行访问空间，可以有效防止运行不越界。而虚拟内存技术是通过页换入换出，按需加载页的机制，为实现更多进程并发运行提供更大的“内存”空间。</p>
+<h2>多核时代的内存模型</h2>
+<h4>可见性和一致性</h4>
+<p>一致性分为：</p>
+<p>线性一致性</p>
+<h4></h4>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">物理内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.</span> <span class="toc-text">物理内存布局的探索</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.2.</span> <span class="toc-text">页式的内存管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.3.</span> <span class="toc-text">物理页分配算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.4.</span> <span class="toc-text">实现分页机制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">虚拟内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">多核时代的内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.1.</span> <span class="toc-text">可见性和一致性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2020/05/01/ucore/2. 操作系统内存管理/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 lqczzz
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

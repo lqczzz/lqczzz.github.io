@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="分布式基础本文主要是《Distributed systems for fun and profit》的笔记 一.基础计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标分布式系统，我们想要：可扩展性——数据或者问">
+    <meta name="description" content="分布式基础 本文主要是《Distributed systems for fun and profit》的笔记 一.基础 计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统 当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标 分布式系统，我们想要：可扩展性——数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式系统入门">
 <meta property="og:url" content="http://lqczzz.github.io/2019/01/06/分布式系统入门/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="分布式基础本文主要是《Distributed systems for fun and profit》的笔记 一.基础计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标分布式系统，我们想要：可扩展性——数据或者问">
+<meta property="og:description" content="分布式基础 本文主要是《Distributed systems for fun and profit》的笔记 一.基础 计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统 当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标 分布式系统，我们想要：可扩展性——数">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://book.mixu.net/distsys/images/part-repl.png">
 <meta property="og:image" content="http://book.mixu.net/distsys/images/system-of-2.png">
@@ -27,7 +27,7 @@
 <meta property="og:updated_time" content="2019-03-15T17:32:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式系统入门">
-<meta name="twitter:description" content="分布式基础本文主要是《Distributed systems for fun and profit》的笔记 一.基础计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标分布式系统，我们想要：可扩展性——数据或者问">
+<meta name="twitter:description" content="分布式基础 本文主要是《Distributed systems for fun and profit》的笔记 一.基础 计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统 当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标 分布式系统，我们想要：可扩展性——数">
 <meta name="twitter:image" content="http://book.mixu.net/distsys/images/part-repl.png">
     
     
@@ -114,7 +114,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分布式基础"><span class="toc-number">1.</span> <span class="toc-text">分布式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-基础"><span class="toc-number">1.1.</span> <span class="toc-text">一.基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-为什么要用分布式系统"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么要用分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-目标"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1 目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-阻碍"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2 阻碍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-如何研究分布式系统"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 如何研究分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-抽象和模型"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 抽象和模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-分布式实现"><span class="toc-number">1.1.3.</span> <span class="toc-text">3 分布式实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-理论"><span class="toc-number">1.2.</span> <span class="toc-text">二.理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-系统模型"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-公理"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 公理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-FLP理论"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 FLP理论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-CAP理论"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 CAP理论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-一致性的扩展"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">2.2.1 一致性的扩展</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-时间和顺序"><span class="toc-number">1.3.</span> <span class="toc-text">三.时间和顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-全序和偏序"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">3.1 全序和偏序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-时间匀速流逝"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">3.2 时间匀速流逝</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-1-全局时钟"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">3.2.1 全局时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-2-本地时钟"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">3.2.2 本地时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-3-没有时钟"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">3.2.3 没有时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-4-逻辑时钟"><span class="toc-number">1.3.0.2.4.</span> <span class="toc-text">3.2.4 逻辑时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#3-2-4-1-Lamport时钟"><span class="toc-number">1.3.0.2.4.1.</span> <span class="toc-text">3.2.4.1 Lamport时钟</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-2-4-2-Vector-clocks"><span class="toc-number">1.3.0.2.4.2.</span> <span class="toc-text">3.2.4.2 Vector clocks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-失灵检测"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3.3 失灵检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-总结"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">3.4 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-replication"><span class="toc-number">1.4.</span> <span class="toc-text">四.replication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-拷贝范式"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">4.1 拷贝范式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1-1-同步拷贝"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text">4.1.1 同步拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1-2-异步拷贝"><span class="toc-number">1.4.0.1.2.</span> <span class="toc-text">4.1.2 异步拷贝</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-拷贝算法"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">4.2 拷贝算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-1-overview"><span class="toc-number">1.4.0.2.1.</span> <span class="toc-text">4.2.1 overview</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-2-主从备份拷贝"><span class="toc-number">1.4.0.2.2.</span> <span class="toc-text">4.2.2 主从备份拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-3-两阶段提交（2PC）"><span class="toc-number">1.4.0.2.3.</span> <span class="toc-text">4.2.3 两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-4-对网络分割容错的一致性算法：gossip-raft和ZAB"><span class="toc-number">1.4.0.2.4.</span> <span class="toc-text">4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#什么是网络分割（Network-Partition）"><span class="toc-number">1.4.0.2.4.1.</span> <span class="toc-text">什么是网络分割（Network Partition）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-总结"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#遗留的问题"><span class="toc-number">1.5.</span> <span class="toc-text">遗留的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">分布式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">一.基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么要用分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1 目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2 阻碍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 如何研究分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 抽象和模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.3.</span> <span class="toc-text">3 分布式实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">二.理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 公理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 FLP理论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 CAP理论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">2.2.1 一致性的扩展</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">三.时间和顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">3.1 全序和偏序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">3.2 时间匀速流逝</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">3.2.1 全局时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">3.2.2 本地时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">3.2.3 没有时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.</span> <span class="toc-text">3.2.4 逻辑时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.1.</span> <span class="toc-text">3.2.4.1 Lamport时钟</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.2.</span> <span class="toc-text">3.2.4.2 Vector clocks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3.3 失灵检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">3.4 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">四.replication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">4.1 拷贝范式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text">4.1.1 同步拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.2.</span> <span class="toc-text">4.1.2 异步拷贝</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">4.2 拷贝算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.1.</span> <span class="toc-text">4.2.1 overview</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.2.</span> <span class="toc-text">4.2.2 主从备份拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.3.</span> <span class="toc-text">4.2.3 两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.</span> <span class="toc-text">4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.1.</span> <span class="toc-text">什么是网络分割（Network Partition）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">遗留的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -153,38 +153,80 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h1 id="分布式基础"><a href="#分布式基础" class="headerlink" title="分布式基础"></a>分布式基础</h1><p>本文主要是<a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">《Distributed systems for fun and profit》</a>的笔记</p>
-<h2 id="一-基础"><a href="#一-基础" class="headerlink" title="一.基础"></a>一.基础</h2><p>计算机主要做两个事情：</p>
+    <h1>分布式基础</h1>
+<p>本文主要是<a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">《Distributed systems for fun and profit》</a>的笔记</p>
+<h2>一.基础</h2>
+<p>计算机主要做两个事情：</p>
 <ol>
 <li>计算</li>
 <li>存储</li>
 </ol>
-<h3 id="1-为什么要用分布式系统"><a href="#1-为什么要用分布式系统" class="headerlink" title="1. 为什么要用分布式系统"></a>1. 为什么要用分布式系统</h3><p>当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。</p>
-<h4 id="1-1-目标"><a href="#1-1-目标" class="headerlink" title="1.1 目标"></a>1.1 目标</h4><p>分布式系统，我们想要：<strong>可扩展性</strong>——数据或者问题规模变大，可以单纯的通过增加节点解决。</p>
+<h3>1. 为什么要用分布式系统</h3>
+<p>当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。</p>
+<h4>1.1 目标</h4>
+<p>分布式系统，我们想要：<strong>可扩展性</strong>——数据或者问题规模变大，可以单纯的通过增加节点解决。</p>
 <p>扩展性，就要求规模，节点规模从小到大，就会遇到以下问题：</p>
 <ol>
-<li><p>性能</p>
+<li>
+<p>性能</p>
 <ul>
 <li>低时延</li>
 <li>高吞吐</li>
 <li>资源消耗低</li>
 </ul>
 </li>
-<li><p>可用</p>
+<li>
+<p>可用</p>
 <ul>
 <li>容错性：允许某些节点失败</li>
 <li>延时不能过高</li>
 <li><code>Availability = uptime / (uptime + downtime)</code></li>
 </ul>
-<p>| Availability %         | How much downtime is allowed per year? |<br>| ———————- | ————————————– |<br>| 90% (“one nine”)       | More than a month                      |<br>| 99% (“two nines”)      | Less than 4 days                       |<br>| 99.9% (“three nines”)  | Less than 9 hours                      |<br>| 99.99% (“four nines”)  | Less than an hour                      |<br>| 99.999% (“five nines”) | ~ 5 minutes                            |<br>| 99.9999% (“six nines”) | ~ 31 seconds                           |</p>
+<table>
+<thead>
+<tr>
+<th>Availability %</th>
+<th>How much downtime is allowed per year?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>90% (&quot;one nine&quot;)</td>
+<td>More than a month</td>
+</tr>
+<tr>
+<td>99% (&quot;two nines&quot;)</td>
+<td>Less than 4 days</td>
+</tr>
+<tr>
+<td>99.9% (&quot;three nines&quot;)</td>
+<td>Less than 9 hours</td>
+</tr>
+<tr>
+<td>99.99% (&quot;four nines&quot;)</td>
+<td>Less than an hour</td>
+</tr>
+<tr>
+<td>99.999% (&quot;five nines&quot;)</td>
+<td>~ 5 minutes</td>
+</tr>
+<tr>
+<td>99.9999% (&quot;six nines&quot;)</td>
+<td>~ 31 seconds</td>
+</tr>
+</tbody>
+</table>
 </li>
 </ol>
-<h4 id="1-2-阻碍"><a href="#1-2-阻碍" class="headerlink" title="1.2 阻碍"></a>1.2 阻碍</h4><ol>
+<h4>1.2 阻碍</h4>
+<ol>
 <li>节点数量</li>
 <li>节点的距离</li>
 </ol>
 <p>光速传播速度和cpu频率决定了最低时延</p>
-<h3 id="2-如何研究分布式系统"><a href="#2-如何研究分布式系统" class="headerlink" title="2. 如何研究分布式系统"></a>2. 如何研究分布式系统</h3><h4 id="2-1-抽象和模型"><a href="#2-1-抽象和模型" class="headerlink" title="2.1 抽象和模型"></a>2.1 抽象和模型</h4><p><strong>抽象</strong>可以从现实世界的复杂中得到本质的东西，这种本质就是<strong>模型</strong></p>
+<h3>2. 如何研究分布式系统</h3>
+<h4>2.1 抽象和模型</h4>
+<p><strong>抽象</strong>可以从现实世界的复杂中得到本质的东西，这种本质就是<strong>模型</strong></p>
 <p>分布式系统的本质可以归纳为三个模型：</p>
 <ol>
 <li>系统模型（同步／异步）</li>
@@ -192,7 +234,8 @@
 <li>一致性模型（强一致／弱一致）</li>
 </ol>
 <p>抽象的目的就是为了让这个系统对外看起来像是一个节点。这里有一个矛盾，过分强调一致，会使得使用者容易理解，但是会导致性能不好，可用性降低，适当暴露一些细节会提高性能，但是增加了系统的理解成本。</p>
-<h3 id="3-分布式实现"><a href="#3-分布式实现" class="headerlink" title="3 分布式实现"></a>3 分布式实现</h3><p>本质上只有两种手段：</p>
+<h3>3 分布式实现</h3>
+<p>本质上只有两种手段：</p>
 <ol>
 <li>数据分区（partition）</li>
 <li>数据复制（replication）</li>
@@ -200,9 +243,11 @@
 <p><img src="http://book.mixu.net/distsys/images/part-repl.png" alt="partition/replication"></p>
 <p><strong>partition</strong>可以把数据分成几块，解决了单一节点的存储限制</p>
 <p><strong>replication</strong>允许我们实现可扩展，容错，但是涉及到数据的同步，是很多问题的源泉，<strong>一致性模型</strong>就是为了描述这个问题而存在的</p>
-<h2 id="二-理论"><a href="#二-理论" class="headerlink" title="二.理论"></a>二.理论</h2><p>抽象可以提取实物的本质，再通过这个本质可以推导出某种公理性的东西</p>
+<h2>二.理论</h2>
+<p>抽象可以提取实物的本质，再通过这个本质可以推导出某种公理性的东西</p>
 <p>系统模型就是分布式系统的抽象</p>
-<h3 id="1-系统模型"><a href="#1-系统模型" class="headerlink" title="1. 系统模型"></a>1. 系统模型</h3><p>分布式系统模型的抽象取决于假设的多少，一般来说，假设越少越好，系统模型有三个基本的假设</p>
+<h3>1. 系统模型</h3>
+<p>分布式系统模型的抽象取决于假设的多少，一般来说，假设越少越好，系统模型有三个基本的假设</p>
 <ol>
 <li>节点独立运行</li>
 <li>节点通过网络连接</li>
@@ -223,19 +268,22 @@
 </ul>
 <p>节点通信的两种异常：左边是节点失灵，右边是网络</p>
 <p><img src="http://book.mixu.net/distsys/images/system-of-2.png" alt="node"></p>
-<h3 id="2-公理"><a href="#2-公理" class="headerlink" title="2. 公理"></a>2. 公理</h3><p>有了系统模型，我们推演出了一些公理</p>
-<h4 id="2-1-FLP理论"><a href="#2-1-FLP理论" class="headerlink" title="2.1 FLP理论"></a>2.1 FLP理论</h4><p>假设：</p>
+<h3>2. 公理</h3>
+<p>有了系统模型，我们推演出了一些公理</p>
+<h4>2.1 FLP理论</h4>
+<p>假设：</p>
 <ul>
 <li>节点 Fail by crash （不会出现拜占庭将军问题）</li>
 <li>网络可靠</li>
 <li>异步系统模型 消息可能无限delay</li>
 </ul>
 <p>结论</p>
-<p>​    在异步通信场景，即使只有一个进程失败，也没有任何算法能保证非失败进程达到一致性</p>
+<p>​	在异步通信场景，即使只有一个进程失败，也没有任何算法能保证非失败进程达到一致性</p>
 <blockquote>
 <p>证明见参考</p>
 </blockquote>
-<h4 id="2-2-CAP理论"><a href="#2-2-CAP理论" class="headerlink" title="2.2 CAP理论"></a>2.2 CAP理论</h4><p><img src="http://book.mixu.net/distsys/images/CAP.png" alt="cap"></p>
+<h4>2.2 CAP理论</h4>
+<p><img src="http://book.mixu.net/distsys/images/CAP.png" alt="cap"></p>
 <ul>
 <li>consistency:  所有节点在同一时刻看到同样的值</li>
 <li>availability：某些节点失效并不影响剩余节点运行</li>
@@ -252,7 +300,8 @@
 <blockquote>
 <p>实践中我们大多已经采取了弱一致性的异步延时同步方案，以提高可用性</p>
 </blockquote>
-<h5 id="2-2-1-一致性的扩展"><a href="#2-2-1-一致性的扩展" class="headerlink" title="2.2.1 一致性的扩展"></a>2.2.1 一致性的扩展</h5><p>这里，CAP的C理解为多个数据副本的读写一致性问题，其实C可以在很多场景拓展</p>
+<h5>2.2.1 一致性的扩展</h5>
+<p>这里，CAP的C理解为多个数据副本的读写一致性问题，其实C可以在很多场景拓展</p>
 <ul>
 <li>多个数据副本的读写</li>
 <li>事务</li>
@@ -264,35 +313,45 @@
 <p>众所周知，分布式事务一般采用两阶段提交策略来实现，这是一个非常耗时的复杂过程，会严重影响系统效率，在实践中我们尽量避免使用它。在实践过程中，如果我们为了扩展数据容量将数据分布式存储，而事务的要求又完全不能降低。那么，系统的可用性一定会大大降低，在现实中我们一般都采用对这些数据不分散存储的策略。</p>
 </blockquote>
 <p>nosql数据库为了实现P，牺牲了C，也即牺牲了事务，事务遵循<em>BASE</em>而不是<em>ACID</em></p>
-<h2 id="三-时间和顺序"><a href="#三-时间和顺序" class="headerlink" title="三.时间和顺序"></a>三.时间和顺序</h2><h4 id="3-1-全序和偏序"><a href="#3-1-全序和偏序" class="headerlink" title="3.1 全序和偏序"></a>3.1 全序和偏序</h4><p>全序就是在集合里任何两个元素都可以比较，分出大小。偏序中，某些元素是没办法比较大小的。</p>
+<h2>三.时间和顺序</h2>
+<h4>3.1 全序和偏序</h4>
+<p>全序就是在集合里任何两个元素都可以比较，分出大小。偏序中，某些元素是没办法比较大小的。</p>
 <p>在分布式的系统里，每个节点的指令运行顺序都取决于本地节点的时钟，所以分布式系统是偏序。</p>
-<h4 id="3-2-时间匀速流逝"><a href="#3-2-时间匀速流逝" class="headerlink" title="3.2 时间匀速流逝"></a>3.2 时间匀速流逝</h4><p>时间是顺序的来源，分布式系统中每个节点都有独立的本地时间和时间戳，于是事件的发生有本地的顺序，但是该顺序和其他节点完全独立，很难做到全部节点有序。当然也不是做不到全序，维持一个全局时钟就是一种方法，只是这种方法的代价太大。</p>
+<h4>3.2 时间匀速流逝</h4>
+<p>时间是顺序的来源，分布式系统中每个节点都有独立的本地时间和时间戳，于是事件的发生有本地的顺序，但是该顺序和其他节点完全独立，很难做到全部节点有序。当然也不是做不到全序，维持一个全局时钟就是一种方法，只是这种方法的代价太大。</p>
 <ul>
 <li>全局时钟（Global Clock）</li>
 <li>本地时钟（Local Clock）</li>
 <li>没有时钟存在（No Clock）</li>
 </ul>
-<h5 id="3-2-1-全局时钟"><a href="#3-2-1-全局时钟" class="headerlink" title="3.2.1 全局时钟"></a>3.2.1 全局时钟</h5><p><img src="http://book.mixu.net/distsys/images/global-clock.png" alt="全局时钟"></p>
+<h5>3.2.1 全局时钟</h5>
+<p><img src="http://book.mixu.net/distsys/images/global-clock.png" alt="全局时钟"></p>
 <p>完美的时钟，走时同步，存在于所有节点。这是分布式系统的理想假设。实际上，时钟同步只能保证有限的精度。用户可能随机地改变本机时间，新节点加入，都有可能破坏全局时钟的假设。</p>
 <blockquote>
 <p>现实系统也有做出这个假设的。FB的Cassandra，就是使用时间戳来解决write的冲突的</p>
 </blockquote>
-<h5 id="3-2-2-本地时钟"><a href="#3-2-2-本地时钟" class="headerlink" title="3.2.2 本地时钟"></a>3.2.2 本地时钟</h5><p><img src="http://book.mixu.net/distsys/images/local-clock.png" alt="local clock"></p>
+<h5>3.2.2 本地时钟</h5>
+<p><img src="http://book.mixu.net/distsys/images/local-clock.png" alt="local clock"></p>
 <p>本地时钟无法保证全局有序</p>
-<h5 id="3-2-3-没有时钟"><a href="#3-2-3-没有时钟" class="headerlink" title="3.2.3 没有时钟"></a>3.2.3 没有时钟</h5><p>完全不使用”时钟”这个概念，取而代之，“逻辑时间”。因为时间戳么，只不过是当前世界状态的一个快照，那我们用一个计数器（Counter），并和节点之间交流就可以做到了。</p>
+<h5>3.2.3 没有时钟</h5>
+<p>完全不使用”时钟”这个概念，取而代之，“逻辑时间”。因为时间戳么，只不过是当前世界状态的一个快照，那我们用一个计数器（Counter），并和节点之间交流就可以做到了。</p>
 <p>这样，我们可以在不同的节点之间决定事件顺序。不过有个坏处，因为缺乏时钟，没办法决定timeout。</p>
 <p>“没有时钟”的假设的实现有：</p>
 <ol>
-<li><p>Lamport时钟</p>
+<li>
+<p>Lamport时钟</p>
 </li>
-<li><p>Vector clocks</p>
+<li>
+<p>Vector clocks</p>
 </li>
 </ol>
 <blockquote>
 <p>Cassandra的cousin Riak 和 Vodemort（LinkedIn）是它的应用。这些系统避免了全局or本地时钟漂移带来的不确定性。</p>
 </blockquote>
-<h5 id="3-2-4-逻辑时钟"><a href="#3-2-4-逻辑时钟" class="headerlink" title="3.2.4 逻辑时钟"></a>3.2.4 逻辑时钟</h5><p><strong>Lamport时钟</strong>和<strong>向量时钟</strong>通过计数器和通信来决定分布式系统中事件发生顺序的。计数器可以在不同节点之前进行比较。</p>
-<h6 id="3-2-4-1-Lamport时钟"><a href="#3-2-4-1-Lamport时钟" class="headerlink" title="3.2.4.1 Lamport时钟"></a>3.2.4.1 Lamport时钟</h6><p>每个进程都维护一个计时器。</p>
+<h5>3.2.4 逻辑时钟</h5>
+<p><strong>Lamport时钟</strong>和<strong>向量时钟</strong>通过计数器和通信来决定分布式系统中事件发生顺序的。计数器可以在不同节点之前进行比较。</p>
+<h6>3.2.4.1 Lamport时钟</h6>
+<p>每个进程都维护一个计时器。</p>
 <ul>
 <li>当进程做了任意一件事，增加计时器计数。</li>
 <li>进程发送的消息中包含计时器计数。</li>
@@ -304,7 +363,8 @@
 <li>a和b压根没法比较</li>
 </ul>
 <p>第二种情况发生在a和b所在的Partition没有发送通信。</p>
-<h6 id="3-2-4-2-Vector-clocks"><a href="#3-2-4-2-Vector-clocks" class="headerlink" title="3.2.4.2 Vector clocks"></a>3.2.4.2 Vector clocks</h6><p>向量时钟是Lamport时钟的一种扩展。它维护大小为N的数列[t1, t2, ….]，N为节点数。每个节点都更新自己的时钟。</p>
+<h6>3.2.4.2 Vector clocks</h6>
+<p>向量时钟是Lamport时钟的一种扩展。它维护大小为N的数列[t1, t2, ....]，N为节点数。每个节点都更新自己的时钟。</p>
 <ul>
 <li>每当进程做了事情，更新该node的时钟。</li>
 <li>进程发送的消息，包含上面提到的数组。</li>
@@ -312,27 +372,38 @@
 </ul>
 <p>如图：</p>
 <p><img src="http://book.mixu.net/distsys/images/vector_clock.svg.png" alt=""></p>
-<h4 id="3-3-失灵检测"><a href="#3-3-失灵检测" class="headerlink" title="3.3 失灵检测"></a>3.3 失灵检测</h4><p>对于一个节点上的程序，它怎么知道远程某个节点失效了呢？在缺乏有效准确的全局信息下，我们可以通过一个合理的timeout值来确定。但是合理的timeout值该怎么确定呢？</p>
-<p>失灵检测器可以通过使用心跳消息来实现timeout。节点之间交换心跳消息。如果消息在timeout之前没有收到响应，就可以认为出现失效。这种检测要么太冲动(把正常的节点算成失效），要么太保守，很长时间才能检测出错误。            </p>
+<h4>3.3 失灵检测</h4>
+<p>对于一个节点上的程序，它怎么知道远程某个节点失效了呢？在缺乏有效准确的全局信息下，我们可以通过一个合理的timeout值来确定。但是合理的timeout值该怎么确定呢？</p>
+<p>失灵检测器可以通过使用心跳消息来实现timeout。节点之间交换心跳消息。如果消息在timeout之前没有收到响应，就可以认为出现失效。这种检测要么太冲动(把正常的节点算成失效），要么太保守，很长时间才能检测出错误。</p>
 <p><a href="http://www.google.com/search?q=Unreliable%20Failure%20Detectors%20for%20Reliable%20Distributed%20Systems" target="_blank" rel="noopener">论文</a> 讨论了失灵检测在解决一致性问题中的两大属性：<strong>完整性</strong>和<strong>精准性</strong></p>
-<h4 id="3-4-总结"><a href="#3-4-总结" class="headerlink" title="3.4 总结"></a>3.4 总结</h4><p>在分布式系统中应假设偏序而不是全序。而要承诺全序也是可能的，但是代价非常大。</p>
+<h4>3.4 总结</h4>
+<p>在分布式系统中应假设偏序而不是全序。而要承诺全序也是可能的，但是代价非常大。</p>
 <p>时间，顺序和同步真的必要么？看情况。有时候可能你只不过需要最后的结果而不关系中间事件发生的顺序。</p>
-<h2 id="四-replication"><a href="#四-replication" class="headerlink" title="四.replication"></a>四.replication</h2><p>拷贝其实是一组通信问题，为一些子问题，例如选举，失灵检测，一致性和原子广播提供了上下文</p>
+<h2>四.replication</h2>
+<p>拷贝其实是一组通信问题，为一些子问题，例如选举，失灵检测，一致性和原子广播提供了上下文</p>
 <p>拷贝本质就只有两种：</p>
 <ol>
 <li>同步拷贝</li>
 <li>异步拷贝</li>
 </ol>
-<h4 id="4-1-拷贝范式"><a href="#4-1-拷贝范式" class="headerlink" title="4.1 拷贝范式"></a>4.1 拷贝范式</h4><h5 id="4-1-1-同步拷贝"><a href="#4-1-1-同步拷贝" class="headerlink" title="4.1.1 同步拷贝"></a>4.1.1 同步拷贝</h5><p><img src="http://book.mixu.net/distsys/images/replication-sync.png" alt=""></p>
+<h4>4.1 拷贝范式</h4>
+<h5>4.1.1 同步拷贝</h5>
+<p><img src="http://book.mixu.net/distsys/images/replication-sync.png" alt=""></p>
 <p>首先client发送请求。然后同步拷贝，同步意味着这时候client还在等待着请求返回。最后，服务器返回。</p>
 <p>这就是N-of-N write，只有等所有N个节点成功写，才返回写成功给client。系统不容忍任何服务器下线。从性能上说，最慢的服务器决定了写的速度</p>
-<h5 id="4-1-2-异步拷贝"><a href="#4-1-2-异步拷贝" class="headerlink" title="4.1.2 异步拷贝"></a>4.1.2 异步拷贝</h5><p><img src="http://book.mixu.net/distsys/images/replication-async.png" alt=""></p>
+<h5>4.1.2 异步拷贝</h5>
+<p><img src="http://book.mixu.net/distsys/images/replication-async.png" alt=""></p>
 <p>master节点立即返回。该节点可能在本地做了复制，但是不会向其他服务器发送拷贝。只有在返回以后，异步的任务在开始执行。</p>
 <p>相对地，这是1-of-N write。性能上说，快。但是不能提供强一致性保证。</p>
-<h4 id="4-2-拷贝算法"><a href="#4-2-拷贝算法" class="headerlink" title="4.2 拷贝算法"></a>4.2 拷贝算法</h4><h5 id="4-2-1-overview"><a href="#4-2-1-overview" class="headerlink" title="4.2.1 overview"></a>4.2.1 overview</h5><p>一致性的强弱可以用来区分拷贝算法</p>
+<h4>4.2 拷贝算法</h4>
+<h5>4.2.1 overview</h5>
+<p>一致性的强弱可以用来区分拷贝算法</p>
 <blockquote>
-<p> 一致性就是所有的节点都同意某一个值，具体的说，一致性包括：</p>
-<p>协议：每个正确的流程必须就相同的价值达成一致。<br>完整性：每个正确的过程最多决定一个值，如果它决定某个值，那么它必须由某个过程提出。<br>终止：所有流程最终都会做出决定。<br>有效性：如果所有正确的过程提出相同的值V，那么所有正确的过程决定V</p>
+<p>一致性就是所有的节点都同意某一个值，具体的说，一致性包括：</p>
+<p>协议：每个正确的流程必须就相同的价值达成一致。
+完整性：每个正确的过程最多决定一个值，如果它决定某个值，那么它必须由某个过程提出。
+终止：所有流程最终都会做出决定。
+有效性：如果所有正确的过程提出相同的值V，那么所有正确的过程决定V</p>
 </blockquote>
 <p>互斥，leader选举，多播和原子广播都是更普遍的一致性问题</p>
 <p>单拷贝系统按照一次执行中传递的消息数目，可以做一下分类：</p>
@@ -344,7 +415,8 @@
 </ul>
 <p><img src="http://book.mixu.net/distsys/images/google-transact09.png" alt=""></p>
 <p>上图列出的复制算法不难发现，一致性强的算法，相应的延时高，性能低，这是一种取舍，得此失彼。</p>
-<h5 id="4-2-2-主从备份拷贝"><a href="#4-2-2-主从备份拷贝" class="headerlink" title="4.2.2 主从备份拷贝"></a>4.2.2 主从备份拷贝</h5><p>最常见最基本的拷贝方式。所有的update发生在primary，并且以log的形式拷贝到backup 服务器。主从备份也分同步和异步两种。</p>
+<h5>4.2.2 主从备份拷贝</h5>
+<p>最常见最基本的拷贝方式。所有的update发生在primary，并且以log的形式拷贝到backup 服务器。主从备份也分同步和异步两种。</p>
 <p>MySQL和MongoDB都使用异步主从备份。同步主从备份保证在返回给client之前，backup节点成功存储了拷贝（Replica）。不过即使这样，同步方式也仅能保证较弱的承诺。考虑下面的场景：</p>
 <ul>
 <li>主服务器收到write，发送到backup</li>
@@ -352,20 +424,24 @@
 <li>主服务器fail，client超时，认为写失败。</li>
 </ul>
 <p>client现在认为写失败，但是backup其实成功。如果backup promote成为primary，那么就不对了</p>
-<h5 id="4-2-3-两阶段提交（2PC）"><a href="#4-2-3-两阶段提交（2PC）" class="headerlink" title="4.2.3 两阶段提交（2PC）"></a>4.2.3 两阶段提交（2PC）</h5><p>2PC在很多经典的关系型数据库中都使用到了。例如MySQL 集群使用2PC提供同步拷贝。下面是2PC的基本流程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ Coordinator ] -&gt; OK to commit?     [ Peers ]</span><br><span class="line">                &lt;- Yes / No</span><br><span class="line"></span><br><span class="line">[ Coordinator ] -&gt; Commit / Rollback [ Peers ]</span><br><span class="line">                &lt;- ACK</span><br></pre></td></tr></table></figure>
+<h5>4.2.3 两阶段提交（2PC）</h5>
+<p>2PC在很多经典的关系型数据库中都使用到了。例如MySQL 集群使用2PC提供同步拷贝。下面是2PC的基本流程</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ Coordinator ] -&gt; OK to commit?     [ Peers ]</span><br><span class="line">                &lt;- Yes / No</span><br><span class="line"></span><br><span class="line">[ Coordinator ] -&gt; Commit / Rollback [ Peers ]</span><br><span class="line">                &lt;- ACK</span><br></pre></td></tr></table></figure></p>
 <p>在第一阶段，<strong>投票</strong>，协调者（Coordinator）给所有参与者发送update。每个参与者投票决定是否commit。如果选择commit，结果首先存放在临时区域（the write-ahead log）。除非第二阶段完成，这部分都只算“临时”的update。</p>
 <p>在第二阶段，<strong>决策</strong>，协调者决定结果，并通知参与者。如果所有参与者都选择commit，那结果从临时区域移除，而成为最终结果。</p>
 <p>2PC在最后commit之前，有一个临时区域，就能够在节点失效的时候，从而允许回滚。</p>
 <p>之前讨论过，2PC属于CA，所以它没有考虑网络分割，对网络分割并没有容错。同时由于是N-of-N write，所以性能上会有一些折扣</p>
-<h5 id="4-2-4-对网络分割容错的一致性算法：gossip-raft和ZAB"><a href="#4-2-4-对网络分割容错的一致性算法：gossip-raft和ZAB" class="headerlink" title="4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB"></a>4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</h5><p>对网络分割容错的一致性算法其实就是实现了CAP的CP，同时保重了一定的A。</p>
-<h6 id="什么是网络分割（Network-Partition）"><a href="#什么是网络分割（Network-Partition）" class="headerlink" title="什么是网络分割（Network Partition）"></a>什么是网络分割（Network Partition）</h6><p>节点本身正常运行，但是网络链路发生问题。不同的Partition甚至还能接收client的请求。</p>
+<h5>4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</h5>
+<p>对网络分割容错的一致性算法其实就是实现了CAP的CP，同时保重了一定的A。</p>
+<h6>什么是网络分割（Network Partition）</h6>
+<p>节点本身正常运行，但是网络链路发生问题。不同的Partition甚至还能接收client的请求。</p>
 <p>2节点，节点失效 vs 网络分割</p>
 <p><img src="http://book.mixu.net/distsys/images/system-of-2.png" alt=""></p>
 <p>3节点，节点失效 vs网络分割</p>
 <p><img src="http://book.mixu.net/distsys/images/system-of-3.png" alt=""></p>
-<p><strong>对这类算法会在学习MIT6.824公开课深入学习，to be continues…</strong></p>
-<h4 id="4-3-总结"><a href="#4-3-总结" class="headerlink" title="4.3 总结"></a>4.3 总结</h4><p>总结下各类算法的一些关键特征。</p>
+<p><strong>对这类算法会在学习MIT6.824公开课深入学习，to be continues...</strong></p>
+<h4>4.3 总结</h4>
+<p>总结下各类算法的一些关键特征。</p>
 <p><strong>主从备份</strong></p>
 <ul>
 <li>单独的，静态的master节点</li>
@@ -381,23 +457,29 @@
 <li>协调者和普通节点同时挂掉情况下无法保证一致性</li>
 <li>无法容错网络分割</li>
 </ul>
-<p><strong>Paxos like</strong> </p>
+<p><strong>Paxos like</strong></p>
 <ul>
-<li><p>多数投票</p>
+<li>
+<p>多数投票</p>
 </li>
-<li><p>动态master节点</p>
+<li>
+<p>动态master节点</p>
 </li>
-<li><p>允许n/2-1节点挂</p>
+<li>
+<p>允许n/2-1节点挂</p>
 </li>
-<li><p>对延时并不太敏感</p>
+<li>
+<p>对延时并不太敏感</p>
 </li>
 </ul>
-<h2 id="遗留的问题"><a href="#遗留的问题" class="headerlink" title="遗留的问题"></a>遗留的问题</h2><ol>
+<h2>遗留的问题</h2>
+<ol>
 <li>拜占庭将军问题</li>
 <li>2PC</li>
 <li>flp实现</li>
 </ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">1. ebook</a></p>
+<h2>参考</h2>
+<p><a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">1. ebook</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/41329283" target="_blank" rel="noopener">2. 区块链时代的拜占庭将军们</a></p>
 <p><a href="https://blog.csdn.net/chen77716/article/details/27963079" target="_blank" rel="noopener">3. FLP impossible</a></p>
 <p><a href="https://www.jdon.com/bigdata/how-to-understand-cap.html" target="_blank" rel="noopener">4. 如何正确理解CAP</a></p>
@@ -426,7 +508,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分布式基础"><span class="toc-number">1.</span> <span class="toc-text">分布式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-基础"><span class="toc-number">1.1.</span> <span class="toc-text">一.基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-为什么要用分布式系统"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么要用分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-目标"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1 目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-阻碍"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2 阻碍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-如何研究分布式系统"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 如何研究分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-抽象和模型"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 抽象和模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-分布式实现"><span class="toc-number">1.1.3.</span> <span class="toc-text">3 分布式实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-理论"><span class="toc-number">1.2.</span> <span class="toc-text">二.理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-系统模型"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-公理"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 公理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-FLP理论"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 FLP理论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-CAP理论"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 CAP理论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-一致性的扩展"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">2.2.1 一致性的扩展</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-时间和顺序"><span class="toc-number">1.3.</span> <span class="toc-text">三.时间和顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-全序和偏序"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">3.1 全序和偏序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-时间匀速流逝"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">3.2 时间匀速流逝</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-1-全局时钟"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">3.2.1 全局时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-2-本地时钟"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">3.2.2 本地时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-3-没有时钟"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">3.2.3 没有时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-4-逻辑时钟"><span class="toc-number">1.3.0.2.4.</span> <span class="toc-text">3.2.4 逻辑时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#3-2-4-1-Lamport时钟"><span class="toc-number">1.3.0.2.4.1.</span> <span class="toc-text">3.2.4.1 Lamport时钟</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-2-4-2-Vector-clocks"><span class="toc-number">1.3.0.2.4.2.</span> <span class="toc-text">3.2.4.2 Vector clocks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-失灵检测"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3.3 失灵检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-总结"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">3.4 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-replication"><span class="toc-number">1.4.</span> <span class="toc-text">四.replication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-拷贝范式"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">4.1 拷贝范式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1-1-同步拷贝"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text">4.1.1 同步拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1-2-异步拷贝"><span class="toc-number">1.4.0.1.2.</span> <span class="toc-text">4.1.2 异步拷贝</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-拷贝算法"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">4.2 拷贝算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-1-overview"><span class="toc-number">1.4.0.2.1.</span> <span class="toc-text">4.2.1 overview</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-2-主从备份拷贝"><span class="toc-number">1.4.0.2.2.</span> <span class="toc-text">4.2.2 主从备份拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-3-两阶段提交（2PC）"><span class="toc-number">1.4.0.2.3.</span> <span class="toc-text">4.2.3 两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-4-对网络分割容错的一致性算法：gossip-raft和ZAB"><span class="toc-number">1.4.0.2.4.</span> <span class="toc-text">4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#什么是网络分割（Network-Partition）"><span class="toc-number">1.4.0.2.4.1.</span> <span class="toc-text">什么是网络分割（Network Partition）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-总结"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#遗留的问题"><span class="toc-number">1.5.</span> <span class="toc-text">遗留的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">分布式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">一.基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么要用分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1 目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2 阻碍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 如何研究分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 抽象和模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.3.</span> <span class="toc-text">3 分布式实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">二.理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 公理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 FLP理论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 CAP理论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">2.2.1 一致性的扩展</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">三.时间和顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">3.1 全序和偏序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">3.2 时间匀速流逝</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">3.2.1 全局时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">3.2.2 本地时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">3.2.3 没有时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.</span> <span class="toc-text">3.2.4 逻辑时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.1.</span> <span class="toc-text">3.2.4.1 Lamport时钟</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.2.</span> <span class="toc-text">3.2.4.2 Vector clocks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3.3 失灵检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">3.4 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">四.replication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">4.1 拷贝范式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text">4.1.1 同步拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.2.</span> <span class="toc-text">4.1.2 异步拷贝</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">4.2 拷贝算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.1.</span> <span class="toc-text">4.2.1 overview</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.2.</span> <span class="toc-text">4.2.2 主从备份拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.3.</span> <span class="toc-text">4.2.3 两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.</span> <span class="toc-text">4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.1.</span> <span class="toc-text">什么是网络分割（Network Partition）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">遗留的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

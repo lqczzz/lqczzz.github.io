@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="从需求说起还是timeline（微博／朋友圈etc）的业务场景。timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类型：">
+    <meta name="description" content="从需求说起 还是timeline（微博／朋友圈etc）的业务场景。 timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类">
 <meta name="keywords" content="golang">
 <meta property="og:type" content="article">
 <meta property="og:title" content="模版模式在golang的使用">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/27/golang组合和继承/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="从需求说起还是timeline（微博／朋友圈etc）的业务场景。timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类型：">
+<meta property="og:description" content="从需求说起 还是timeline（微博／朋友圈etc）的业务场景。 timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-10-27T11:12:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="模版模式在golang的使用">
-<meta name="twitter:description" content="从需求说起还是timeline（微博／朋友圈etc）的业务场景。timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类型：">
+<meta name="twitter:description" content="从需求说起 还是timeline（微博／朋友圈etc）的业务场景。 timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类">
     
     
         
@@ -103,7 +103,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#从需求说起"><span class="toc-number">1.</span> <span class="toc-text">从需求说起</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">从需求说起</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -147,7 +147,9 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="从需求说起"><a href="#从需求说起" class="headerlink" title="从需求说起"></a>从需求说起</h2><p>还是timeline（微博／朋友圈etc）的业务场景。<br>timeline业务从步骤上考虑，无非就是几个步骤：</p>
+    <h2>从需求说起</h2>
+<p>还是timeline（微博／朋友圈etc）的业务场景。
+timeline业务从步骤上考虑，无非就是几个步骤：</p>
 <ol>
 <li>获取不同的数据队列（通常是meta信息)</li>
 <li>根据一定的算法合并和截取数据</li>
@@ -162,7 +164,8 @@
 <li>推荐列表</li>
 <li>etc</li>
 </ol>
-<p>这种场景最适合用模版模式实现了<br>在java里面：</p>
+<p>这种场景最适合用模版模式实现了
+在java里面：</p>
 <pre><code>public asbtract class BaseTimeline {
     public void Do() {
         this.doRetrieve()
@@ -201,7 +204,8 @@ public class Server {
         timeline.Do()
     }
 }
-</code></pre><p>通过模版模式可以很方便的实现对timeline的扩展，新增不同的展示方式直接新增timeline类。在java servlet编程和图形界面开发(android view, html5 vue .etc)中是很常见的设计模式</p>
+</code></pre>
+<p>通过模版模式可以很方便的实现对timeline的扩展，新增不同的展示方式直接新增timeline类。在java servlet编程和图形界面开发(android view, html5 vue .etc)中是很常见的设计模式</p>
 <p>可是golang的组合的方式没办法支持抽象方法</p>
 <pre><code>type ITimeline interface {
     doRetrieve()   // 获取不同的队列
@@ -264,7 +268,9 @@ func main() {
 // base retrieve
 // base merge
 // base content
-</code></pre><p>原因是因为组合方式不支持方法覆盖<br>可以把Do单独出来：</p>
+</code></pre>
+<p>原因是因为组合方式不支持方法覆盖
+可以把Do单独出来：</p>
 <pre><code>type ITimeline interface {
     doRetrieve()   // 获取不同的队列
     doMerge()      // 合并
@@ -322,8 +328,8 @@ func server(request, response interface{}) {
 func main() {
     req := &amp;GetTimelineRequest{}
     server(req, nil)
-}
-</code></pre>
+}</code></pre>
+
   </div>
 </article>
 
@@ -348,7 +354,7 @@ func main() {
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#从需求说起"><span class="toc-number">1.</span> <span class="toc-text">从需求说起</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">从需求说起</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

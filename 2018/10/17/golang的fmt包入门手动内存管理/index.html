@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="矫情的话在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优秀">
+    <meta name="description" content="矫情的话 在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优">
 <meta name="keywords" content="timeline重构任重道远">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从golang的fmt包入门手动内存管理">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="矫情的话在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优秀">
+<meta property="og:description" content="矫情的话 在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-10-17T15:05:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从golang的fmt包入门手动内存管理">
-<meta name="twitter:description" content="矫情的话在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优秀">
+<meta name="twitter:description" content="矫情的话 在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优">
     
     
         
@@ -103,7 +103,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#矫情的话"><span class="toc-number">1.</span> <span class="toc-text">矫情的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fmt包源码摘要和笔记"><span class="toc-number">2.</span> <span class="toc-text">fmt包源码摘要和笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sync-Pool测试"><span class="toc-number">3.</span> <span class="toc-text">sync.Pool测试</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">矫情的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">fmt包源码摘要和笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">sync.Pool测试</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -147,12 +147,16 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="矫情的话"><a href="#矫情的话" class="headerlink" title="矫情的话"></a>矫情的话</h2><p>在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。</p>
-<p>痛定几周之后决定思痛，要参考学习优秀的代码<br>于是我想，哪里会有优秀的涉及到内存管理的代码呢！</p>
+    <h2>矫情的话</h2>
+<p>在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。</p>
+<p>痛定几周之后决定思痛，要参考学习优秀的代码
+于是我想，哪里会有优秀的涉及到内存管理的代码呢！</p>
 <p>官方库！！</p>
 <p>然后想，timeline涉及网络io，io才会有大量的内存分配和回收的场景！！</p>
-<p>直接看net包？太尼玛复杂了<br>ok，看fmt包</p>
-<h2 id="fmt包源码摘要和笔记"><a href="#fmt包源码摘要和笔记" class="headerlink" title="fmt包源码摘要和笔记"></a>fmt包源码摘要和笔记</h2><blockquote>
+<p>直接看net包？太尼玛复杂了
+ok，看fmt包</p>
+<h2>fmt包源码摘要和笔记</h2>
+<blockquote>
 <p>来自fmt/print.go</p>
 </blockquote>
 <pre><code>// Fprintf根据w的不同，调用w的write方法，很容易做到打印日志到不同地方
@@ -176,14 +180,16 @@ func Sprintf(format string, a ...interface{}) string {
     p.free()
     return s
 }
-</code></pre><p>这里至少有三点可以学:</p>
+</code></pre>
+<p>这里至少有三点可以学:</p>
 <ol>
 <li>包本身就是模块化的一种方式，对外提供的函数不一定非得属于某个对象</li>
-<li>接口作为参数的好处：封装变化<br> 这里，变化指的是[]byte的去向，比如os.Stdout</li>
+<li>接口作为参数的好处：封装变化
+这里，变化指的是[]byte的去向，比如os.Stdout</li>
 <li><code>p := newPrinter()</code>这里采用了临时对象池来实现内存的管理</li>
 </ol>
 <p>看下去：</p>
-<pre><code>// pp is used to store a printer&apos;s state and is reused with sync.Pool to avoid allocations.
+<pre><code>// pp is used to store a printer's state and is reused with sync.Pool to avoid allocations.
 type pp struct {
     buf buffer
     // 省略
@@ -209,9 +215,13 @@ func (p *pp) free() {
     p.value = reflect.Value{}
     ppFree.Put(p)   // 放回对象池里
 }
-</code></pre><p>一个sync.Pool对象就是一组临时对象的集合。Pool是协程安全的。<br>Pool用于存储那些被分配了但是没有被使用，而未来可能会使用的值，以减小垃圾回收的压力。</p>
-<p>fmt包总是需要使用一些[]byte之类的对象，golang建立了一个临时对象池，存放着这些对象，如果需要使用一个[]byte，就去Pool里面拿，如果拿不到就分配一份。<br>这比起不停生成新的[]byte，用完了再等待gc回收来要高效得多</p>
-<h2 id="sync-Pool测试"><a href="#sync-Pool测试" class="headerlink" title="sync.Pool测试"></a>sync.Pool测试</h2><pre><code>// 一个[]byte的对象池，每个对象为一个[]byte
+</code></pre>
+<p>一个sync.Pool对象就是一组临时对象的集合。Pool是协程安全的。
+Pool用于存储那些被分配了但是没有被使用，而未来可能会使用的值，以减小垃圾回收的压力。</p>
+<p>fmt包总是需要使用一些[]byte之类的对象，golang建立了一个临时对象池，存放着这些对象，如果需要使用一个[]byte，就去Pool里面拿，如果拿不到就分配一份。
+这比起不停生成新的[]byte，用完了再等待gc回收来要高效得多</p>
+<h2>sync.Pool测试</h2>
+<pre><code>// 一个[]byte的对象池，每个对象为一个[]byte
 var bytePool = sync.Pool{
     New: func() interface{} {
         b := make([]byte, 1024)
@@ -237,15 +247,17 @@ func main() {
     fmt.Println(&quot;without pool &quot;, b-a, &quot;s&quot;)
     fmt.Println(&quot;with    pool &quot;, c-b, &quot;s&quot;)
 }
-</code></pre><blockquote>
-<p>来自：<a href="https://www.jianshu.com/p/2bd41a8f2254" target="_blank" rel="noopener">go的临时对象池–sync.Pool
+</code></pre>
+<blockquote>
+<p>来自：<a href="https://www.jianshu.com/p/2bd41a8f2254" target="_blank" rel="noopener">go的临时对象池--sync.Pool
 </a></p>
 </blockquote>
 <p>测试效果：</p>
 <pre><code>// 数据量更大更明显
 without pool  21 s
 with    pool  16 s
-</code></pre><p>the end…</p>
+</code></pre>
+<p>the end...</p>
 
   </div>
 </article>
@@ -271,7 +283,7 @@ with    pool  16 s
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#矫情的话"><span class="toc-number">1.</span> <span class="toc-text">矫情的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fmt包源码摘要和笔记"><span class="toc-number">2.</span> <span class="toc-text">fmt包源码摘要和笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sync-Pool测试"><span class="toc-number">3.</span> <span class="toc-text">sync.Pool测试</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">矫情的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">fmt包源码摘要和笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">sync.Pool测试</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="golang的break和continue挺好用的，和别的语言不太一样 breakgolang的break关键字for,switch,select会跳出三个关键字的包裹  A “break” statement terminates execution of the innermost “for”, “switch”, or “select” statement within the same">
+    <meta name="description" content="golang的break和continue挺好用的，和别的语言不太一样 break golang的break关键字for,switch,select会跳出三个关键字的包裹  A &amp;quot;break&amp;quot; statement terminates execution of the innermost &amp;quot;for&amp;quot;, &amp;quot;switch&amp;quot;, or &amp;quo">
 <meta name="keywords" content="golang思考">
 <meta property="og:type" content="article">
 <meta property="og:title" content="break 和 continue">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/26/break-in-golang/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="golang的break和continue挺好用的，和别的语言不太一样 breakgolang的break关键字for,switch,select会跳出三个关键字的包裹  A “break” statement terminates execution of the innermost “for”, “switch”, or “select” statement within the same">
+<meta property="og:description" content="golang的break和continue挺好用的，和别的语言不太一样 break golang的break关键字for,switch,select会跳出三个关键字的包裹  A &amp;quot;break&amp;quot; statement terminates execution of the innermost &amp;quot;for&amp;quot;, &amp;quot;switch&amp;quot;, or &amp;quo">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-10-26T13:40:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="break 和 continue">
-<meta name="twitter:description" content="golang的break和continue挺好用的，和别的语言不太一样 breakgolang的break关键字for,switch,select会跳出三个关键字的包裹  A “break” statement terminates execution of the innermost “for”, “switch”, or “select” statement within the same">
+<meta name="twitter:description" content="golang的break和continue挺好用的，和别的语言不太一样 break golang的break关键字for,switch,select会跳出三个关键字的包裹  A &amp;quot;break&amp;quot; statement terminates execution of the innermost &amp;quot;for&amp;quot;, &amp;quot;switch&amp;quot;, or &amp;quo">
     
     
         
@@ -103,7 +103,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#break"><span class="toc-number">1.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#continue"><span class="toc-number">2.</span> <span class="toc-text">continue</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">continue</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -148,18 +148,19 @@
 
   <div class="content" itemprop="articleBody">
     <p>golang的break和continue挺好用的，和别的语言不太一样</p>
-<h1 id="break"><a href="#break" class="headerlink" title="break"></a>break</h1><p>golang的<code>break</code>关键字<code>for</code>,<code>switch</code>,<code>select</code>会跳出三个关键字的包裹</p>
+<h1>break</h1>
+<p>golang的<code>break</code>关键字<code>for</code>,<code>switch</code>,<code>select</code>会跳出三个关键字的包裹</p>
 <blockquote>
-<p><a href="https://golang.org/ref/spec#Break_statements" target="_blank" rel="noopener">A “break” statement terminates execution of the innermost “for”, “switch”, or “select” statement within the same function. —— 《The Go Programming Language Specification》</a></p>
+<p><a href="https://golang.org/ref/spec#Break_statements" target="_blank" rel="noopener">A &quot;break&quot; statement terminates execution of the innermost &quot;for&quot;, &quot;switch&quot;, or &quot;select&quot; statement within the same function. —— 《The Go Programming Language Specification》</a></p>
 </blockquote>
 <p>下面一段代码</p>
 <pre><code>for i := 0; i &lt; 6; i++ {
-    switch i {
-    case 2:
-        break
-    default:
-        fmt.Println(i)
-    }
+	switch i {
+	case 2:
+		break
+	default:
+		fmt.Println(i)
+	}
 }
 // go run main.go：
 // 0
@@ -167,7 +168,8 @@
 // 3
 // 4
 // 5
-</code></pre><p>如果想跳出更上一层的<code>for</code>关键字，需要指定<code>label</code></p>
+</code></pre>
+<p>如果想跳出更上一层的<code>for</code>关键字，需要指定<code>label</code></p>
 <pre><code>forLoop:
     for i := 0; i &lt; 6; i++ {
         switch i {
@@ -181,7 +183,9 @@
 // go run main.go:
 // 0
 // 1
-</code></pre><h1 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h1><p><code>continue</code>也可以指定label</p>
+</code></pre>
+<h1>continue</h1>
+<p><code>continue</code>也可以指定label</p>
 <pre><code>forLoop:
     for i := 0; i &lt; 6; i++ {
         switch i {
@@ -198,6 +202,7 @@
 // 4
 // 5
 </code></pre>
+
   </div>
 </article>
 
@@ -222,7 +227,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#break"><span class="toc-number">1.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#continue"><span class="toc-number">2.</span> <span class="toc-text">continue</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">continue</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

@@ -6,17 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
+    <meta name="description" content="elasticSearch入门 最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门 1.安装es 前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装">
 <meta property="og:type" content="article">
 <meta property="og:title" content="elasticSearch学习笔记">
 <meta property="og:url" content="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
+<meta property="og:description" content="elasticSearch入门 最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门 1.安装es 前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-10-17T05:17:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="elasticSearch学习笔记">
-<meta name="twitter:description" content="elasticSearch入门最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门1.安装es前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了">
+<meta name="twitter:description" content="elasticSearch入门 最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门 1.安装es 前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装">
     
     
         
@@ -102,7 +102,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#elasticSearch入门"><span class="toc-number">1.</span> <span class="toc-text">elasticSearch入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#入门"><span class="toc-number">1.1.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-安装es"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.安装es</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-自动补全"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.自动补全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mappings-amp-analysizer"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">mappings &amp; analysizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加数据"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">添加数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查询数据"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">查询数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考："><span class="toc-number">1.3.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">elasticSearch入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.安装es</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.自动补全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">mappings &amp; analysizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">添加数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">查询数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -141,21 +141,26 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h1 id="elasticSearch入门"><a href="#elasticSearch入门" class="headerlink" title="elasticSearch入门"></a>elasticSearch入门</h1><p>最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。</p>
+    <h1>elasticSearch入门</h1>
+<p>最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。</p>
 <p>怎么入门：</p>
 <ol>
 <li>类比入门：类比一个熟悉的知识点，知识迁移会更容易</li>
 <li>简单的事例入门：动手进行简单的一个demo感受一下流程</li>
 </ol>
-<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><h3 id="1-安装es"><a href="#1-安装es" class="headerlink" title="1.安装es"></a>1.安装es</h3><p>前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了</p>
+<h2>入门</h2>
+<h3>1.安装es</h3>
+<p>前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了</p>
 <p>步骤：</p>
 <ol>
-<li>安装es：<ul>
+<li>安装es：
+<ul>
 <li>brew install elasticsearch</li>
 <li>es服务端会被安装</li>
 </ul>
 </li>
-<li>安装kibana：<ul>
+<li>安装kibana：
+<ul>
 <li>brew install kibana</li>
 <li>kibana可以理解为图形化的es客户端</li>
 </ul>
@@ -163,14 +168,18 @@
 <li>启动es：brew services start elasticsearch</li>
 <li>启动kibana：brew services start kibana</li>
 </ol>
-<p>安装es成功之后访问<code>http://localhost:9200/</code>可以获得es的状态信息<br>安装kibana成功之后访问<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>可以对es进行操作</p>
-<h3 id="2-自动补全"><a href="#2-自动补全" class="headerlink" title="2.自动补全"></a>2.自动补全</h3><pre><code>// hashtag
+<p>安装es成功之后访问<code>http://localhost:9200/</code>可以获得es的状态信息
+安装kibana成功之后访问<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>可以对es进行操作</p>
+<h3>2.自动补全</h3>
+<pre><code>// hashtag
 {
     id,
     name,
     score, // weight
 }
-</code></pre><h4 id="mappings-amp-analysizer"><a href="#mappings-amp-analysizer" class="headerlink" title="mappings &amp; analysizer"></a>mappings &amp; analysizer</h4><pre><code>PUT feed_id
+</code></pre>
+<h4>mappings &amp; analysizer</h4>
+<pre><code>PUT feed_id
 {
     &quot;mappings&quot;: {
         &quot;hashtag&quot;: {
@@ -182,7 +191,9 @@
         }
     }
 }
-</code></pre><h4 id="添加数据"><a href="#添加数据" class="headerlink" title="添加数据"></a>添加数据</h4><pre><code>POST feed_id/hashtag
+</code></pre>
+<h4>添加数据</h4>
+<pre><code>POST feed_id/hashtag
 {
     &quot;name&quot;: {
         &quot;input&quot;: [&quot;hashtag name&quot;],
@@ -238,7 +249,9 @@ POST feed_id/hashtag/9
         &quot;weight&quot;: 6
     }
 }
-</code></pre><h4 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h4><pre><code>POST feed_id/_search?pretty
+</code></pre>
+<h4>查询数据</h4>
+<pre><code>POST feed_id/_search?pretty
 {
     &quot;suggest&quot;: {
         &quot;hashtag-suggest&quot;: {
@@ -249,8 +262,11 @@ POST feed_id/hashtag/9
         }
     }
 }
-</code></pre><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>摘抄自<a href="ttps://github.com/looly/elasticsearch-definitive-guide-cn" target="_blank" rel="noopener">elasticsearch-definitive-guide-cn</a></p>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2>
+</code></pre>
+<h2>基本概念</h2>
+<p>摘抄自<a href="ttps://github.com/looly/elasticsearch-definitive-guide-cn" target="_blank" rel="noopener">elasticsearch-definitive-guide-cn</a></p>
+<h2>参考：</h2>
+
   </div>
 </article>
 
@@ -275,7 +291,7 @@ POST feed_id/hashtag/9
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#elasticSearch入门"><span class="toc-number">1.</span> <span class="toc-text">elasticSearch入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#入门"><span class="toc-number">1.1.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-安装es"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.安装es</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-自动补全"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.自动补全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mappings-amp-analysizer"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">mappings &amp; analysizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加数据"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">添加数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查询数据"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">查询数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考："><span class="toc-number">1.3.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">elasticSearch入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.安装es</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.自动补全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">mappings &amp; analysizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">添加数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">查询数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
