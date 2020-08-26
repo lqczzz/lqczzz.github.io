@@ -1,200 +1,147 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="命令 必须掌握  cat grep awk tail head wc (word count) less sort[todo] uniq[todo]  不太常用但是有用  sed tac nl  详细 更详细用法可以 man command 1. cat  功能：  查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file ...] 常用参数: 共">
-<meta property="og:type" content="article">
-<meta property="og:title" content="linux查看日志常用命令">
-<meta property="og:url" content="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="命令 必须掌握  cat grep awk tail head wc (word count) less sort[todo] uniq[todo]  不太常用但是有用  sed tac nl  详细 更详细用法可以 man command 1. cat  功能：  查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file ...] 常用参数: 共">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-20T06:07:32.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux查看日志常用命令">
-<meta name="twitter:description" content="命令 必须掌握  cat grep awk tail head wc (word count) less sort[todo] uniq[todo]  不太常用但是有用  sed tac nl  详细 更详细用法可以 man command 1. cat  功能：  查看一个文本所有信息（经常和grep结合） 黏合文件   用法： cat [-benstuv] [file ...] 常用参数: 共">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>linux查看日志常用命令</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                linux查看日志常用命令 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/10/27/golang组合和继承/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&text=linux查看日志常用命令"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&is_video=false&description=linux查看日志常用命令"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=linux查看日志常用命令&body=Check out this article: http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&name=linux查看日志常用命令&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">必须掌握</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">不太常用但是有用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">详细</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">1. cat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2. grep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">awk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">tail/head</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.5.</span> <span class="toc-text">wc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.6.</span> <span class="toc-text">less</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.7.</span> <span class="toc-text">sed</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.8.</span> <span class="toc-text">tac</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.9.</span> <span class="toc-text">nl</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">常用组合</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        linux查看日志常用命令
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-11-11T07:45:27.000Z" itemprop="datePublished">2018-11-11</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h2>命令</h2>
-<h3>必须掌握</h3>
-<ol>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">linux查看日志常用命令</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/11/11</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <h2 id="&#x547D;&#x4EE4;"><a href="#&#x547D;&#x4EE4;" class="headerlink" title="&#x547D;&#x4EE4;"></a>&#x547D;&#x4EE4;</h2><h3 id="&#x5FC5;&#x987B;&#x638C;&#x63E1;"><a href="#&#x5FC5;&#x987B;&#x638C;&#x63E1;" class="headerlink" title="&#x5FC5;&#x987B;&#x638C;&#x63E1;"></a>&#x5FC5;&#x987B;&#x638C;&#x63E1;</h3><ol class="ui list">
 <li>cat</li>
 <li>grep</li>
 <li>awk</li>
 <li>tail</li>
-<li>head</li>
+<li>head </li>
 <li>wc (word count)</li>
 <li>less</li>
 <li>sort[todo]</li>
 <li>uniq[todo]</li>
 </ol>
-<h3>不太常用但是有用</h3>
-<ol>
+<h3 id="&#x4E0D;&#x592A;&#x5E38;&#x7528;&#x4F46;&#x662F;&#x6709;&#x7528;"><a href="#&#x4E0D;&#x592A;&#x5E38;&#x7528;&#x4F46;&#x662F;&#x6709;&#x7528;" class="headerlink" title="&#x4E0D;&#x592A;&#x5E38;&#x7528;&#x4F46;&#x662F;&#x6709;&#x7528;"></a>&#x4E0D;&#x592A;&#x5E38;&#x7528;&#x4F46;&#x662F;&#x6709;&#x7528;</h3><ol class="ui list">
 <li>sed</li>
 <li>tac</li>
 <li>nl</li>
 </ol>
-<h2>详细</h2>
-<p>更详细用法可以 <code>man command</code></p>
-<h3>1. cat</h3>
-<ol>
-<li>功能：
-<ol>
-<li>查看一个文本所有信息（经常和grep结合）</li>
-<li>黏合文件</li>
+<h2 id="&#x8BE6;&#x7EC6;"><a href="#&#x8BE6;&#x7EC6;" class="headerlink" title="&#x8BE6;&#x7EC6;"></a>&#x8BE6;&#x7EC6;</h2><p>&#x66F4;&#x8BE6;&#x7EC6;&#x7528;&#x6CD5;&#x53EF;&#x4EE5; <code>man command</code></p>
+<h3 id="1-cat"><a href="#1-cat" class="headerlink" title="1. cat"></a>1. cat</h3><ol class="ui list">
+<li>&#x529F;&#x80FD;&#xFF1A;<ol>
+<li>&#x67E5;&#x770B;&#x4E00;&#x4E2A;&#x6587;&#x672C;&#x6240;&#x6709;&#x4FE1;&#x606F;&#xFF08;&#x7ECF;&#x5E38;&#x548C;grep&#x7ED3;&#x5408;&#xFF09;</li>
+<li>&#x9ECF;&#x5408;&#x6587;&#x4EF6;</li>
 </ol>
 </li>
-<li>用法：
-cat [-benstuv] [file ...]</li>
-<li>常用参数:
-共7个参数，常用的是-n
--n  带上行数</li>
-<li>demo
-<ol>
-<li>合并文件
-cat test1 test2 &gt; test3 (&gt; 表示覆盖写，创建的意思)
-cat test1 test2 &gt;&gt; test3 (&gt;&gt; 表示追加写)</li>
-<li>带行数的查看文件
-cat -n filename</li>
+<li>&#x7528;&#x6CD5;&#xFF1A;<br> cat [-benstuv] [file &#x2026;]</li>
+<li>&#x5E38;&#x7528;&#x53C2;&#x6570;:<br> &#x5171;7&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x5E38;&#x7528;&#x7684;&#x662F;-n<br> -n  &#x5E26;&#x4E0A;&#x884C;&#x6570;</li>
+<li>demo<ol>
+<li>&#x5408;&#x5E76;&#x6587;&#x4EF6;<br> cat test1 test2 &gt; test3 (&gt; &#x8868;&#x793A;&#x8986;&#x76D6;&#x5199;&#xFF0C;&#x521B;&#x5EFA;&#x7684;&#x610F;&#x601D;)<br> cat test1 test2 &gt;&gt; test3 (&gt;&gt; &#x8868;&#x793A;&#x8FFD;&#x52A0;&#x5199;)</li>
+<li>&#x5E26;&#x884C;&#x6570;&#x7684;&#x67E5;&#x770B;&#x6587;&#x4EF6;<br> cat -n filename</li>
 </ol>
 </li>
 </ol>
-<h3>2. grep</h3>
-<ol>
-<li>
-<p>功能：
-正则匹配的查找文件内容</p>
-</li>
-<li>
-<p>用法：
-grep
-[-abcdDEFGHhIiJLlmnOopqRSsUVvwxZ]
+<h3 id="2-grep"><a href="#2-grep" class="headerlink" title="2. grep"></a>2. grep</h3><ol class="ui list">
+<li>&#x529F;&#x80FD;&#xFF1A;<br> &#x6B63;&#x5219;&#x5339;&#x914D;&#x7684;&#x67E5;&#x627E;&#x6587;&#x4EF6;&#x5185;&#x5BB9;</li>
+<li><p>&#x7528;&#x6CD5;&#xFF1A;<br> grep </p>
+<pre><code>[-abcdDEFGHhIiJLlmnOopqRSsUVvwxZ]
 [-A num]
 [-B num]
 [-C[num]]
@@ -208,313 +155,174 @@ grep
 [--line-buffered]
 [--null]
 [pattern]
-[file ...]</p>
+    [file ...]
+</code></pre></li>
+<li><p>&#x5E38;&#x7528;&#x53C2;&#x6570;:<br> -a   &#x2013;text   #&#x4E0D;&#x8981;&#x5FFD;&#x7565;&#x4E8C;&#x8FDB;&#x5236;&#x7684;&#x6570;&#x636E;&#x3002;<br> -A&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;   &#x2013;after-context=&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;   #&#x9664;&#x4E86;&#x663E;&#x793A;&#x7B26;&#x5408;&#x8303;&#x672C;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x5217;&#x4E4B;&#x5916;&#xFF0C;&#x5E76;&#x663E;&#x793A;&#x8BE5;&#x884C;&#x4E4B;&#x540E;&#x7684;&#x5185;&#x5BB9;&#x3002;<br> -b   &#x2013;byte-offset   #&#x5728;&#x663E;&#x793A;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x884C;&#x4E4B;&#x524D;&#xFF0C;&#x6807;&#x793A;&#x51FA;&#x8BE5;&#x884C;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#x7684;&#x7F16;&#x53F7;&#x3002;<br> -B&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;   &#x2013;before-context=&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;   #&#x9664;&#x4E86;&#x663E;&#x793A;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x884C;&#x4E4B;&#x5916;&#xFF0C;&#x5E76;&#x663E;&#x793A;&#x8BE5;&#x884C;&#x4E4B;&#x524D;&#x7684;&#x5185;&#x5BB9;&#x3002;<br> -c    &#x2013;count   #&#x8BA1;&#x7B97;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x5217;&#x6570;&#x3002;<br> -C&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;    &#x2013;context=&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;&#x6216;-&lt;&#x663E;&#x793A;&#x884C;&#x6570;&gt;   #&#x9664;&#x4E86;&#x663E;&#x793A;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x884C;&#x4E4B;&#x5916;&#xFF0C;&#x5E76;&#x663E;&#x793A;&#x8BE5;&#x884C;&#x4E4B;&#x524D;&#x540E;&#x7684;&#x5185;&#x5BB9;&#x3002;<br> -d &lt;&#x52A8;&#x4F5C;&gt;      &#x2013;directories=&lt;&#x52A8;&#x4F5C;&gt;   #&#x5F53;&#x6307;&#x5B9A;&#x8981;&#x67E5;&#x627E;&#x7684;&#x662F;&#x76EE;&#x5F55;&#x800C;&#x975E;&#x6587;&#x4EF6;&#x65F6;&#xFF0C;&#x5FC5;&#x987B;&#x4F7F;&#x7528;&#x8FD9;&#x9879;&#x53C2;&#x6570;&#xFF0C;&#x5426;&#x5219;grep&#x6307;&#x4EE4;&#x5C06;&#x56DE;&#x62A5;&#x4FE1;&#x606F;&#x5E76;&#x505C;&#x6B62;&#x52A8;&#x4F5C;&#x3002;<br> -e&lt;&#x8303;&#x672C;&#x6837;&#x5F0F;&gt;  &#x2013;regexp=&lt;&#x8303;&#x672C;&#x6837;&#x5F0F;&gt;   #&#x6307;&#x5B9A;&#x5B57;&#x7B26;&#x4E32;&#x505A;&#x4E3A;&#x67E5;&#x627E;&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x7684;&#x6837;&#x5F0F;&#x3002;<br> -E      &#x2013;extended-regexp   #&#x5C06;&#x6837;&#x5F0F;&#x4E3A;&#x5EF6;&#x4F38;&#x7684;&#x666E;&#x901A;&#x8868;&#x793A;&#x6CD5;&#x6765;&#x4F7F;&#x7528;&#x3002;<br> -F   &#x2013;fixed-regexp   #&#x5C06;&#x6837;&#x5F0F;&#x89C6;&#x4E3A;&#x56FA;&#x5B9A;&#x5B57;&#x7B26;&#x4E32;&#x7684;&#x5217;&#x8868;&#x3002;<br> -G   &#x2013;basic-regexp   #&#x5C06;&#x6837;&#x5F0F;&#x89C6;&#x4E3A;&#x666E;&#x901A;&#x7684;&#x8868;&#x793A;&#x6CD5;&#x6765;&#x4F7F;&#x7528;&#x3002;<br> -h   &#x2013;no-filename   #&#x5728;&#x663E;&#x793A;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x884C;&#x4E4B;&#x524D;&#xFF0C;&#x4E0D;&#x6807;&#x793A;&#x8BE5;&#x884C;&#x6240;&#x5C5E;&#x7684;&#x6587;&#x4EF6;&#x540D;&#x79F0;&#x3002;<br> -H   &#x2013;with-filename   #&#x5728;&#x663E;&#x793A;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x884C;&#x4E4B;&#x524D;&#xFF0C;&#x8868;&#x793A;&#x8BE5;&#x884C;&#x6240;&#x5C5E;&#x7684;&#x6587;&#x4EF6;&#x540D;&#x79F0;&#x3002;<br> -i    &#x2013;ignore-case   #&#x5FFD;&#x7565;&#x5B57;&#x7B26;&#x5927;&#x5C0F;&#x5199;&#x7684;&#x5DEE;&#x522B;&#x3002;<br> -l    &#x2013;file-with-matches   #&#x5217;&#x51FA;&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x7B26;&#x5408;&#x6307;&#x5B9A;&#x7684;&#x6837;&#x5F0F;&#x7684;&#x6587;&#x4EF6;&#x540D;&#x79F0;&#x3002;<br> -L   &#x2013;files-without-match   #&#x5217;&#x51FA;&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x4E0D;&#x7B26;&#x5408;&#x6307;&#x5B9A;&#x7684;&#x6837;&#x5F0F;&#x7684;&#x6587;&#x4EF6;&#x540D;&#x79F0;&#x3002;<br> -n   &#x2013;line-number   #&#x5728;&#x663E;&#x793A;&#x7B26;&#x5408;&#x6837;&#x5F0F;&#x7684;&#x90A3;&#x4E00;&#x884C;&#x4E4B;&#x524D;&#xFF0C;&#x6807;&#x793A;&#x51FA;&#x8BE5;&#x884C;&#x7684;&#x5217;&#x6570;&#x7F16;&#x53F7;&#x3002;<br> -q   &#x2013;quiet&#x6216;&#x2013;silent   #&#x4E0D;&#x663E;&#x793A;&#x4EFB;&#x4F55;&#x4FE1;&#x606F;&#x3002;<br> -r   &#x2013;recursive   #&#x6B64;&#x53C2;&#x6570;&#x7684;&#x6548;&#x679C;&#x548C;&#x6307;&#x5B9A;&#x201C;-d recurse&#x201D;&#x53C2;&#x6570;&#x76F8;&#x540C;&#x3002;<br> -s   &#x2013;no-messages   #&#x4E0D;&#x663E;&#x793A;&#x9519;&#x8BEF;&#x4FE1;&#x606F;&#x3002;<br> -v   &#x2013;revert-match   #&#x663E;&#x793A;&#x4E0D;&#x5305;&#x542B;&#x5339;&#x914D;&#x6587;&#x672C;&#x7684;&#x6240;&#x6709;&#x884C;&#x3002;<br> -V   &#x2013;version   #&#x663E;&#x793A;&#x7248;&#x672C;&#x4FE1;&#x606F;&#x3002;<br> -w   &#x2013;word-regexp   #&#x53EA;&#x663E;&#x793A;&#x5168;&#x5B57;&#x7B26;&#x5408;&#x7684;&#x5217;&#x3002;<br> -x    &#x2013;line-regexp   #&#x53EA;&#x663E;&#x793A;&#x5168;&#x5217;&#x7B26;&#x5408;&#x7684;&#x5217;&#x3002;<br> -y   #&#x6B64;&#x53C2;&#x6570;&#x7684;&#x6548;&#x679C;&#x548C;&#x6307;&#x5B9A;&#x201C;-i&#x201D;&#x53C2;&#x6570;&#x76F8;&#x540C;&#x3002;</p>
 </li>
-<li>
-<p>常用参数:
--a   --text   #不要忽略二进制的数据。<br>
--A&lt;显示行数&gt;   --after-context=&lt;显示行数&gt;   #除了显示符合范本样式的那一列之外，并显示该行之后的内容。<br>
--b   --byte-offset   #在显示符合样式的那一行之前，标示出该行第一个字符的编号。<br>
--B&lt;显示行数&gt;   --before-context=&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前的内容。<br>
--c    --count   #计算符合样式的列数。<br>
--C&lt;显示行数&gt;    --context=&lt;显示行数&gt;或-&lt;显示行数&gt;   #除了显示符合样式的那一行之外，并显示该行之前后的内容。<br>
--d &lt;动作&gt;      --directories=&lt;动作&gt;   #当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。<br>
--e&lt;范本样式&gt;  --regexp=&lt;范本样式&gt;   #指定字符串做为查找文件内容的样式。<br>
--E      --extended-regexp   #将样式为延伸的普通表示法来使用。<br>
--F   --fixed-regexp   #将样式视为固定字符串的列表。<br>
--G   --basic-regexp   #将样式视为普通的表示法来使用。<br>
--h   --no-filename   #在显示符合样式的那一行之前，不标示该行所属的文件名称。<br>
--H   --with-filename   #在显示符合样式的那一行之前，表示该行所属的文件名称。<br>
--i    --ignore-case   #忽略字符大小写的差别。<br>
--l    --file-with-matches   #列出文件内容符合指定的样式的文件名称。<br>
--L   --files-without-match   #列出文件内容不符合指定的样式的文件名称。<br>
--n   --line-number   #在显示符合样式的那一行之前，标示出该行的列数编号。<br>
--q   --quiet或--silent   #不显示任何信息。<br>
--r   --recursive   #此参数的效果和指定“-d recurse”参数相同。<br>
--s   --no-messages   #不显示错误信息。<br>
--v   --revert-match   #显示不包含匹配文本的所有行。<br>
--V   --version   #显示版本信息。<br>
--w   --word-regexp   #只显示全字符合的列。<br>
--x    --line-regexp   #只显示全列符合的列。<br>
--y   #此参数的效果和指定“-i”参数相同。</p>
-</li>
-<li>
-<p>正则匹配规则</p>
+<li><p>&#x6B63;&#x5219;&#x5339;&#x914D;&#x89C4;&#x5219;</p>
 </li>
 </ol>
-<p>grep的规则表达式:</p>
-<pre><code>^  #锚定行的开始 如：'^grep'匹配所有以grep开头的行。    
-$  #锚定行的结束 如：'grep$'匹配所有以grep结尾的行。    
-.  #匹配一个非换行符的字符 如：'gr.p'匹配gr后接一个任意字符，然后是p。    
-*  #匹配零个或多个先前字符 如：'*grep'匹配所有一个或多个空格后紧跟grep的行。    
-.*   #一起用代表任意字符。   
-[]   #匹配一个指定范围内的字符，如'[Gg]rep'匹配Grep和grep。    
-[^]  #匹配一个不在指定范围内的字符，如：'[^A-FH-Z]rep'匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    
-\(..\)  #标记匹配字符，如'\(love\)'，love被标记为1。    
-\&lt;      #锚定单词的开始，如:'\&lt;grep'匹配包含以grep开头的单词的行。    
-\&gt;      #锚定单词的结束，如'grep\&gt;'匹配包含以grep结尾的单词的行。    
-x\{m\}  #重复字符x，m次，如：'0\{5\}'匹配包含5个o的行。    
-x\{m,\}  #重复字符x,至少m次，如：'o\{5,\}'匹配至少有5个o的行。    
-x\{m,n\}  #重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5--10个o的行。   
-\w    #匹配文字和数字字符，也就是[A-Za-z0-9]，如：'G\w*p'匹配以G后跟零个或多个文字或数字字符，然后是p。   
-\W    #\w的反置形式，匹配一个或多个非单词字符，如点号句号等。   
-\b    #单词锁定符，如: '\bgrep\b'只匹配grep
-</code></pre>
-<ol start="4">
-<li>demo
-<ol>
-<li>查看进程 <code>ps -ef|grep svn</code></li>
-<li>统计进程数 <code>ps -ef|grep svn -c</code></li>
-<li>管道查看关键字的行 <code>cat test.txt | grep -F keyword</code></li>
-<li>管道查看关键字的行并且打印行号<code>cat test.txt | grep -nf keyword</code></li>
-<li>直接根据关键字查看行 <code>grep keyword filename</code></li>
-<li>多文件 <code>grep keyword filename1 filename2</code></li>
-<li>所有文件 <code>grep keyword *</code></li>
-<li>查看以**开头的行 <code>cat test.txt |grep ^u</code></li>
-<li>查看以**结尾的行 <code>cat test.txt |grep hat$</code></li>
-<li>查看不以**开头的行 <code>cat test.txt |grep ^[^u]</code></li>
-<li>查看有**或者**的行<code>cat test.txt |grep -E &quot;ed|at&quot;</code></li>
+<p>grep&#x7684;&#x89C4;&#x5219;&#x8868;&#x8FBE;&#x5F0F;:</p>
+<pre><code>^  #&#x951A;&#x5B9A;&#x884C;&#x7684;&#x5F00;&#x59CB; &#x5982;&#xFF1A;&apos;^grep&apos;&#x5339;&#x914D;&#x6240;&#x6709;&#x4EE5;grep&#x5F00;&#x5934;&#x7684;&#x884C;&#x3002;    
+$  #&#x951A;&#x5B9A;&#x884C;&#x7684;&#x7ED3;&#x675F; &#x5982;&#xFF1A;&apos;grep$&apos;&#x5339;&#x914D;&#x6240;&#x6709;&#x4EE5;grep&#x7ED3;&#x5C3E;&#x7684;&#x884C;&#x3002;    
+.  #&#x5339;&#x914D;&#x4E00;&#x4E2A;&#x975E;&#x6362;&#x884C;&#x7B26;&#x7684;&#x5B57;&#x7B26; &#x5982;&#xFF1A;&apos;gr.p&apos;&#x5339;&#x914D;gr&#x540E;&#x63A5;&#x4E00;&#x4E2A;&#x4EFB;&#x610F;&#x5B57;&#x7B26;&#xFF0C;&#x7136;&#x540E;&#x662F;p&#x3002;    
+*  #&#x5339;&#x914D;&#x96F6;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x5148;&#x524D;&#x5B57;&#x7B26; &#x5982;&#xFF1A;&apos;*grep&apos;&#x5339;&#x914D;&#x6240;&#x6709;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x7A7A;&#x683C;&#x540E;&#x7D27;&#x8DDF;grep&#x7684;&#x884C;&#x3002;    
+.*   #&#x4E00;&#x8D77;&#x7528;&#x4EE3;&#x8868;&#x4EFB;&#x610F;&#x5B57;&#x7B26;&#x3002;   
+[]   #&#x5339;&#x914D;&#x4E00;&#x4E2A;&#x6307;&#x5B9A;&#x8303;&#x56F4;&#x5185;&#x7684;&#x5B57;&#x7B26;&#xFF0C;&#x5982;&apos;[Gg]rep&apos;&#x5339;&#x914D;Grep&#x548C;grep&#x3002;    
+[^]  #&#x5339;&#x914D;&#x4E00;&#x4E2A;&#x4E0D;&#x5728;&#x6307;&#x5B9A;&#x8303;&#x56F4;&#x5185;&#x7684;&#x5B57;&#x7B26;&#xFF0C;&#x5982;&#xFF1A;&apos;[^A-FH-Z]rep&apos;&#x5339;&#x914D;&#x4E0D;&#x5305;&#x542B;A-R&#x548C;T-Z&#x7684;&#x4E00;&#x4E2A;&#x5B57;&#x6BCD;&#x5F00;&#x5934;&#xFF0C;&#x7D27;&#x8DDF;rep&#x7684;&#x884C;&#x3002;    
+\(..\)  #&#x6807;&#x8BB0;&#x5339;&#x914D;&#x5B57;&#x7B26;&#xFF0C;&#x5982;&apos;\(love\)&apos;&#xFF0C;love&#x88AB;&#x6807;&#x8BB0;&#x4E3A;1&#x3002;    
+\&lt;      #&#x951A;&#x5B9A;&#x5355;&#x8BCD;&#x7684;&#x5F00;&#x59CB;&#xFF0C;&#x5982;:&apos;\&lt;grep&apos;&#x5339;&#x914D;&#x5305;&#x542B;&#x4EE5;grep&#x5F00;&#x5934;&#x7684;&#x5355;&#x8BCD;&#x7684;&#x884C;&#x3002;    
+\&gt;      #&#x951A;&#x5B9A;&#x5355;&#x8BCD;&#x7684;&#x7ED3;&#x675F;&#xFF0C;&#x5982;&apos;grep\&gt;&apos;&#x5339;&#x914D;&#x5305;&#x542B;&#x4EE5;grep&#x7ED3;&#x5C3E;&#x7684;&#x5355;&#x8BCD;&#x7684;&#x884C;&#x3002;    
+x\{m\}  #&#x91CD;&#x590D;&#x5B57;&#x7B26;x&#xFF0C;m&#x6B21;&#xFF0C;&#x5982;&#xFF1A;&apos;0\{5\}&apos;&#x5339;&#x914D;&#x5305;&#x542B;5&#x4E2A;o&#x7684;&#x884C;&#x3002;    
+x\{m,\}  #&#x91CD;&#x590D;&#x5B57;&#x7B26;x,&#x81F3;&#x5C11;m&#x6B21;&#xFF0C;&#x5982;&#xFF1A;&apos;o\{5,\}&apos;&#x5339;&#x914D;&#x81F3;&#x5C11;&#x6709;5&#x4E2A;o&#x7684;&#x884C;&#x3002;    
+x\{m,n\}  #&#x91CD;&#x590D;&#x5B57;&#x7B26;x&#xFF0C;&#x81F3;&#x5C11;m&#x6B21;&#xFF0C;&#x4E0D;&#x591A;&#x4E8E;n&#x6B21;&#xFF0C;&#x5982;&#xFF1A;&apos;o\{5,10\}&apos;&#x5339;&#x914D;5--10&#x4E2A;o&#x7684;&#x884C;&#x3002;   
+\w    #&#x5339;&#x914D;&#x6587;&#x5B57;&#x548C;&#x6570;&#x5B57;&#x5B57;&#x7B26;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;[A-Za-z0-9]&#xFF0C;&#x5982;&#xFF1A;&apos;G\w*p&apos;&#x5339;&#x914D;&#x4EE5;G&#x540E;&#x8DDF;&#x96F6;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x6587;&#x5B57;&#x6216;&#x6570;&#x5B57;&#x5B57;&#x7B26;&#xFF0C;&#x7136;&#x540E;&#x662F;p&#x3002;   
+\W    #\w&#x7684;&#x53CD;&#x7F6E;&#x5F62;&#x5F0F;&#xFF0C;&#x5339;&#x914D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x975E;&#x5355;&#x8BCD;&#x5B57;&#x7B26;&#xFF0C;&#x5982;&#x70B9;&#x53F7;&#x53E5;&#x53F7;&#x7B49;&#x3002;   
+\b    #&#x5355;&#x8BCD;&#x9501;&#x5B9A;&#x7B26;&#xFF0C;&#x5982;: &apos;\bgrep\b&apos;&#x53EA;&#x5339;&#x914D;grep
+</code></pre><ol class="ui list">
+<li>demo<ol>
+<li>&#x67E5;&#x770B;&#x8FDB;&#x7A0B; <code>ps -ef|grep svn</code></li>
+<li>&#x7EDF;&#x8BA1;&#x8FDB;&#x7A0B;&#x6570; <code>ps -ef|grep svn -c</code></li>
+<li>&#x7BA1;&#x9053;&#x67E5;&#x770B;&#x5173;&#x952E;&#x5B57;&#x7684;&#x884C; <code>cat test.txt | grep -F keyword</code></li>
+<li>&#x7BA1;&#x9053;&#x67E5;&#x770B;&#x5173;&#x952E;&#x5B57;&#x7684;&#x884C;&#x5E76;&#x4E14;&#x6253;&#x5370;&#x884C;&#x53F7;<code>cat test.txt | grep -nf keyword</code></li>
+<li>&#x76F4;&#x63A5;&#x6839;&#x636E;&#x5173;&#x952E;&#x5B57;&#x67E5;&#x770B;&#x884C; <code>grep keyword filename</code></li>
+<li>&#x591A;&#x6587;&#x4EF6; <code>grep keyword filename1 filename2</code></li>
+<li>&#x6240;&#x6709;&#x6587;&#x4EF6; <code>grep keyword *</code></li>
+<li>&#x67E5;&#x770B;&#x4EE5;**&#x5F00;&#x5934;&#x7684;&#x884C; <code>cat test.txt |grep ^u</code></li>
+<li>&#x67E5;&#x770B;&#x4EE5;**&#x7ED3;&#x5C3E;&#x7684;&#x884C; <code>cat test.txt |grep hat$</code></li>
+<li>&#x67E5;&#x770B;&#x4E0D;&#x4EE5;**&#x5F00;&#x5934;&#x7684;&#x884C; <code>cat test.txt |grep ^[^u]</code></li>
+<li>&#x67E5;&#x770B;&#x6709;**&#x6216;&#x8005;**&#x7684;&#x884C;<code>cat test.txt |grep -E &quot;ed|at&quot;</code></li>
 </ol>
 </li>
 </ol>
-<h3>awk</h3>
-<ol>
-<li>
-<p>功能：
-awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。
-特别适合一行文本特别长的时候进行显示处理</p>
+<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><ol class="ui list">
+<li><p>&#x529F;&#x80FD;&#xFF1A;<br> awk&#x5C31;&#x662F;&#x628A;&#x6587;&#x4EF6;&#x9010;&#x884C;&#x7684;&#x8BFB;&#x5165;&#xFF0C;&#x4EE5;&#x7A7A;&#x683C;&#x4E3A;&#x9ED8;&#x8BA4;&#x5206;&#x9694;&#x7B26;&#x5C06;&#x6BCF;&#x884C;&#x5207;&#x7247;&#xFF0C;&#x5207;&#x5F00;&#x7684;&#x90E8;&#x5206;&#x518D;&#x8FDB;&#x884C;&#x5404;&#x79CD;&#x5206;&#x6790;&#x5904;&#x7406;&#x3002;<br> &#x7279;&#x522B;&#x9002;&#x5408;&#x4E00;&#x884C;&#x6587;&#x672C;&#x7279;&#x522B;&#x957F;&#x7684;&#x65F6;&#x5019;&#x8FDB;&#x884C;&#x663E;&#x793A;&#x5904;&#x7406;</p>
 </li>
-<li>
-<p>用法：
-awk '{pattern + action}' {filenames}
-其中action支持多种操作，强大又复杂</p>
+<li><p>&#x7528;&#x6CD5;&#xFF1A;<br> awk &#x2018;{pattern + action}&#x2019; {filenames}<br> &#x5176;&#x4E2D;action&#x652F;&#x6301;&#x591A;&#x79CD;&#x64CD;&#x4F5C;&#xFF0C;&#x5F3A;&#x5927;&#x53C8;&#x590D;&#x6742;</p>
 </li>
-<li>
-<p>常用参数:
--F：分割符</p>
-</li>
-<li>
-<p>demo</p>
-<ol>
-<li>查看某一行的前面部分：<code>cat filename | awk -F '|' '{print $1, $2}'</code></li>
+<li>&#x5E38;&#x7528;&#x53C2;&#x6570;:<br> -F&#xFF1A;&#x5206;&#x5272;&#x7B26;</li>
+<li>demo<ol>
+<li>&#x67E5;&#x770B;&#x67D0;&#x4E00;&#x884C;&#x7684;&#x524D;&#x9762;&#x90E8;&#x5206;&#xFF1A;<code>cat filename | awk -F &apos;|&apos; &apos;{print $1, $2}&apos;</code></li>
 </ol>
 </li>
 </ol>
-<h3>tail/head</h3>
-<ol>
-<li>功能：
-tail 显示文件末尾/开始的内容</li>
-<li>用法：
-<ul>
-<li>tail [-F | -f | -r] [-q] [-b number | -c number | -n number] [file ...]</li>
-<li>head [-n count | -c bytes] [file ...]</li>
+<h3 id="tail-head"><a href="#tail-head" class="headerlink" title="tail/head"></a>tail/head</h3><ol class="ui list">
+<li>&#x529F;&#x80FD;&#xFF1A;<br> tail &#x663E;&#x793A;&#x6587;&#x4EF6;&#x672B;&#x5C3E;/&#x5F00;&#x59CB;&#x7684;&#x5185;&#x5BB9;</li>
+<li>&#x7528;&#x6CD5;&#xFF1A;<ul>
+<li>tail [-F | -f | -r] [-q] [-b number | -c number | -n number] [file &#x2026;]</li>
+<li>head [-n count | -c bytes] [file &#x2026;]</li>
 </ul>
 </li>
-<li>常用参数:
--f：循环读取
--n&lt;行数&gt;： 显示行数</li>
-<li>demo
-<ol>
-<li>监控日志：<code>tail -f filename</code></li>
-<li>从第n行开始查看文件：<code>tail -n +100 filename</code> (必须有<code>+</code>)</li>
-<li>查看前n行的内容：<code>head -n 20 filename</code></li>
-<li>查看n-m行之间的内容：<code>cat -n info.log | tail -n +140 | head -n 2</code></li>
+<li>&#x5E38;&#x7528;&#x53C2;&#x6570;:<br> -f&#xFF1A;&#x5FAA;&#x73AF;&#x8BFB;&#x53D6;<br> -n&lt;&#x884C;&#x6570;&gt;&#xFF1A; &#x663E;&#x793A;&#x884C;&#x6570;</li>
+<li>demo<ol>
+<li>&#x76D1;&#x63A7;&#x65E5;&#x5FD7;&#xFF1A;<code>tail -f filename</code></li>
+<li>&#x4ECE;&#x7B2C;n&#x884C;&#x5F00;&#x59CB;&#x67E5;&#x770B;&#x6587;&#x4EF6;&#xFF1A;<code>tail -n +100 filename</code> (&#x5FC5;&#x987B;&#x6709;<code>+</code>)</li>
+<li>&#x67E5;&#x770B;&#x524D;n&#x884C;&#x7684;&#x5185;&#x5BB9;&#xFF1A;<code>head -n 20 filename</code></li>
+<li>&#x67E5;&#x770B;n-m&#x884C;&#x4E4B;&#x95F4;&#x7684;&#x5185;&#x5BB9;&#xFF1A;<code>cat -n  info.log | tail -n +140 | head -n 2</code></li>
 </ol>
 </li>
 </ol>
-<h3>wc</h3>
-<ol>
-<li>功能：
-wc -- word, line, character, and byte count</li>
-<li>用法：
-wc [-clmw] [file ...]</li>
-<li>常用参数:
--c 统计字节数。
--l 统计行数。
--m 统计字符数。这个标志不能与 -c 标志一起使用。
--w 统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</li>
-<li>demo
-<ol>
-<li>统计行数: <code>wc -l filename</code></li>
-<li>统计当前目录下的文件数: <code>ls -l | wc -l</code></li>
+<h3 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h3><ol class="ui list">
+<li>&#x529F;&#x80FD;&#xFF1A;<br> wc &#x2013; word, line, character, and byte count</li>
+<li>&#x7528;&#x6CD5;&#xFF1A;<br> wc [-clmw] [file &#x2026;]</li>
+<li>&#x5E38;&#x7528;&#x53C2;&#x6570;:<br> -c &#x7EDF;&#x8BA1;&#x5B57;&#x8282;&#x6570;&#x3002;<br> -l &#x7EDF;&#x8BA1;&#x884C;&#x6570;&#x3002;<br> -m &#x7EDF;&#x8BA1;&#x5B57;&#x7B26;&#x6570;&#x3002;&#x8FD9;&#x4E2A;&#x6807;&#x5FD7;&#x4E0D;&#x80FD;&#x4E0E; -c &#x6807;&#x5FD7;&#x4E00;&#x8D77;&#x4F7F;&#x7528;&#x3002;<br> -w &#x7EDF;&#x8BA1;&#x5B57;&#x6570;&#x3002;&#x4E00;&#x4E2A;&#x5B57;&#x88AB;&#x5B9A;&#x4E49;&#x4E3A;&#x7531;&#x7A7A;&#x767D;&#x3001;&#x8DF3;&#x683C;&#x6216;&#x6362;&#x884C;&#x5B57;&#x7B26;&#x5206;&#x9694;&#x7684;&#x5B57;&#x7B26;&#x4E32;</li>
+<li>demo<ol>
+<li>&#x7EDF;&#x8BA1;&#x884C;&#x6570;: <code>wc -l filename</code></li>
+<li>&#x7EDF;&#x8BA1;&#x5F53;&#x524D;&#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x6587;&#x4EF6;&#x6570;: <code>ls -l | wc -l</code></li>
 </ol>
 </li>
 </ol>
-<h3>less</h3>
-<p>less 命令（分页查看文件内容）分页查看日志，但是中文有乱码
-<code>less error.log</code>
-直接定位到第100行
-<code>less +100g xx.log</code>
-定位到最后一行
-<code>less +GG xx.log</code>
-查找并高亮关键字
-<code>less fis.log.2018-05-20 | grep 2018052019004984219071028 -A 5 --color=auto</code>
-移动日志
-G ：到日志最后
-g ：到日志最前面
-j/↑ ：向前移动一行
-k/↓ ：向后移动一行
-pgup ：向上翻页
-pgdn ：向下翻页</p>
-<h3>sed</h3>
-<p>查看n-m行之间的内容： <code>sed -n '5,10p' filename</code></p>
-<h3>tac</h3>
-<p>和cat反着来的</p>
-<h3>nl</h3>
-<p>加强版 <code>cat -n</code>,使用参考 <code>man nl</code></p>
-<h2>常用组合</h2>
-<ol>
-<li>
-<p>实时监控日志：</p>
-<pre><code> tail -f 20 filename
-</code></pre>
-</li>
-<li>
-<p>显示一个文件的某几行</p>
-<pre><code> 1. `cat -n  info.log | tail -n +140 | head -n 2`
- 2. `sed -n &quot;10,20p&quot; filename`
-</code></pre>
-</li>
-<li>
-<p>统计行数：</p>
-<pre><code> 1. wc -l filename
-</code></pre>
-</li>
-<li>
-<p>现在有一万多条记录，其中包含重复的记录，每条记录占一行，问如何从这些记录中找到数量排名前10的记录:</p>
-<pre><code> sort data | uniq -c | sort -k 1 -n -r | head 10
-</code></pre>
-<blockquote>
-<ol>
-<li>sort data
-表示对data文件中的内容进行排序。sort命令是对于每一行的内容根据字典序（ASCII码）进行排序，这样可以保证重复的记录时相邻的。</li>
-<li>sort data | uniq -c
-这里，通过管道（|）将左边部分的命令的输出作为右边部分的输入。uniq -c 表示合并相邻的重复记录，并统计重复数。因为uniq -c 只会合并相邻的记录，所以在使用该命令之前需要先排序。</li>
-<li>sort data | uniq -c | sort -k 1 -n -r
-经过uniq -c 处理之后的数据格式形如&quot;2 data&quot;，第一个字段是数字，表示重复的记录数；第二个字段为记录的内容。我们将对此内容进行排序。sort -k 1表示对于每行的第一个字段进行排序，这里即指代表重复记录数的那个字段。因为sort命令的默认排序是按照ASCII，这就会导致按从大到小进行排序时，数值2会排在数值11的前面，所以需要使用-n 参数指定sort命令按照数值大小进行排序。-r 表示逆序，即按照从大到小的顺序进行排序。</li>
-<li>sort data | uniq -c | sort -k 1 -n -r | head 10
-head 命令表示选取文本的前x行。通过head 10 就可以得到排序结果中前十行的内容</li>
-</ol>
-<p>来自<a href="http://eriol.iteye.com/blog/870641" target="_blank" rel="noopener">blog</a></p>
+<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>less &#x547D;&#x4EE4;&#xFF08;&#x5206;&#x9875;&#x67E5;&#x770B;&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#xFF09;&#x5206;&#x9875;&#x67E5;&#x770B;&#x65E5;&#x5FD7;&#xFF0C;&#x4F46;&#x662F;&#x4E2D;&#x6587;&#x6709;&#x4E71;&#x7801;<br><code>less error.log</code><br>&#x76F4;&#x63A5;&#x5B9A;&#x4F4D;&#x5230;&#x7B2C;100&#x884C;<br><code>less +100g xx.log</code><br>&#x5B9A;&#x4F4D;&#x5230;&#x6700;&#x540E;&#x4E00;&#x884C;<br><code>less +GG xx.log</code><br>&#x67E5;&#x627E;&#x5E76;&#x9AD8;&#x4EAE;&#x5173;&#x952E;&#x5B57;<br><code>less fis.log.2018-05-20  | grep 2018052019004984219071028 -A 5 --color=auto</code><br>&#x79FB;&#x52A8;&#x65E5;&#x5FD7;<br>    G &#xFF1A;&#x5230;&#x65E5;&#x5FD7;&#x6700;&#x540E;<br>    g &#xFF1A;&#x5230;&#x65E5;&#x5FD7;&#x6700;&#x524D;&#x9762;<br>    j/&#x2191; &#xFF1A;&#x5411;&#x524D;&#x79FB;&#x52A8;&#x4E00;&#x884C;<br>    k/&#x2193; &#xFF1A;&#x5411;&#x540E;&#x79FB;&#x52A8;&#x4E00;&#x884C;<br>    pgup &#xFF1A;&#x5411;&#x4E0A;&#x7FFB;&#x9875;<br>    pgdn &#xFF1A;&#x5411;&#x4E0B;&#x7FFB;&#x9875;</p>
+<h3 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h3><p>&#x67E5;&#x770B;n-m&#x884C;&#x4E4B;&#x95F4;&#x7684;&#x5185;&#x5BB9;&#xFF1A; <code>sed -n &apos;5,10p&apos; filename</code></p>
+<h3 id="tac"><a href="#tac" class="headerlink" title="tac"></a>tac</h3><p>&#x548C;cat&#x53CD;&#x7740;&#x6765;&#x7684;</p>
+<h3 id="nl"><a href="#nl" class="headerlink" title="nl"></a>nl</h3><p>&#x52A0;&#x5F3A;&#x7248; <code>cat -n</code>,&#x4F7F;&#x7528;&#x53C2;&#x8003; <code>man nl</code></p>
+<h2 id="&#x5E38;&#x7528;&#x7EC4;&#x5408;"><a href="#&#x5E38;&#x7528;&#x7EC4;&#x5408;" class="headerlink" title="&#x5E38;&#x7528;&#x7EC4;&#x5408;"></a>&#x5E38;&#x7528;&#x7EC4;&#x5408;</h2><ol class="ui list">
+<li><p>&#x5B9E;&#x65F6;&#x76D1;&#x63A7;&#x65E5;&#x5FD7;&#xFF1A;</p>
+<pre><code>tail -f 20 filename
+</code></pre></li>
+<li><p>&#x663E;&#x793A;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x7684;&#x67D0;&#x51E0;&#x884C;</p>
+<pre><code>1. `cat -n  info.log | tail -n +140 | head -n 2`
+2. `sed -n &quot;10,20p&quot; filename`
+</code></pre></li>
+<li><p>&#x7EDF;&#x8BA1;&#x884C;&#x6570;&#xFF1A;</p>
+<pre><code>1. wc -l filename
+</code></pre></li>
+<li><p>&#x73B0;&#x5728;&#x6709;&#x4E00;&#x4E07;&#x591A;&#x6761;&#x8BB0;&#x5F55;&#xFF0C;&#x5176;&#x4E2D;&#x5305;&#x542B;&#x91CD;&#x590D;&#x7684;&#x8BB0;&#x5F55;&#xFF0C;&#x6BCF;&#x6761;&#x8BB0;&#x5F55;&#x5360;&#x4E00;&#x884C;&#xFF0C;&#x95EE;&#x5982;&#x4F55;&#x4ECE;&#x8FD9;&#x4E9B;&#x8BB0;&#x5F55;&#x4E2D;&#x627E;&#x5230;&#x6570;&#x91CF;&#x6392;&#x540D;&#x524D;10&#x7684;&#x8BB0;&#x5F55;:</p>
+<pre><code>sort data | uniq -c | sort -k 1 -n -r | head 10
+</code></pre><blockquote>
+<p>1) sort data<br>   &#x8868;&#x793A;&#x5BF9;data&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x5185;&#x5BB9;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3002;sort&#x547D;&#x4EE4;&#x662F;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E00;&#x884C;&#x7684;&#x5185;&#x5BB9;&#x6839;&#x636E;&#x5B57;&#x5178;&#x5E8F;&#xFF08;ASCII&#x7801;&#xFF09;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#xFF0C;&#x8FD9;&#x6837;&#x53EF;&#x4EE5;&#x4FDD;&#x8BC1;&#x91CD;&#x590D;&#x7684;&#x8BB0;&#x5F55;&#x65F6;&#x76F8;&#x90BB;&#x7684;&#x3002;<br>2) sort data | uniq -c<br>   &#x8FD9;&#x91CC;&#xFF0C;&#x901A;&#x8FC7;&#x7BA1;&#x9053;&#xFF08;|&#xFF09;&#x5C06;&#x5DE6;&#x8FB9;&#x90E8;&#x5206;&#x7684;&#x547D;&#x4EE4;&#x7684;&#x8F93;&#x51FA;&#x4F5C;&#x4E3A;&#x53F3;&#x8FB9;&#x90E8;&#x5206;&#x7684;&#x8F93;&#x5165;&#x3002;uniq -c &#x8868;&#x793A;&#x5408;&#x5E76;&#x76F8;&#x90BB;&#x7684;&#x91CD;&#x590D;&#x8BB0;&#x5F55;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x91CD;&#x590D;&#x6570;&#x3002;&#x56E0;&#x4E3A;uniq -c &#x53EA;&#x4F1A;&#x5408;&#x5E76;&#x76F8;&#x90BB;&#x7684;&#x8BB0;&#x5F55;&#xFF0C;&#x6240;&#x4EE5;&#x5728;&#x4F7F;&#x7528;&#x8BE5;&#x547D;&#x4EE4;&#x4E4B;&#x524D;&#x9700;&#x8981;&#x5148;&#x6392;&#x5E8F;&#x3002;<br>3) sort data | uniq -c | sort -k 1 -n -r<br>   &#x7ECF;&#x8FC7;uniq -c &#x5904;&#x7406;&#x4E4B;&#x540E;&#x7684;&#x6570;&#x636E;&#x683C;&#x5F0F;&#x5F62;&#x5982;&#x201D;2 data&#x201D;&#xFF0C;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#x662F;&#x6570;&#x5B57;&#xFF0C;&#x8868;&#x793A;&#x91CD;&#x590D;&#x7684;&#x8BB0;&#x5F55;&#x6570;&#xFF1B;&#x7B2C;&#x4E8C;&#x4E2A;&#x5B57;&#x6BB5;&#x4E3A;&#x8BB0;&#x5F55;&#x7684;&#x5185;&#x5BB9;&#x3002;&#x6211;&#x4EEC;&#x5C06;&#x5BF9;&#x6B64;&#x5185;&#x5BB9;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3002;sort -k 1&#x8868;&#x793A;&#x5BF9;&#x4E8E;&#x6BCF;&#x884C;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#xFF0C;&#x8FD9;&#x91CC;&#x5373;&#x6307;&#x4EE3;&#x8868;&#x91CD;&#x590D;&#x8BB0;&#x5F55;&#x6570;&#x7684;&#x90A3;&#x4E2A;&#x5B57;&#x6BB5;&#x3002;&#x56E0;&#x4E3A;sort&#x547D;&#x4EE4;&#x7684;&#x9ED8;&#x8BA4;&#x6392;&#x5E8F;&#x662F;&#x6309;&#x7167;ASCII&#xFF0C;&#x8FD9;&#x5C31;&#x4F1A;&#x5BFC;&#x81F4;&#x6309;&#x4ECE;&#x5927;&#x5230;&#x5C0F;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x65F6;&#xFF0C;&#x6570;&#x503C;2&#x4F1A;&#x6392;&#x5728;&#x6570;&#x503C;11&#x7684;&#x524D;&#x9762;&#xFF0C;&#x6240;&#x4EE5;&#x9700;&#x8981;&#x4F7F;&#x7528;-n &#x53C2;&#x6570;&#x6307;&#x5B9A;sort&#x547D;&#x4EE4;&#x6309;&#x7167;&#x6570;&#x503C;&#x5927;&#x5C0F;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3002;-r &#x8868;&#x793A;&#x9006;&#x5E8F;&#xFF0C;&#x5373;&#x6309;&#x7167;&#x4ECE;&#x5927;&#x5230;&#x5C0F;&#x7684;&#x987A;&#x5E8F;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3002;<br>4) sort data | uniq -c | sort -k 1 -n -r | head 10</p>
+<pre><code>head &#x547D;&#x4EE4;&#x8868;&#x793A;&#x9009;&#x53D6;&#x6587;&#x672C;&#x7684;&#x524D;x&#x884C;&#x3002;&#x901A;&#x8FC7;head 10 &#x5C31;&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x6392;&#x5E8F;&#x7ED3;&#x679C;&#x4E2D;&#x524D;&#x5341;&#x884C;&#x7684;&#x5185;&#x5BB9;
+</code></pre><p>&#x6765;&#x81EA;<a href="http://eriol.iteye.com/blog/870641" target="_blank" rel="noopener">blog</a></p>
 </blockquote>
 </li>
 </ol>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">[转]go服务监控指标(metric)上报open-falcon</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/10/27/golang组合和继承/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">模版模式在golang的使用</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">必须掌握</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">不太常用但是有用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">详细</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">1. cat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2. grep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">awk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">tail/head</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.5.</span> <span class="toc-text">wc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.6.</span> <span class="toc-text">less</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.7.</span> <span class="toc-text">sed</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.8.</span> <span class="toc-text">tac</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.9.</span> <span class="toc-text">nl</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">常用组合</span></a></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&text=linux查看日志常用命令"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&is_video=false&description=linux查看日志常用命令"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=linux查看日志常用命令&body=Check out this article: http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&title=linux查看日志常用命令"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/&name=linux查看日志常用命令&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/linux查看日志常用命令.md" data-title="linux查看日志常用命令" data-url="http://lqczzz.github.io/2018/11/11/linux查看日志常用命令/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

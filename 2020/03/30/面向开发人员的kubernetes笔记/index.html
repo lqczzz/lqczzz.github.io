@@ -1,203 +1,133 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="这边笔记涵盖了以下内容：  容器虚拟化的原理 容器编排的基本概念 k8s的容器编排对象 k8s的集群架构和基本原理 容器编排的实践  参考学习材料   《docker进阶与实战》   《kubernetes in action》ch1-ch11   极客时间《深入剖析Kubernetes》   容器&amp;amp;docker docker的虚拟化原理 Namespace 做隔离，Cgroups 做限制">
-<meta property="og:type" content="article">
-<meta property="og:title" content="面向开发人员的kubernetes笔记">
-<meta property="og:url" content="http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="这边笔记涵盖了以下内容：  容器虚拟化的原理 容器编排的基本概念 k8s的容器编排对象 k8s的集群架构和基本原理 容器编排的实践  参考学习材料   《docker进阶与实战》   《kubernetes in action》ch1-ch11   极客时间《深入剖析Kubernetes》   容器&amp;amp;docker docker的虚拟化原理 Namespace 做隔离，Cgroups 做限制">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329213121557.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329220457602.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329221527443.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329223022331.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330003811291.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330005629376.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330005650536.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330005740322.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200330010423544.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213710432.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213019107.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213121550.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213743308.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213913111.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402213913111.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329213556137.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402223335663.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402223352288.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200403011056624.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402231301311.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402231314698.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402231908550.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402232325392.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402232551057.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402234517386.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200402235448264.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200403000010564.png">
-<meta property="og:image" content="http://lqczzz.github.io/images/k8s_1/image-20200403002417215.png">
-<meta property="og:updated_time" content="2020-04-02T17:37:47.070Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="面向开发人员的kubernetes笔记">
-<meta name="twitter:description" content="这边笔记涵盖了以下内容：  容器虚拟化的原理 容器编排的基本概念 k8s的容器编排对象 k8s的集群架构和基本原理 容器编排的实践  参考学习材料   《docker进阶与实战》   《kubernetes in action》ch1-ch11   极客时间《深入剖析Kubernetes》   容器&amp;amp;docker docker的虚拟化原理 Namespace 做隔离，Cgroups 做限制">
-<meta name="twitter:image" content="http://lqczzz.github.io/images/k8s_1/image-20200329213121557.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>面向开发人员的kubernetes笔记</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                面向开发人员的kubernetes笔记 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2020/05/01/ucore/2. 操作系统内存管理/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2019/11/20/对数据系统架构设计权衡的思考/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&text=面向开发人员的kubernetes笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&is_video=false&description=面向开发人员的kubernetes笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=面向开发人员的kubernetes笔记&body=Check out this article: http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&name=面向开发人员的kubernetes笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">容器&amp;docker</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.</span> <span class="toc-text">docker的虚拟化原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">Namespace 做隔离</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.2.</span> <span class="toc-text">Cgroups 做限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.3.</span> <span class="toc-text">rootfs 做文件系统</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">容器编排&amp;kubernetes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">什么是容器编排(Container Orchestration）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">kubernetes的集群架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">kubernetes的资源对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. pod - 最小的调度单位(workloads)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">pod的结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">容器设计模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">pod的资源描述</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. deployment - 声明式的升级应用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">从replicationController(rc)说起</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">deployment直接作用的是rs不是pod</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.3.</span> <span class="toc-text">其他的编排对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.4.</span> <span class="toc-text">其他编排方式：蓝绿/金丝雀(灰度)...</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. service - 让客户端发现pod&amp;和pod通信</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">服务发现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">连接外部服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.</span> <span class="toc-text">对外暴露服务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.1.</span> <span class="toc-text">nodeport</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.2.</span> <span class="toc-text">负载均衡器</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.3.</span> <span class="toc-text">ingress</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.4.</span> <span class="toc-text">headless服务</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.</span> <span class="toc-text">4. volume - 将磁盘挂在到pod中</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">常用volume</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.1.</span> <span class="toc-text">emptyDir</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.2.</span> <span class="toc-text">hostPath</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.3.</span> <span class="toc-text">gitRepo</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.2.</span> <span class="toc-text">persistence volume</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.</span> <span class="toc-text">Projected Volume</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.1.</span> <span class="toc-text">configmap</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.2.</span> <span class="toc-text">secret</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.3.</span> <span class="toc-text">downward api</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.4.</span> <span class="toc-text">ServiceAccountToken</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">kubernetes运行原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.</span> <span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">1) etcd - 存储介质</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">2) apiserver - k8s的api，类似系统调用之于于操作系统</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.3.</span> <span class="toc-text">3) 调度器 - 分配节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.4.</span> <span class="toc-text">4) controller manager - 让集群状态向api定义的期望状态收敛</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.5.</span> <span class="toc-text">5) kubelet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.6.</span> <span class="toc-text">6）kube-proxy</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.6.1.</span> <span class="toc-text">运行模式</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.7.</span> <span class="toc-text">7) 插件</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.2.</span> <span class="toc-text">控制器工作流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.</span> <span class="toc-text">跨pod网络(service/DNS/服务发现)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.1.</span> <span class="toc-text">1. 同一个pod内不同的容器通信</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.2.</span> <span class="toc-text">2. 同一节点的通信原理（和docker的CNM一样</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.2.1.</span> <span class="toc-text">桥接网络模式</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.</span> <span class="toc-text">3. 跨节点的通信原理</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.1.</span> <span class="toc-text">UDP</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.2.</span> <span class="toc-text">vxlan</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.3.</span> <span class="toc-text">host-gw</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">常用kubectl的命令（持续更新</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.1.</span> <span class="toc-text">资源信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.</span> <span class="toc-text">pod</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.0.1.</span> <span class="toc-text">pod</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.0.2.</span> <span class="toc-text">label</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.0.3.</span> <span class="toc-text">namespace</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        面向开发人员的kubernetes笔记
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2020-03-29T17:14:49.000Z" itemprop="datePublished">2020-03-30</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <p>这边笔记涵盖了以下内容：</p>
-<ul>
-<li>容器虚拟化的原理</li>
-<li>容器编排的基本概念</li>
-<li>k8s的容器编排对象</li>
-<li>k8s的集群架构和基本原理</li>
-<li>容器编排的实践</li>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">面向开发人员的kubernetes笔记</h1>
+
+          <section class="post-info">
+            <span class="post-date">2020/03/30</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <p>&#x8FD9;&#x8FB9;&#x7B14;&#x8BB0;&#x6DB5;&#x76D6;&#x4E86;&#x4EE5;&#x4E0B;&#x5185;&#x5BB9;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x5BB9;&#x5668;&#x865A;&#x62DF;&#x5316;&#x7684;&#x539F;&#x7406;</li>
+<li>&#x5BB9;&#x5668;&#x7F16;&#x6392;&#x7684;&#x57FA;&#x672C;&#x6982;&#x5FF5;</li>
+<li>k8s&#x7684;&#x5BB9;&#x5668;&#x7F16;&#x6392;&#x5BF9;&#x8C61;</li>
+<li>k8s&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;&#x548C;&#x57FA;&#x672C;&#x539F;&#x7406;</li>
+<li>&#x5BB9;&#x5668;&#x7F16;&#x6392;&#x7684;&#x5B9E;&#x8DF5;</li>
 </ul>
-<p>参考学习材料</p>
-<ul>
-<li>
-<p>《docker进阶与实战》</p>
+<p>&#x53C2;&#x8003;&#x5B66;&#x4E60;&#x6750;&#x6599;</p>
+<ul class="ui list">
+<li>&#x300A;docker&#x8FDB;&#x9636;&#x4E0E;&#x5B9E;&#x6218;&#x300B;</li>
+<li><p>&#x300A;kubernetes in action&#x300B;ch1-ch11</p>
 </li>
-<li>
-<p>《kubernetes in action》ch1-ch11</p>
-</li>
-<li>
-<p>极客时间《深入剖析Kubernetes》</p>
+<li><p>&#x6781;&#x5BA2;&#x65F6;&#x95F4;&#x300A;&#x6DF1;&#x5165;&#x5256;&#x6790;Kubernetes&#x300B; </p>
 </li>
 </ul>
-<h2>容器&amp;docker</h2>
-<h4>docker的虚拟化原理</h4>
-<p>Namespace 做隔离，Cgroups 做限制，rootfs 做文件系统</p>
-<p>本质上依然是一个进程</p>
-<h5>Namespace 做隔离</h5>
-<p>namespace用于对全局资源的隔离</p>
-<p>已经有的：</p>
-<ul>
+<h2 id="&#x5BB9;&#x5668;-amp-docker"><a href="#&#x5BB9;&#x5668;-amp-docker" class="headerlink" title="&#x5BB9;&#x5668;&amp;docker"></a>&#x5BB9;&#x5668;&amp;docker</h2><h4 id="docker&#x7684;&#x865A;&#x62DF;&#x5316;&#x539F;&#x7406;"><a href="#docker&#x7684;&#x865A;&#x62DF;&#x5316;&#x539F;&#x7406;" class="headerlink" title="docker&#x7684;&#x865A;&#x62DF;&#x5316;&#x539F;&#x7406;"></a>docker&#x7684;&#x865A;&#x62DF;&#x5316;&#x539F;&#x7406;</h4><p>Namespace &#x505A;&#x9694;&#x79BB;&#xFF0C;Cgroups &#x505A;&#x9650;&#x5236;&#xFF0C;rootfs &#x505A;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;</p>
+<p>&#x672C;&#x8D28;&#x4E0A;&#x4F9D;&#x7136;&#x662F;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;</p>
+<h5 id="Namespace-&#x505A;&#x9694;&#x79BB;"><a href="#Namespace-&#x505A;&#x9694;&#x79BB;" class="headerlink" title="Namespace &#x505A;&#x9694;&#x79BB;"></a>Namespace &#x505A;&#x9694;&#x79BB;</h5><p>namespace&#x7528;&#x4E8E;&#x5BF9;&#x5168;&#x5C40;&#x8D44;&#x6E90;&#x7684;&#x9694;&#x79BB;</p>
+<p>&#x5DF2;&#x7ECF;&#x6709;&#x7684;&#xFF1A;</p>
+<ul class="ui list">
 <li>ipc</li>
 <li>network</li>
 <li>mount</li>
@@ -205,621 +135,465 @@
 <li>uts</li>
 <li>user</li>
 </ul>
-<p>通常的操作：</p>
-<p>clone： 创建新的namespance</p>
-<p>setns：把进程放进已有的namespace里</p>
-<h5>Cgroups 做限制</h5>
-<ul>
-<li>
-<p>cpuset子系统：限制可用的cpu列表</p>
+<p>&#x901A;&#x5E38;&#x7684;&#x64CD;&#x4F5C;&#xFF1A;</p>
+<p>clone&#xFF1A; &#x521B;&#x5EFA;&#x65B0;&#x7684;namespance</p>
+<p>setns&#xFF1A;&#x628A;&#x8FDB;&#x7A0B;&#x653E;&#x8FDB;&#x5DF2;&#x6709;&#x7684;namespace&#x91CC;</p>
+<h5 id="Cgroups-&#x505A;&#x9650;&#x5236;"><a href="#Cgroups-&#x505A;&#x9650;&#x5236;" class="headerlink" title="Cgroups &#x505A;&#x9650;&#x5236;"></a>Cgroups &#x505A;&#x9650;&#x5236;</h5><ul class="ui list">
+<li><p>cpuset&#x5B50;&#x7CFB;&#x7EDF;&#xFF1A;&#x9650;&#x5236;&#x53EF;&#x7528;&#x7684;cpu&#x5217;&#x8868;</p>
 </li>
-<li>
-<p>cpu子系统：限制cpu利用率</p>
+<li><p>cpu&#x5B50;&#x7CFB;&#x7EDF;&#xFF1A;&#x9650;&#x5236;cpu&#x5229;&#x7528;&#x7387;</p>
 </li>
-<li>
-<p>memory子系统：限制内存使用率</p>
+<li><p>memory&#x5B50;&#x7CFB;&#x7EDF;&#xFF1A;&#x9650;&#x5236;&#x5185;&#x5B58;&#x4F7F;&#x7528;&#x7387;</p>
 </li>
-<li>
-<p>...</p>
+<li><p>&#x2026;</p>
 </li>
 </ul>
-<h5>rootfs 做文件系统</h5>
-<p>进程使用pivot_root系统调用来做跟文件系统的切换</p>
-<p>（union mount来分层镜像）</p>
-<h2>容器编排&amp;kubernetes</h2>
-<h3>什么是容器编排(Container Orchestration）</h3>
-<p>容器编排是为了简化服务的开发和运维，提升基础设施利用率的工具。</p>
-<p>容器编排核心关注的是以下几个点</p>
-<ol>
-<li>
-<p>Workloads</p>
+<h5 id="rootfs-&#x505A;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;"><a href="#rootfs-&#x505A;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;" class="headerlink" title="rootfs &#x505A;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;"></a>rootfs &#x505A;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;</h5><p>&#x8FDB;&#x7A0B;&#x4F7F;&#x7528;pivot_root&#x7CFB;&#x7EDF;&#x8C03;&#x7528;&#x6765;&#x505A;&#x8DDF;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x7684;&#x5207;&#x6362;</p>
+<p>&#xFF08;union mount&#x6765;&#x5206;&#x5C42;&#x955C;&#x50CF;&#xFF09;</p>
+<h2 id="&#x5BB9;&#x5668;&#x7F16;&#x6392;-amp-kubernetes"><a href="#&#x5BB9;&#x5668;&#x7F16;&#x6392;-amp-kubernetes" class="headerlink" title="&#x5BB9;&#x5668;&#x7F16;&#x6392;&amp;kubernetes"></a>&#x5BB9;&#x5668;&#x7F16;&#x6392;&amp;kubernetes</h2><h3 id="&#x4EC0;&#x4E48;&#x662F;&#x5BB9;&#x5668;&#x7F16;&#x6392;-Container-Orchestration&#xFF09;"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x5BB9;&#x5668;&#x7F16;&#x6392;-Container-Orchestration&#xFF09;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x5BB9;&#x5668;&#x7F16;&#x6392;(Container Orchestration&#xFF09;"></a>&#x4EC0;&#x4E48;&#x662F;&#x5BB9;&#x5668;&#x7F16;&#x6392;(Container Orchestration&#xFF09;</h3><p>&#x5BB9;&#x5668;&#x7F16;&#x6392;&#x662F;&#x4E3A;&#x4E86;&#x7B80;&#x5316;&#x670D;&#x52A1;&#x7684;&#x5F00;&#x53D1;&#x548C;&#x8FD0;&#x7EF4;&#xFF0C;&#x63D0;&#x5347;&#x57FA;&#x7840;&#x8BBE;&#x65BD;&#x5229;&#x7528;&#x7387;&#x7684;&#x5DE5;&#x5177;&#x3002;</p>
+<p>&#x5BB9;&#x5668;&#x7F16;&#x6392;&#x6838;&#x5FC3;&#x5173;&#x6CE8;&#x7684;&#x662F;&#x4EE5;&#x4E0B;&#x51E0;&#x4E2A;&#x70B9;</p>
+<ol class="ui list">
+<li><p>Workloads</p>
 </li>
-<li>
-<p>Scheduler</p>
+<li><p>Scheduler</p>
 </li>
-<li>
-<p>Networking</p>
+<li><p>Networking</p>
 </li>
-<li>
-<p>Storage</p>
+<li><p>Storage</p>
 </li>
 </ol>
-<p>workloads是最小的部署单元，比如我们手动在服务器上启动web服务：<code>python manager runserver</code>,可以认为最小的部署单元是一个进程。workloads包含了network/memory/cpu等资源的需求。</p>
-<p>scheduler主要功能有三个：</p>
-<ul>
-<li>控制着workloads的生命周期，包括创建，销毁，health check</li>
-<li>控制着workloads之间的约束关系：Coordination/Replica/Dependency</li>
-<li>workloads的扩容缩容/更新/回滚等</li>
+<p>workloads&#x662F;&#x6700;&#x5C0F;&#x7684;&#x90E8;&#x7F72;&#x5355;&#x5143;&#xFF0C;&#x6BD4;&#x5982;&#x6211;&#x4EEC;&#x624B;&#x52A8;&#x5728;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x542F;&#x52A8;web&#x670D;&#x52A1;&#xFF1A;<code>python manager runserver</code>,&#x53EF;&#x4EE5;&#x8BA4;&#x4E3A;&#x6700;&#x5C0F;&#x7684;&#x90E8;&#x7F72;&#x5355;&#x5143;&#x662F;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x3002;workloads&#x5305;&#x542B;&#x4E86;network/memory/cpu&#x7B49;&#x8D44;&#x6E90;&#x7684;&#x9700;&#x6C42;&#x3002;</p>
+<p>scheduler&#x4E3B;&#x8981;&#x529F;&#x80FD;&#x6709;&#x4E09;&#x4E2A;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x63A7;&#x5236;&#x7740;workloads&#x7684;&#x751F;&#x547D;&#x5468;&#x671F;&#xFF0C;&#x5305;&#x62EC;&#x521B;&#x5EFA;&#xFF0C;&#x9500;&#x6BC1;&#xFF0C;health check</li>
+<li>&#x63A7;&#x5236;&#x7740;workloads&#x4E4B;&#x95F4;&#x7684;&#x7EA6;&#x675F;&#x5173;&#x7CFB;&#xFF1A;Coordination/Replica/Dependency</li>
+<li>workloads&#x7684;&#x6269;&#x5BB9;&#x7F29;&#x5BB9;/&#x66F4;&#x65B0;/&#x56DE;&#x6EDA;&#x7B49;</li>
 </ul>
-<p>Networks关注集群的网络模型（L3/L4)/DNS/service discovery/load balance</p>
-<p>存储主要分为volumn &amp; persistence volumn</p>
-<p>kubernetes是起源于google的borg&amp;omega的容器编排工具</p>
-<p><img src="/images/k8s_1/image-20200329213121557.png" alt="image-20200329213121557"></p>
-<h3>kubernetes的集群架构</h3>
-<p>从硬件角度看，一个kubernetes集群有很多节点(node)组成，每个节点可以是物理机/虚拟机，这些节点被分为两种类型：</p>
-<ul>
-<li>
-<p>master：集群的管理</p>
+<p>Networks&#x5173;&#x6CE8;&#x96C6;&#x7FA4;&#x7684;&#x7F51;&#x7EDC;&#x6A21;&#x578B;&#xFF08;L3/L4)/DNS/service discovery/load balance</p>
+<p>&#x5B58;&#x50A8;&#x4E3B;&#x8981;&#x5206;&#x4E3A;volumn &amp; persistence volumn</p>
+<p>kubernetes&#x662F;&#x8D77;&#x6E90;&#x4E8E;google&#x7684;borg&amp;omega&#x7684;&#x5BB9;&#x5668;&#x7F16;&#x6392;&#x5DE5;&#x5177;</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200329213121557.png"><img src="/images/k8s_1/image-20200329213121557.png" alt="image-20200329213121557" class="ui centered image"></a></p>
+<h3 id="kubernetes&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;"><a href="#kubernetes&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;" class="headerlink" title="kubernetes&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;"></a>kubernetes&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;</h3><p>&#x4ECE;&#x786C;&#x4EF6;&#x89D2;&#x5EA6;&#x770B;&#xFF0C;&#x4E00;&#x4E2A;kubernetes&#x96C6;&#x7FA4;&#x6709;&#x5F88;&#x591A;&#x8282;&#x70B9;(node)&#x7EC4;&#x6210;&#xFF0C;&#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x53EF;&#x4EE5;&#x662F;&#x7269;&#x7406;&#x673A;/&#x865A;&#x62DF;&#x673A;&#xFF0C;&#x8FD9;&#x4E9B;&#x8282;&#x70B9;&#x88AB;&#x5206;&#x4E3A;&#x4E24;&#x79CD;&#x7C7B;&#x578B;&#xFF1A;</p>
+<ul class="ui list">
+<li><p>master&#xFF1A;&#x96C6;&#x7FA4;&#x7684;&#x7BA1;&#x7406;</p>
 </li>
-<li>
-<p>worker：运行用户实际部署的应用</p>
+<li><p>worker&#xFF1A;&#x8FD0;&#x884C;&#x7528;&#x6237;&#x5B9E;&#x9645;&#x90E8;&#x7F72;&#x7684;&#x5E94;&#x7528;</p>
 </li>
 </ul>
-<p><img src="/images/k8s_1/image-20200329220457602.png" alt="image-20200329220457602"></p>
-<p>master主要有四个组件</p>
-<ul>
-<li>etcd：提供线性一致性的存储，用于存储集群的配置信息/leader 选举</li>
-<li>api server：etcd的代理，提供etcd的配置变更接口，变更监听的能力</li>
-<li>scheduler：调度应用（给应用分配可部署的节点）</li>
-<li>controller manager：跟踪工作节点，处理工作节点失效等集群的功能</li>
+<p>  <a class="magnific-img" href="/images/k8s_1/image-20200329220457602.png"><img src="/images/k8s_1/image-20200329220457602.png" alt="image-20200329220457602" class="ui centered image"></a></p>
+<p>master&#x4E3B;&#x8981;&#x6709;&#x56DB;&#x4E2A;&#x7EC4;&#x4EF6;</p>
+<ul class="ui list">
+<li>etcd&#xFF1A;&#x63D0;&#x4F9B;&#x7EBF;&#x6027;&#x4E00;&#x81F4;&#x6027;&#x7684;&#x5B58;&#x50A8;&#xFF0C;&#x7528;&#x4E8E;&#x5B58;&#x50A8;&#x96C6;&#x7FA4;&#x7684;&#x914D;&#x7F6E;&#x4FE1;&#x606F;/leader &#x9009;&#x4E3E;</li>
+<li>api server&#xFF1A;etcd&#x7684;&#x4EE3;&#x7406;&#xFF0C;&#x63D0;&#x4F9B;etcd&#x7684;&#x914D;&#x7F6E;&#x53D8;&#x66F4;&#x63A5;&#x53E3;&#xFF0C;&#x53D8;&#x66F4;&#x76D1;&#x542C;&#x7684;&#x80FD;&#x529B;</li>
+<li>scheduler&#xFF1A;&#x8C03;&#x5EA6;&#x5E94;&#x7528;&#xFF08;&#x7ED9;&#x5E94;&#x7528;&#x5206;&#x914D;&#x53EF;&#x90E8;&#x7F72;&#x7684;&#x8282;&#x70B9;&#xFF09;</li>
+<li>controller manager&#xFF1A;&#x8DDF;&#x8E2A;&#x5DE5;&#x4F5C;&#x8282;&#x70B9;&#xFF0C;&#x5904;&#x7406;&#x5DE5;&#x4F5C;&#x8282;&#x70B9;&#x5931;&#x6548;&#x7B49;&#x96C6;&#x7FA4;&#x7684;&#x529F;&#x80FD;</li>
 </ul>
-<p>worker nodes主要有三个组件</p>
-<ul>
-<li>
-<p>kubelet：管理节点的容器</p>
+<p>worker nodes&#x4E3B;&#x8981;&#x6709;&#x4E09;&#x4E2A;&#x7EC4;&#x4EF6;</p>
+<ul class="ui list">
+<li><p>kubelet&#xFF1A;&#x7BA1;&#x7406;&#x8282;&#x70B9;&#x7684;&#x5BB9;&#x5668;</p>
 </li>
-<li>
-<p>kube-proxy：组件之间的负载均衡网络流量</p>
+<li><p>kube-proxy&#xFF1A;&#x7EC4;&#x4EF6;&#x4E4B;&#x95F4;&#x7684;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;</p>
 </li>
-<li>
-<p>Container runtime:容器运行时</p>
+<li><p>Container runtime:&#x5BB9;&#x5668;&#x8FD0;&#x884C;&#x65F6;</p>
 </li>
 </ul>
-<h3>kubernetes的资源对象</h3>
-<p>kubernetes的资源对象包括了pod/deployment/service等等各种各样的资源。</p>
-<p><img src="/images/k8s_1/image-20200329221527443.png" alt="image-20200329221527443"></p>
-<p>kubernetes的资源对象都是通过yaml或者json描述文件来创建的，<code>kubebctl</code>也提供了一些简单的命令创建一组属性有限的资源对象。</p>
-<h4>1. pod - 最小的调度单位(workloads)</h4>
-<h5>pod的结构</h5>
-<p>kubernetes使用pod作为最小调度单位，pod是一组共享了某些资源的容器</p>
-<p>具体的说，共享了net/uts/ipc/pid namespace，所以具有相同的loopback网络接口，可以进行ipc通信等，但是挂载文件系统是隔离的（文件系统来自于容器镜像）</p>
-<p><img src="/images/k8s_1/image-20200329223022331.png" alt="image-20200329223022331"></p>
-<ul>
-<li>pod里的容器必须运行在相同的节点，解决了成组调度的问题</li>
-<li>Infra 容器是一个非常特殊的镜像，叫作：k8s.gcr.io/pause。这个镜像是一个用汇编语言编写的、永远处于“暂停”状态的容器，解压后的大小也只有 100~200 KB 左右</li>
-<li>pod之间的网络没有NAT转换</li>
-<li>Pod 扮演的是传统部署环境里“虚拟机”的角色，调度、网络、存储，以及安全相关的属性，基本上是 Pod 级别的</li>
+<h3 id="kubernetes&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;"><a href="#kubernetes&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;" class="headerlink" title="kubernetes&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;"></a>kubernetes&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;</h3><p>kubernetes&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;&#x5305;&#x62EC;&#x4E86;pod/deployment/service&#x7B49;&#x7B49;&#x5404;&#x79CD;&#x5404;&#x6837;&#x7684;&#x8D44;&#x6E90;&#x3002;</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200329221527443.png"><img src="/images/k8s_1/image-20200329221527443.png" alt="image-20200329221527443" class="ui centered image"></a></p>
+<p>kubernetes&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;&#x90FD;&#x662F;&#x901A;&#x8FC7;yaml&#x6216;&#x8005;json&#x63CF;&#x8FF0;&#x6587;&#x4EF6;&#x6765;&#x521B;&#x5EFA;&#x7684;&#xFF0C;<code>kubebctl</code>&#x4E5F;&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E9B;&#x7B80;&#x5355;&#x7684;&#x547D;&#x4EE4;&#x521B;&#x5EFA;&#x4E00;&#x7EC4;&#x5C5E;&#x6027;&#x6709;&#x9650;&#x7684;&#x8D44;&#x6E90;&#x5BF9;&#x8C61;&#x3002;</p>
+<h4 id="1-pod-&#x6700;&#x5C0F;&#x7684;&#x8C03;&#x5EA6;&#x5355;&#x4F4D;-workloads"><a href="#1-pod-&#x6700;&#x5C0F;&#x7684;&#x8C03;&#x5EA6;&#x5355;&#x4F4D;-workloads" class="headerlink" title="1. pod - &#x6700;&#x5C0F;&#x7684;&#x8C03;&#x5EA6;&#x5355;&#x4F4D;(workloads)"></a>1. pod - &#x6700;&#x5C0F;&#x7684;&#x8C03;&#x5EA6;&#x5355;&#x4F4D;(workloads)</h4><h5 id="pod&#x7684;&#x7ED3;&#x6784;"><a href="#pod&#x7684;&#x7ED3;&#x6784;" class="headerlink" title="pod&#x7684;&#x7ED3;&#x6784;"></a>pod&#x7684;&#x7ED3;&#x6784;</h5><p>kubernetes&#x4F7F;&#x7528;pod&#x4F5C;&#x4E3A;&#x6700;&#x5C0F;&#x8C03;&#x5EA6;&#x5355;&#x4F4D;&#xFF0C;pod&#x662F;&#x4E00;&#x7EC4;&#x5171;&#x4EAB;&#x4E86;&#x67D0;&#x4E9B;&#x8D44;&#x6E90;&#x7684;&#x5BB9;&#x5668;</p>
+<p>&#x5177;&#x4F53;&#x7684;&#x8BF4;&#xFF0C;&#x5171;&#x4EAB;&#x4E86;net/uts/ipc/pid namespace&#xFF0C;&#x6240;&#x4EE5;&#x5177;&#x6709;&#x76F8;&#x540C;&#x7684;loopback&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#xFF0C;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;ipc&#x901A;&#x4FE1;&#x7B49;&#xFF0C;&#x4F46;&#x662F;&#x6302;&#x8F7D;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x662F;&#x9694;&#x79BB;&#x7684;&#xFF08;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6765;&#x81EA;&#x4E8E;&#x5BB9;&#x5668;&#x955C;&#x50CF;&#xFF09;</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200329223022331.png"><img src="/images/k8s_1/image-20200329223022331.png" alt="image-20200329223022331" class="ui centered image"></a></p>
+<ul class="ui list">
+<li>pod&#x91CC;&#x7684;&#x5BB9;&#x5668;&#x5FC5;&#x987B;&#x8FD0;&#x884C;&#x5728;&#x76F8;&#x540C;&#x7684;&#x8282;&#x70B9;&#xFF0C;&#x89E3;&#x51B3;&#x4E86;&#x6210;&#x7EC4;&#x8C03;&#x5EA6;&#x7684;&#x95EE;&#x9898;</li>
+<li>Infra &#x5BB9;&#x5668;&#x662F;&#x4E00;&#x4E2A;&#x975E;&#x5E38;&#x7279;&#x6B8A;&#x7684;&#x955C;&#x50CF;&#xFF0C;&#x53EB;&#x4F5C;&#xFF1A;k8s.gcr.io/pause&#x3002;&#x8FD9;&#x4E2A;&#x955C;&#x50CF;&#x662F;&#x4E00;&#x4E2A;&#x7528;&#x6C47;&#x7F16;&#x8BED;&#x8A00;&#x7F16;&#x5199;&#x7684;&#x3001;&#x6C38;&#x8FDC;&#x5904;&#x4E8E;&#x201C;&#x6682;&#x505C;&#x201D;&#x72B6;&#x6001;&#x7684;&#x5BB9;&#x5668;&#xFF0C;&#x89E3;&#x538B;&#x540E;&#x7684;&#x5927;&#x5C0F;&#x4E5F;&#x53EA;&#x6709; 100~200 KB &#x5DE6;&#x53F3;</li>
+<li>pod&#x4E4B;&#x95F4;&#x7684;&#x7F51;&#x7EDC;&#x6CA1;&#x6709;NAT&#x8F6C;&#x6362;</li>
+<li>Pod &#x626E;&#x6F14;&#x7684;&#x662F;&#x4F20;&#x7EDF;&#x90E8;&#x7F72;&#x73AF;&#x5883;&#x91CC;&#x201C;&#x865A;&#x62DF;&#x673A;&#x201D;&#x7684;&#x89D2;&#x8272;&#xFF0C;&#x8C03;&#x5EA6;&#x3001;&#x7F51;&#x7EDC;&#x3001;&#x5B58;&#x50A8;&#xFF0C;&#x4EE5;&#x53CA;&#x5B89;&#x5168;&#x76F8;&#x5173;&#x7684;&#x5C5E;&#x6027;&#xFF0C;&#x57FA;&#x672C;&#x4E0A;&#x662F; Pod &#x7EA7;&#x522B;&#x7684;</li>
 </ul>
-<h5>容器设计模式</h5>
-<p>主容器运行应用，sidecar进程运行住进程之外的工作</p>
-<p>eg：</p>
-<ul>
+<h5 id="&#x5BB9;&#x5668;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;"><a href="#&#x5BB9;&#x5668;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;" class="headerlink" title="&#x5BB9;&#x5668;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;"></a>&#x5BB9;&#x5668;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</h5><p>&#x4E3B;&#x5BB9;&#x5668;&#x8FD0;&#x884C;&#x5E94;&#x7528;&#xFF0C;sidecar&#x8FDB;&#x7A0B;&#x8FD0;&#x884C;&#x4F4F;&#x8FDB;&#x7A0B;&#x4E4B;&#x5916;&#x7684;&#x5DE5;&#x4F5C;</p>
+<p>eg&#xFF1A;</p>
+<ul class="ui list">
 <li>war &amp;&amp; tomcat</li>
-<li>应用和日志搜集</li>
+<li>&#x5E94;&#x7528;&#x548C;&#x65E5;&#x5FD7;&#x641C;&#x96C6;</li>
 <li>istio sidecar</li>
 </ul>
-<h5>pod的资源描述</h5>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1 # api版本</span><br><span class="line">kind: Pod # 资源类型</span><br><span class="line">metadata: # 名称/命名空间(namespace)/标签(label)</span><br><span class="line">  name: kubia-manual</span><br><span class="line">spec: # pod内容的实际说明，例如容器/volume等</span><br><span class="line">  containers:</span><br><span class="line">  - image: luksa/kubia</span><br><span class="line">    name: kubia</span><br><span class="line">    ports:</span><br><span class="line">    - containerPort: 8080</span><br><span class="line">      protocol: TCP</span><br><span class="line"># status: # status是运行时资源的状态</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>
-<p>使用命名空间对资源进行分组(没有隔离作用)</p>
+<h5 id="pod&#x7684;&#x8D44;&#x6E90;&#x63CF;&#x8FF0;"><a href="#pod&#x7684;&#x8D44;&#x6E90;&#x63CF;&#x8FF0;" class="headerlink" title="pod&#x7684;&#x8D44;&#x6E90;&#x63CF;&#x8FF0;"></a>pod&#x7684;&#x8D44;&#x6E90;&#x63CF;&#x8FF0;</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1 # api&#x7248;&#x672C;</span><br><span class="line">kind: Pod # &#x8D44;&#x6E90;&#x7C7B;&#x578B;</span><br><span class="line">metadata: # &#x540D;&#x79F0;/&#x547D;&#x540D;&#x7A7A;&#x95F4;(namespace)/&#x6807;&#x7B7E;(label)</span><br><span class="line">  name: kubia-manual</span><br><span class="line">spec: # pod&#x5185;&#x5BB9;&#x7684;&#x5B9E;&#x9645;&#x8BF4;&#x660E;&#xFF0C;&#x4F8B;&#x5982;&#x5BB9;&#x5668;/volume&#x7B49;</span><br><span class="line">  containers:</span><br><span class="line">  - image: luksa/kubia</span><br><span class="line">    name: kubia</span><br><span class="line">    ports:</span><br><span class="line">    - containerPort: 8080</span><br><span class="line">      protocol: TCP</span><br><span class="line"># status: # status&#x662F;&#x8FD0;&#x884C;&#x65F6;&#x8D44;&#x6E90;&#x7684;&#x72B6;&#x6001;</span><br></pre></td></tr></table></figure>
+<ul class="ui list">
+<li><p>&#x4F7F;&#x7528;&#x547D;&#x540D;&#x7A7A;&#x95F4;&#x5BF9;&#x8D44;&#x6E90;&#x8FDB;&#x884C;&#x5206;&#x7EC4;(&#x6CA1;&#x6709;&#x9694;&#x79BB;&#x4F5C;&#x7528;)</p>
 </li>
-<li>
-<p>使用标签和选择器来约束pod的调度</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spec:</span><br><span class="line">	nodeSelector:</span><br><span class="line">		labelKey: labelValue</span><br></pre></td></tr></table></figure></p>
+<li><p>&#x4F7F;&#x7528;&#x6807;&#x7B7E;&#x548C;&#x9009;&#x62E9;&#x5668;&#x6765;&#x7EA6;&#x675F;pod&#x7684;&#x8C03;&#x5EA6;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spec:</span><br><span class="line">	nodeSelector:</span><br><span class="line">		labelKey: labelValue</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h4>2. deployment - 声明式的升级应用</h4>
-<h5>从replicationController(rc)说起</h5>
-<p><img src="/images/k8s_1/image-20200330003811291.png" alt="image-20200330003811291"></p>
-<p>通过给pod配置存活探针，kubernetes检测pod本身的状态</p>
-<ul>
-<li>当pod出现问题，replicationController会自动拉起一个新的pod</li>
-<li>修改replicationController的replicas，可以实现动态扩容缩容</li>
-<li>修改replicationController的template,可以升级应用(修改之后再删除原有的，因为修改template并不会影响现有的运行中的pod，这是一种停机升级)</li>
+<h4 id="2-deployment-&#x58F0;&#x660E;&#x5F0F;&#x7684;&#x5347;&#x7EA7;&#x5E94;&#x7528;"><a href="#2-deployment-&#x58F0;&#x660E;&#x5F0F;&#x7684;&#x5347;&#x7EA7;&#x5E94;&#x7528;" class="headerlink" title="2. deployment - &#x58F0;&#x660E;&#x5F0F;&#x7684;&#x5347;&#x7EA7;&#x5E94;&#x7528;"></a>2. deployment - &#x58F0;&#x660E;&#x5F0F;&#x7684;&#x5347;&#x7EA7;&#x5E94;&#x7528;</h4><h5 id="&#x4ECE;replicationController-rc-&#x8BF4;&#x8D77;"><a href="#&#x4ECE;replicationController-rc-&#x8BF4;&#x8D77;" class="headerlink" title="&#x4ECE;replicationController(rc)&#x8BF4;&#x8D77;"></a>&#x4ECE;replicationController(rc)&#x8BF4;&#x8D77;</h5><p><a class="magnific-img" href="/images/k8s_1/image-20200330003811291.png"><img src="/images/k8s_1/image-20200330003811291.png" alt="image-20200330003811291" class="ui centered image"></a></p>
+<p>&#x901A;&#x8FC7;&#x7ED9;pod&#x914D;&#x7F6E;&#x5B58;&#x6D3B;&#x63A2;&#x9488;&#xFF0C;kubernetes&#x68C0;&#x6D4B;pod&#x672C;&#x8EAB;&#x7684;&#x72B6;&#x6001;</p>
+<ul class="ui list">
+<li>&#x5F53;pod&#x51FA;&#x73B0;&#x95EE;&#x9898;&#xFF0C;replicationController&#x4F1A;&#x81EA;&#x52A8;&#x62C9;&#x8D77;&#x4E00;&#x4E2A;&#x65B0;&#x7684;pod</li>
+<li>&#x4FEE;&#x6539;replicationController&#x7684;replicas&#xFF0C;&#x53EF;&#x4EE5;&#x5B9E;&#x73B0;&#x52A8;&#x6001;&#x6269;&#x5BB9;&#x7F29;&#x5BB9;</li>
+<li>&#x4FEE;&#x6539;replicationController&#x7684;template,&#x53EF;&#x4EE5;&#x5347;&#x7EA7;&#x5E94;&#x7528;(&#x4FEE;&#x6539;&#x4E4B;&#x540E;&#x518D;&#x5220;&#x9664;&#x539F;&#x6709;&#x7684;&#xFF0C;&#x56E0;&#x4E3A;&#x4FEE;&#x6539;template&#x5E76;&#x4E0D;&#x4F1A;&#x5F71;&#x54CD;&#x73B0;&#x6709;&#x7684;&#x8FD0;&#x884C;&#x4E2D;&#x7684;pod&#xFF0C;&#x8FD9;&#x662F;&#x4E00;&#x79CD;&#x505C;&#x673A;&#x5347;&#x7EA7;)</li>
 </ul>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ReplicationController</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3 # 副本数量</span><br><span class="line">  selector: # 根据label选择pod</span><br><span class="line">    app: kubia</span><br><span class="line">  template: # 声明被控制的对象（俄罗斯套娃</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: kubia</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: kubia</span><br><span class="line">        image: luksa/kubia</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8080</span><br></pre></td></tr></table></figure></p>
-<h5>deployment直接作用的是rs不是pod</h5>
-<p>replicationSet(rs)就是label选择表达式更加丰富了的rc。</p>
-<p>没有deployment的时候，升级的应用的方式有：</p>
-<ol>
-<li>使用一个rc，停机升级：先修改template，删除旧pod，然后创建新的pod</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ReplicationController</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3 # &#x526F;&#x672C;&#x6570;&#x91CF;</span><br><span class="line">  selector: # &#x6839;&#x636E;label&#x9009;&#x62E9;pod</span><br><span class="line">    app: kubia</span><br><span class="line">  template: # &#x58F0;&#x660E;&#x88AB;&#x63A7;&#x5236;&#x7684;&#x5BF9;&#x8C61;&#xFF08;&#x4FC4;&#x7F57;&#x65AF;&#x5957;&#x5A03;</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: kubia</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: kubia</span><br><span class="line">        image: luksa/kubia</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8080</span><br></pre></td></tr></table></figure>
+<h5 id="deployment&#x76F4;&#x63A5;&#x4F5C;&#x7528;&#x7684;&#x662F;rs&#x4E0D;&#x662F;pod"><a href="#deployment&#x76F4;&#x63A5;&#x4F5C;&#x7528;&#x7684;&#x662F;rs&#x4E0D;&#x662F;pod" class="headerlink" title="deployment&#x76F4;&#x63A5;&#x4F5C;&#x7528;&#x7684;&#x662F;rs&#x4E0D;&#x662F;pod"></a>deployment&#x76F4;&#x63A5;&#x4F5C;&#x7528;&#x7684;&#x662F;rs&#x4E0D;&#x662F;pod</h5><p>replicationSet(rs)&#x5C31;&#x662F;label&#x9009;&#x62E9;&#x8868;&#x8FBE;&#x5F0F;&#x66F4;&#x52A0;&#x4E30;&#x5BCC;&#x4E86;&#x7684;rc&#x3002;</p>
+<p>&#x6CA1;&#x6709;deployment&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5347;&#x7EA7;&#x7684;&#x5E94;&#x7528;&#x7684;&#x65B9;&#x5F0F;&#x6709;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x4F7F;&#x7528;&#x4E00;&#x4E2A;rc&#xFF0C;&#x505C;&#x673A;&#x5347;&#x7EA7;&#xFF1A;&#x5148;&#x4FEE;&#x6539;template&#xFF0C;&#x5220;&#x9664;&#x65E7;pod&#xFF0C;&#x7136;&#x540E;&#x521B;&#x5EFA;&#x65B0;&#x7684;pod</li>
 </ol>
-<p><img src="/images/k8s_1/image-20200330005629376.png" alt="image-20200330005629376"></p>
-<ol start="2">
-<li>使用两个rc，不停机升级：先修改template，删除旧pod，然后创建新的pod</li>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200330005629376.png"><img src="/images/k8s_1/image-20200330005629376.png" alt="image-20200330005629376" class="ui centered image"></a></p>
+<ol class="ui list">
+<li>&#x4F7F;&#x7528;&#x4E24;&#x4E2A;rc&#xFF0C;&#x4E0D;&#x505C;&#x673A;&#x5347;&#x7EA7;&#xFF1A;&#x5148;&#x4FEE;&#x6539;template&#xFF0C;&#x5220;&#x9664;&#x65E7;pod&#xFF0C;&#x7136;&#x540E;&#x521B;&#x5EFA;&#x65B0;&#x7684;pod</li>
 </ol>
-<p><img src="/images/k8s_1/image-20200330005650536.png" alt="image-20200330005650536"></p>
-<ol start="3">
-<li>手动执行滚动升级</li>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200330005650536.png"><img src="/images/k8s_1/image-20200330005650536.png" alt="image-20200330005650536" class="ui centered image"></a></p>
+<ol class="ui list">
+<li>&#x624B;&#x52A8;&#x6267;&#x884C;&#x6EDA;&#x52A8;&#x5347;&#x7EA7;</li>
 </ol>
-<p><img src="/images/k8s_1/image-20200330005740322.png" alt="image-20200330005740322"></p>
-<p>使用了deployment实现自动滚动升级(kubernetes自动控制)</p>
-<p><img src="/images/k8s_1/image-20200330010423544.png" alt="image-20200330010423544"></p>
-<ul>
-<li>deployment滚动升级过程也是通过创建新的rs逐步替换旧pod，旧的rs不删除</li>
-<li>保留旧的rs，方便回滚</li>
-<li>支持暂停升级（相当于运行了一个金丝雀版本的app）</li>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200330005740322.png"><img src="/images/k8s_1/image-20200330005740322.png" alt="image-20200330005740322" class="ui centered image"></a></p>
+<p>&#x4F7F;&#x7528;&#x4E86;deployment&#x5B9E;&#x73B0;&#x81EA;&#x52A8;&#x6EDA;&#x52A8;&#x5347;&#x7EA7;(kubernetes&#x81EA;&#x52A8;&#x63A7;&#x5236;)</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200330010423544.png"><img src="/images/k8s_1/image-20200330010423544.png" alt="image-20200330010423544" class="ui centered image"></a></p>
+<ul class="ui list">
+<li>deployment&#x6EDA;&#x52A8;&#x5347;&#x7EA7;&#x8FC7;&#x7A0B;&#x4E5F;&#x662F;&#x901A;&#x8FC7;&#x521B;&#x5EFA;&#x65B0;&#x7684;rs&#x9010;&#x6B65;&#x66FF;&#x6362;&#x65E7;pod&#xFF0C;&#x65E7;&#x7684;rs&#x4E0D;&#x5220;&#x9664;</li>
+<li>&#x4FDD;&#x7559;&#x65E7;&#x7684;rs&#xFF0C;&#x65B9;&#x4FBF;&#x56DE;&#x6EDA;</li>
+<li>&#x652F;&#x6301;&#x6682;&#x505C;&#x5347;&#x7EA7;&#xFF08;&#x76F8;&#x5F53;&#x4E8E;&#x8FD0;&#x884C;&#x4E86;&#x4E00;&#x4E2A;&#x91D1;&#x4E1D;&#x96C0;&#x7248;&#x672C;&#x7684;app&#xFF09;</li>
 </ul>
-<h5>其他的编排对象</h5>
-<ul>
-<li>
-<p>daemon set： 给每个node都创建一个pod</p>
-<p>eg：kube-proxy，日志搜集程序，servicemesh网格/sidecar</p>
+<h5 id="&#x5176;&#x4ED6;&#x7684;&#x7F16;&#x6392;&#x5BF9;&#x8C61;"><a href="#&#x5176;&#x4ED6;&#x7684;&#x7F16;&#x6392;&#x5BF9;&#x8C61;" class="headerlink" title="&#x5176;&#x4ED6;&#x7684;&#x7F16;&#x6392;&#x5BF9;&#x8C61;"></a>&#x5176;&#x4ED6;&#x7684;&#x7F16;&#x6392;&#x5BF9;&#x8C61;</h5><ul class="ui list">
+<li><p>daemon set&#xFF1A; &#x7ED9;&#x6BCF;&#x4E2A;node&#x90FD;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;pod</p>
+<p>eg&#xFF1A;kube-proxy&#xFF0C;&#x65E5;&#x5FD7;&#x641C;&#x96C6;&#x7A0B;&#x5E8F;&#xFF0C;servicemesh&#x7F51;&#x683C;/sidecar</p>
 </li>
-<li>
-<p>job:一次性任务/定时任务</p>
+<li><p>job:&#x4E00;&#x6B21;&#x6027;&#x4EFB;&#x52A1;/&#x5B9A;&#x65F6;&#x4EFB;&#x52A1;</p>
 </li>
-<li>
-<p>stateful set：有状态的pods的编排对象</p>
+<li><p>stateful set&#xFF1A;&#x6709;&#x72B6;&#x6001;&#x7684;pods&#x7684;&#x7F16;&#x6392;&#x5BF9;&#x8C61;</p>
 </li>
 </ul>
-<h5>其他编排方式：蓝绿/金丝雀(灰度)...</h5>
-<p>https://github.com/ContainerSolutions/k8s-deployment-strategies</p>
-<h4>3. service - 让客户端发现pod&amp;和pod通信</h4>
-<p>service主要解决两个问题：</p>
-<ol>
-<li>pod随机调度引起的pod应用定位的问题</li>
-<li>pod的流量的负载均衡</li>
+<h5 id="&#x5176;&#x4ED6;&#x7F16;&#x6392;&#x65B9;&#x5F0F;&#xFF1A;&#x84DD;&#x7EFF;-&#x91D1;&#x4E1D;&#x96C0;-&#x7070;&#x5EA6;-&#x2026;"><a href="#&#x5176;&#x4ED6;&#x7F16;&#x6392;&#x65B9;&#x5F0F;&#xFF1A;&#x84DD;&#x7EFF;-&#x91D1;&#x4E1D;&#x96C0;-&#x7070;&#x5EA6;-&#x2026;" class="headerlink" title="&#x5176;&#x4ED6;&#x7F16;&#x6392;&#x65B9;&#x5F0F;&#xFF1A;&#x84DD;&#x7EFF;/&#x91D1;&#x4E1D;&#x96C0;(&#x7070;&#x5EA6;)&#x2026;"></a>&#x5176;&#x4ED6;&#x7F16;&#x6392;&#x65B9;&#x5F0F;&#xFF1A;&#x84DD;&#x7EFF;/&#x91D1;&#x4E1D;&#x96C0;(&#x7070;&#x5EA6;)&#x2026;</h5><p><a href="https://github.com/ContainerSolutions/k8s-deployment-strategies" target="_blank" rel="noopener">https://github.com/ContainerSolutions/k8s-deployment-strategies</a></p>
+<h4 id="3-service-&#x8BA9;&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x73B0;pod-amp-&#x548C;pod&#x901A;&#x4FE1;"><a href="#3-service-&#x8BA9;&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x73B0;pod-amp-&#x548C;pod&#x901A;&#x4FE1;" class="headerlink" title="3. service - &#x8BA9;&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x73B0;pod&amp;&#x548C;pod&#x901A;&#x4FE1;"></a>3. service - &#x8BA9;&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x73B0;pod&amp;&#x548C;pod&#x901A;&#x4FE1;</h4><p>service&#x4E3B;&#x8981;&#x89E3;&#x51B3;&#x4E24;&#x4E2A;&#x95EE;&#x9898;&#xFF1A;</p>
+<ol class="ui list">
+<li>pod&#x968F;&#x673A;&#x8C03;&#x5EA6;&#x5F15;&#x8D77;&#x7684;pod&#x5E94;&#x7528;&#x5B9A;&#x4F4D;&#x7684;&#x95EE;&#x9898;</li>
+<li>pod&#x7684;&#x6D41;&#x91CF;&#x7684;&#x8D1F;&#x8F7D;&#x5747;&#x8861;</li>
 </ol>
-<p>service提供稳定的ip地址来访问pod</p>
-<p>service的ip地址是虚拟ip地址(vip)，无法ping通</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia</span><br><span class="line">spec:</span><br><span class="line">  ports: # 提供多个端口映射</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8080</span><br><span class="line">  selector:</span><br><span class="line">    app: kubia</span><br></pre></td></tr></table></figure></p>
-<h5>服务发现</h5>
-<p>主要通过环境变量和DNS用于发现服务</p>
-<ul>
-<li>
-<p>环境变量</p>
+<p>service&#x63D0;&#x4F9B;&#x7A33;&#x5B9A;&#x7684;ip&#x5730;&#x5740;&#x6765;&#x8BBF;&#x95EE;pod</p>
+<p>service&#x7684;ip&#x5730;&#x5740;&#x662F;&#x865A;&#x62DF;ip&#x5730;&#x5740;(vip)&#xFF0C;&#x65E0;&#x6CD5;ping&#x901A;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia</span><br><span class="line">spec:</span><br><span class="line">  ports: # &#x63D0;&#x4F9B;&#x591A;&#x4E2A;&#x7AEF;&#x53E3;&#x6620;&#x5C04;</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8080</span><br><span class="line">  selector:</span><br><span class="line">    app: kubia</span><br></pre></td></tr></table></figure>
+<h5 id="&#x670D;&#x52A1;&#x53D1;&#x73B0;"><a href="#&#x670D;&#x52A1;&#x53D1;&#x73B0;" class="headerlink" title="&#x670D;&#x52A1;&#x53D1;&#x73B0;"></a>&#x670D;&#x52A1;&#x53D1;&#x73B0;</h5><p>&#x4E3B;&#x8981;&#x901A;&#x8FC7;&#x73AF;&#x5883;&#x53D8;&#x91CF;&#x548C;DNS&#x7528;&#x4E8E;&#x53D1;&#x73B0;&#x670D;&#x52A1;</p>
+<ul class="ui list">
+<li><p>&#x73AF;&#x5883;&#x53D8;&#x91CF;</p>
 <p>XXX_SERVICE_HOST</p>
 <p>XXX_SERVICE_PORT</p>
-<p>(XXX为服务名字)</p>
+<p>(XXX&#x4E3A;&#x670D;&#x52A1;&#x540D;&#x5B57;)</p>
 </li>
-<li>
-<p>DNS</p>
-<p>{service_name}.{namespace}.{可配置的集群域后缀}</p>
-<p>eg：kubia.default.svc.cluster.local</p>
+<li><p>DNS</p>
+<p>{service_name}.{namespace}.{&#x53EF;&#x914D;&#x7F6E;&#x7684;&#x96C6;&#x7FA4;&#x57DF;&#x540E;&#x7F00;}</p>
+<p>eg&#xFF1A;kubia.default.svc.cluster.local</p>
 </li>
 </ul>
-<h5>连接外部服务</h5>
-<p><img src="/images/k8s_1/image-20200402213710432.png" alt="image-20200402213710432"></p>
-<p>连接service和pod的是一种叫做endpoint的资源，endpoint资源是一组服务的ip地址和端口列表</p>
-<p>手动配置endpoint指向外部的ip/域名，可以使得服务得以访问相应的外部服务</p>
-<h5>对外暴露服务</h5>
-<h6>nodeport</h6>
-<p>把任意集群节点的端口的流量转发到内部的service ip端口</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-nodeport</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80 # service 端口</span><br><span class="line">    targetPort: 8080 # pod容器端口</span><br><span class="line">    nodePort: 30123 # 集群的节点的端口</span><br><span class="line">  selector:</span><br><span class="line">    app: kubia</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/k8s_1/image-20200402213019107.png" alt="image-20200402213019107"></p>
-<h6>负载均衡器</h6>
-<p>在nodeport基础上做了一层负载均衡</p>
-<p><img src="/images/k8s_1/image-20200402213121550.png" alt="image-20200402213121550"></p>
-<h6>ingress</h6>
-<p>ingress提供多个服务的负载均衡，本质上是k8s对反向代理的一种抽象(nginx/haproxy...)</p>
-<p><img src="/images/k8s_1/image-20200402213743308.png" alt="image-20200402213743308"></p>
-<p>ingress不转发请求给service，而是通过service来选择一个pod</p>
-<p><img src="/images/k8s_1/image-20200402213913111.png" alt="image-20200402213913111"></p>
-<h5>headless服务</h5>
-<p>通过讲服务的spec配置项clusterIP设置为none，DNS查询不返回service的vip，而是返回多个A记录（每个pod一个）</p>
-<h4>4. volume - 将磁盘挂在到pod中</h4>
-<p>docker的文件系统来自于镜像，通过volume实现pod中多个容器的文件共享</p>
-<h5>常用volume</h5>
-<h6>emptyDir</h6>
-<p>磁盘临时文件，pod删除，卷内容会被回收</p>
-<h6>hostPath</h6>
-<p>挂载工作节点（host机器）上的文件，类似于shopee的日志</p>
-<h6>gitRepo</h6>
-<p>git仓库同步的目录（不能一直保持同步）</p>
-<h5>persistence volume</h5>
-<p>Pv/pvc/storage class</p>
-<p>pvc：持久卷声明，面向用户(开发)，类似于接口。是用户需求清单的抽象</p>
-<p>pv：持久卷，面向运维，类似实现了pvc的对象，运维可以随意替换存储介质的实现</p>
-<p>storage class：实现了pvc的类，可以通过storage class模版化的生成pv</p>
-<p><img src="/images/k8s_1/image-20200402213913111.png" alt="image-20200402215322964"></p>
-<h5>Projected Volume</h5>
-<p>常用配置应用程序的方式有：命令行参数/配置文件读取/环境变量读取。</p>
-<p>projected volume是配置资源的抽象，但是最终让用户/应用进程所感知的方式同样是上面三种</p>
-<p>抽象配置资源，可以独立配置声明的yaml文件和部署资源的yaml文件</p>
-<h6>configmap</h6>
-<p>存储非敏感的文本配置数据</p>
-<h6>secret</h6>
-<p>用于传递证书/私钥之类的敏感数据</p>
-<h6>downward api</h6>
-<p>用来和k8s通信/获取pod元数据的</p>
-<h6>ServiceAccountToken</h6>
-<h3>kubernetes运行原理</h3>
-<h4>组件</h4>
-<p><img src="/images/k8s_1/image-20200329213556137.png" alt="image-20200329213556137"></p>
-<p>k8s组件主要分为：</p>
-<ul>
-<li>控制面板
-<ul>
+<h5 id="&#x8FDE;&#x63A5;&#x5916;&#x90E8;&#x670D;&#x52A1;"><a href="#&#x8FDE;&#x63A5;&#x5916;&#x90E8;&#x670D;&#x52A1;" class="headerlink" title="&#x8FDE;&#x63A5;&#x5916;&#x90E8;&#x670D;&#x52A1;"></a>&#x8FDE;&#x63A5;&#x5916;&#x90E8;&#x670D;&#x52A1;</h5><p><a class="magnific-img" href="/images/k8s_1/image-20200402213710432.png"><img src="/images/k8s_1/image-20200402213710432.png" alt="image-20200402213710432" class="ui centered image"></a></p>
+<p>&#x8FDE;&#x63A5;service&#x548C;pod&#x7684;&#x662F;&#x4E00;&#x79CD;&#x53EB;&#x505A;endpoint&#x7684;&#x8D44;&#x6E90;&#xFF0C;endpoint&#x8D44;&#x6E90;&#x662F;&#x4E00;&#x7EC4;&#x670D;&#x52A1;&#x7684;ip&#x5730;&#x5740;&#x548C;&#x7AEF;&#x53E3;&#x5217;&#x8868;</p>
+<p>&#x624B;&#x52A8;&#x914D;&#x7F6E;endpoint&#x6307;&#x5411;&#x5916;&#x90E8;&#x7684;ip/&#x57DF;&#x540D;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x5F97;&#x670D;&#x52A1;&#x5F97;&#x4EE5;&#x8BBF;&#x95EE;&#x76F8;&#x5E94;&#x7684;&#x5916;&#x90E8;&#x670D;&#x52A1;</p>
+<h5 id="&#x5BF9;&#x5916;&#x66B4;&#x9732;&#x670D;&#x52A1;"><a href="#&#x5BF9;&#x5916;&#x66B4;&#x9732;&#x670D;&#x52A1;" class="headerlink" title="&#x5BF9;&#x5916;&#x66B4;&#x9732;&#x670D;&#x52A1;"></a>&#x5BF9;&#x5916;&#x66B4;&#x9732;&#x670D;&#x52A1;</h5><h6 id="nodeport"><a href="#nodeport" class="headerlink" title="nodeport"></a>nodeport</h6><p>&#x628A;&#x4EFB;&#x610F;&#x96C6;&#x7FA4;&#x8282;&#x70B9;&#x7684;&#x7AEF;&#x53E3;&#x7684;&#x6D41;&#x91CF;&#x8F6C;&#x53D1;&#x5230;&#x5185;&#x90E8;&#x7684;service ip&#x7AEF;&#x53E3;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kubia-nodeport</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80 # service &#x7AEF;&#x53E3;</span><br><span class="line">    targetPort: 8080 # pod&#x5BB9;&#x5668;&#x7AEF;&#x53E3;</span><br><span class="line">    nodePort: 30123 # &#x96C6;&#x7FA4;&#x7684;&#x8282;&#x70B9;&#x7684;&#x7AEF;&#x53E3;</span><br><span class="line">  selector:</span><br><span class="line">    app: kubia</span><br></pre></td></tr></table></figure>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402213019107.png"><img src="/images/k8s_1/image-20200402213019107.png" alt="image-20200402213019107" class="ui centered image"></a></p>
+<h6 id="&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x5668;"><a href="#&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x5668;" class="headerlink" title="&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x5668;"></a>&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x5668;</h6><p>&#x5728;nodeport&#x57FA;&#x7840;&#x4E0A;&#x505A;&#x4E86;&#x4E00;&#x5C42;&#x8D1F;&#x8F7D;&#x5747;&#x8861;</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402213121550.png"><img src="/images/k8s_1/image-20200402213121550.png" alt="image-20200402213121550" class="ui centered image"></a></p>
+<h6 id="ingress"><a href="#ingress" class="headerlink" title="ingress"></a>ingress</h6><p>ingress&#x63D0;&#x4F9B;&#x591A;&#x4E2A;&#x670D;&#x52A1;&#x7684;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF0C;&#x672C;&#x8D28;&#x4E0A;&#x662F;k8s&#x5BF9;&#x53CD;&#x5411;&#x4EE3;&#x7406;&#x7684;&#x4E00;&#x79CD;&#x62BD;&#x8C61;(nginx/haproxy&#x2026;)</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402213743308.png"><img src="/images/k8s_1/image-20200402213743308.png" alt="image-20200402213743308" class="ui centered image"></a></p>
+<p>ingress&#x4E0D;&#x8F6C;&#x53D1;&#x8BF7;&#x6C42;&#x7ED9;service&#xFF0C;&#x800C;&#x662F;&#x901A;&#x8FC7;service&#x6765;&#x9009;&#x62E9;&#x4E00;&#x4E2A;pod</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402213913111.png"><img src="/images/k8s_1/image-20200402213913111.png" alt="image-20200402213913111" class="ui centered image"></a></p>
+<h5 id="headless&#x670D;&#x52A1;"><a href="#headless&#x670D;&#x52A1;" class="headerlink" title="headless&#x670D;&#x52A1;"></a>headless&#x670D;&#x52A1;</h5><p>&#x901A;&#x8FC7;&#x8BB2;&#x670D;&#x52A1;&#x7684;spec&#x914D;&#x7F6E;&#x9879;clusterIP&#x8BBE;&#x7F6E;&#x4E3A;none&#xFF0C;DNS&#x67E5;&#x8BE2;&#x4E0D;&#x8FD4;&#x56DE;service&#x7684;vip&#xFF0C;&#x800C;&#x662F;&#x8FD4;&#x56DE;&#x591A;&#x4E2A;A&#x8BB0;&#x5F55;&#xFF08;&#x6BCF;&#x4E2A;pod&#x4E00;&#x4E2A;&#xFF09;</p>
+<h4 id="4-volume-&#x5C06;&#x78C1;&#x76D8;&#x6302;&#x5728;&#x5230;pod&#x4E2D;"><a href="#4-volume-&#x5C06;&#x78C1;&#x76D8;&#x6302;&#x5728;&#x5230;pod&#x4E2D;" class="headerlink" title="4. volume - &#x5C06;&#x78C1;&#x76D8;&#x6302;&#x5728;&#x5230;pod&#x4E2D;"></a>4. volume - &#x5C06;&#x78C1;&#x76D8;&#x6302;&#x5728;&#x5230;pod&#x4E2D;</h4><p>docker&#x7684;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6765;&#x81EA;&#x4E8E;&#x955C;&#x50CF;&#xFF0C;&#x901A;&#x8FC7;volume&#x5B9E;&#x73B0;pod&#x4E2D;&#x591A;&#x4E2A;&#x5BB9;&#x5668;&#x7684;&#x6587;&#x4EF6;&#x5171;&#x4EAB;</p>
+<h5 id="&#x5E38;&#x7528;volume"><a href="#&#x5E38;&#x7528;volume" class="headerlink" title="&#x5E38;&#x7528;volume"></a>&#x5E38;&#x7528;volume</h5><h6 id="emptyDir"><a href="#emptyDir" class="headerlink" title="emptyDir"></a>emptyDir</h6><p>&#x78C1;&#x76D8;&#x4E34;&#x65F6;&#x6587;&#x4EF6;&#xFF0C;pod&#x5220;&#x9664;&#xFF0C;&#x5377;&#x5185;&#x5BB9;&#x4F1A;&#x88AB;&#x56DE;&#x6536;</p>
+<h6 id="hostPath"><a href="#hostPath" class="headerlink" title="hostPath"></a>hostPath</h6><p>&#x6302;&#x8F7D;&#x5DE5;&#x4F5C;&#x8282;&#x70B9;&#xFF08;host&#x673A;&#x5668;&#xFF09;&#x4E0A;&#x7684;&#x6587;&#x4EF6;&#xFF0C;&#x7C7B;&#x4F3C;&#x4E8E;shopee&#x7684;&#x65E5;&#x5FD7;</p>
+<h6 id="gitRepo"><a href="#gitRepo" class="headerlink" title="gitRepo"></a>gitRepo</h6><p>git&#x4ED3;&#x5E93;&#x540C;&#x6B65;&#x7684;&#x76EE;&#x5F55;&#xFF08;&#x4E0D;&#x80FD;&#x4E00;&#x76F4;&#x4FDD;&#x6301;&#x540C;&#x6B65;&#xFF09;</p>
+<h5 id="persistence-volume"><a href="#persistence-volume" class="headerlink" title="persistence volume"></a>persistence volume</h5><p>Pv/pvc/storage class</p>
+<p>pvc&#xFF1A;&#x6301;&#x4E45;&#x5377;&#x58F0;&#x660E;&#xFF0C;&#x9762;&#x5411;&#x7528;&#x6237;(&#x5F00;&#x53D1;)&#xFF0C;&#x7C7B;&#x4F3C;&#x4E8E;&#x63A5;&#x53E3;&#x3002;&#x662F;&#x7528;&#x6237;&#x9700;&#x6C42;&#x6E05;&#x5355;&#x7684;&#x62BD;&#x8C61;</p>
+<p>pv&#xFF1A;&#x6301;&#x4E45;&#x5377;&#xFF0C;&#x9762;&#x5411;&#x8FD0;&#x7EF4;&#xFF0C;&#x7C7B;&#x4F3C;&#x5B9E;&#x73B0;&#x4E86;pvc&#x7684;&#x5BF9;&#x8C61;&#xFF0C;&#x8FD0;&#x7EF4;&#x53EF;&#x4EE5;&#x968F;&#x610F;&#x66FF;&#x6362;&#x5B58;&#x50A8;&#x4ECB;&#x8D28;&#x7684;&#x5B9E;&#x73B0;</p>
+<p>storage class&#xFF1A;&#x5B9E;&#x73B0;&#x4E86;pvc&#x7684;&#x7C7B;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;storage class&#x6A21;&#x7248;&#x5316;&#x7684;&#x751F;&#x6210;pv</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402213913111.png"><img src="/images/k8s_1/image-20200402213913111.png" alt="image-20200402215322964" class="ui centered image"></a></p>
+<h5 id="Projected-Volume"><a href="#Projected-Volume" class="headerlink" title="Projected Volume"></a>Projected Volume</h5><p>&#x5E38;&#x7528;&#x914D;&#x7F6E;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x7684;&#x65B9;&#x5F0F;&#x6709;&#xFF1A;&#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;/&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x8BFB;&#x53D6;/&#x73AF;&#x5883;&#x53D8;&#x91CF;&#x8BFB;&#x53D6;&#x3002;</p>
+<p>projected volume&#x662F;&#x914D;&#x7F6E;&#x8D44;&#x6E90;&#x7684;&#x62BD;&#x8C61;&#xFF0C;&#x4F46;&#x662F;&#x6700;&#x7EC8;&#x8BA9;&#x7528;&#x6237;/&#x5E94;&#x7528;&#x8FDB;&#x7A0B;&#x6240;&#x611F;&#x77E5;&#x7684;&#x65B9;&#x5F0F;&#x540C;&#x6837;&#x662F;&#x4E0A;&#x9762;&#x4E09;&#x79CD;</p>
+<p>&#x62BD;&#x8C61;&#x914D;&#x7F6E;&#x8D44;&#x6E90;&#xFF0C;&#x53EF;&#x4EE5;&#x72EC;&#x7ACB;&#x914D;&#x7F6E;&#x58F0;&#x660E;&#x7684;yaml&#x6587;&#x4EF6;&#x548C;&#x90E8;&#x7F72;&#x8D44;&#x6E90;&#x7684;yaml&#x6587;&#x4EF6;</p>
+<h6 id="configmap"><a href="#configmap" class="headerlink" title="configmap"></a>configmap</h6><p>&#x5B58;&#x50A8;&#x975E;&#x654F;&#x611F;&#x7684;&#x6587;&#x672C;&#x914D;&#x7F6E;&#x6570;&#x636E;</p>
+<h6 id="secret"><a href="#secret" class="headerlink" title="secret"></a>secret</h6><p>&#x7528;&#x4E8E;&#x4F20;&#x9012;&#x8BC1;&#x4E66;/&#x79C1;&#x94A5;&#x4E4B;&#x7C7B;&#x7684;&#x654F;&#x611F;&#x6570;&#x636E;</p>
+<h6 id="downward-api"><a href="#downward-api" class="headerlink" title="downward api"></a>downward api</h6><p>&#x7528;&#x6765;&#x548C;k8s&#x901A;&#x4FE1;/&#x83B7;&#x53D6;pod&#x5143;&#x6570;&#x636E;&#x7684;</p>
+<h6 id="ServiceAccountToken"><a href="#ServiceAccountToken" class="headerlink" title="ServiceAccountToken"></a>ServiceAccountToken</h6><h3 id="kubernetes&#x8FD0;&#x884C;&#x539F;&#x7406;"><a href="#kubernetes&#x8FD0;&#x884C;&#x539F;&#x7406;" class="headerlink" title="kubernetes&#x8FD0;&#x884C;&#x539F;&#x7406;"></a>kubernetes&#x8FD0;&#x884C;&#x539F;&#x7406;</h3><h4 id="&#x7EC4;&#x4EF6;"><a href="#&#x7EC4;&#x4EF6;" class="headerlink" title="&#x7EC4;&#x4EF6;"></a>&#x7EC4;&#x4EF6;</h4><p><a class="magnific-img" href="/images/k8s_1/image-20200329213556137.png"><img src="/images/k8s_1/image-20200329213556137.png" alt="image-20200329213556137" class="ui centered image"></a></p>
+<p>k8s&#x7EC4;&#x4EF6;&#x4E3B;&#x8981;&#x5206;&#x4E3A;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x63A7;&#x5236;&#x9762;&#x677F;<ul>
 <li>etcd</li>
 <li>apiserver</li>
 <li>scheduler</li>
 <li>controller manager</li>
 </ul>
 </li>
-<li>工作节点
-<ul>
+<li>&#x5DE5;&#x4F5C;&#x8282;&#x70B9;<ul>
 <li>kubelet</li>
 <li>kube-proxy</li>
-<li>容器运行时</li>
+<li>&#x5BB9;&#x5668;&#x8FD0;&#x884C;&#x65F6;</li>
 </ul>
 </li>
-<li>附加组件
-<ul>
-<li>K8s DNS服务器</li>
+<li>&#x9644;&#x52A0;&#x7EC4;&#x4EF6;<ul>
+<li>K8s DNS&#x670D;&#x52A1;&#x5668;</li>
 <li>dashboard</li>
-<li>ingress控制器</li>
-<li>集群监控</li>
-<li>CNI（容器网络接口插件）</li>
+<li>ingress&#x63A7;&#x5236;&#x5668;</li>
+<li>&#x96C6;&#x7FA4;&#x76D1;&#x63A7;</li>
+<li>CNI&#xFF08;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x63D2;&#x4EF6;&#xFF09;</li>
 </ul>
 </li>
 </ul>
-<p>几个点：</p>
-<ul>
-<li>etcd是唯一的存储组件（raft协议，线性一致性的存储系统）</li>
-<li>apiserver是唯一的和etcd交互的组件（apiserver实现了乐观锁机制，能保证冲突被正常处理）</li>
-<li>apiserver以外的组件之间的通信都是通过apiserver进行</li>
-<li>etcd和apiserver是多实例同时运行，其他组件虽然多实例，但只有一个主节点处于工作状态（利用etcd选举）</li>
-<li>除了kubelet外，其他组件都可以作为pod来运行</li>
+<p>&#x51E0;&#x4E2A;&#x70B9;&#xFF1A;</p>
+<ul class="ui list">
+<li>etcd&#x662F;&#x552F;&#x4E00;&#x7684;&#x5B58;&#x50A8;&#x7EC4;&#x4EF6;&#xFF08;raft&#x534F;&#x8BAE;&#xFF0C;&#x7EBF;&#x6027;&#x4E00;&#x81F4;&#x6027;&#x7684;&#x5B58;&#x50A8;&#x7CFB;&#x7EDF;&#xFF09;</li>
+<li>apiserver&#x662F;&#x552F;&#x4E00;&#x7684;&#x548C;etcd&#x4EA4;&#x4E92;&#x7684;&#x7EC4;&#x4EF6;&#xFF08;apiserver&#x5B9E;&#x73B0;&#x4E86;&#x4E50;&#x89C2;&#x9501;&#x673A;&#x5236;&#xFF0C;&#x80FD;&#x4FDD;&#x8BC1;&#x51B2;&#x7A81;&#x88AB;&#x6B63;&#x5E38;&#x5904;&#x7406;&#xFF09;</li>
+<li>apiserver&#x4EE5;&#x5916;&#x7684;&#x7EC4;&#x4EF6;&#x4E4B;&#x95F4;&#x7684;&#x901A;&#x4FE1;&#x90FD;&#x662F;&#x901A;&#x8FC7;apiserver&#x8FDB;&#x884C;</li>
+<li>etcd&#x548C;apiserver&#x662F;&#x591A;&#x5B9E;&#x4F8B;&#x540C;&#x65F6;&#x8FD0;&#x884C;&#xFF0C;&#x5176;&#x4ED6;&#x7EC4;&#x4EF6;&#x867D;&#x7136;&#x591A;&#x5B9E;&#x4F8B;&#xFF0C;&#x4F46;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x4E3B;&#x8282;&#x70B9;&#x5904;&#x4E8E;&#x5DE5;&#x4F5C;&#x72B6;&#x6001;&#xFF08;&#x5229;&#x7528;etcd&#x9009;&#x4E3E;&#xFF09;</li>
+<li>&#x9664;&#x4E86;kubelet&#x5916;&#xFF0C;&#x5176;&#x4ED6;&#x7EC4;&#x4EF6;&#x90FD;&#x53EF;&#x4EE5;&#x4F5C;&#x4E3A;pod&#x6765;&#x8FD0;&#x884C;</li>
 </ul>
-<h5>1) etcd - 存储介质</h5>
-<h5>2) apiserver - k8s的api，类似系统调用之于于操作系统</h5>
-<ol>
-<li>
-<p>集群资源和状态的crud</p>
-<p><img src="/images/k8s_1/image-20200402223335663.png" alt="image-20200402223335663"></p>
+<h5 id="1-etcd-&#x5B58;&#x50A8;&#x4ECB;&#x8D28;"><a href="#1-etcd-&#x5B58;&#x50A8;&#x4ECB;&#x8D28;" class="headerlink" title="1) etcd - &#x5B58;&#x50A8;&#x4ECB;&#x8D28;"></a>1) etcd - &#x5B58;&#x50A8;&#x4ECB;&#x8D28;</h5><h5 id="2-apiserver-k8s&#x7684;api&#xFF0C;&#x7C7B;&#x4F3C;&#x7CFB;&#x7EDF;&#x8C03;&#x7528;&#x4E4B;&#x4E8E;&#x4E8E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;"><a href="#2-apiserver-k8s&#x7684;api&#xFF0C;&#x7C7B;&#x4F3C;&#x7CFB;&#x7EDF;&#x8C03;&#x7528;&#x4E4B;&#x4E8E;&#x4E8E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;" class="headerlink" title="2) apiserver - k8s&#x7684;api&#xFF0C;&#x7C7B;&#x4F3C;&#x7CFB;&#x7EDF;&#x8C03;&#x7528;&#x4E4B;&#x4E8E;&#x4E8E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;"></a>2) apiserver - k8s&#x7684;api&#xFF0C;&#x7C7B;&#x4F3C;&#x7CFB;&#x7EDF;&#x8C03;&#x7528;&#x4E4B;&#x4E8E;&#x4E8E;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;</h5><ol class="ui list">
+<li><p>&#x96C6;&#x7FA4;&#x8D44;&#x6E90;&#x548C;&#x72B6;&#x6001;&#x7684;crud</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402223335663.png"><img src="/images/k8s_1/image-20200402223335663.png" alt="image-20200402223335663" class="ui centered image"></a></p>
 </li>
-<li>
-<p>资源变更的通知</p>
+<li><p>&#x8D44;&#x6E90;&#x53D8;&#x66F4;&#x7684;&#x901A;&#x77E5;</p>
 </li>
 </ol>
-<p><img src="/images/k8s_1/image-20200402223352288.png" alt="image-20200402223352288"></p>
-<h5>3) 调度器 - 分配节点</h5>
-<p>调度器调度流程：</p>
-<ol>
-<li>调度器监听api server中所有更新的pod的定义</li>
-<li>选择一个合适的节点（涉及到调度策略）</li>
-<li>更改pod中<code>nodeName</code>的声明</li>
-<li>apiserver通知对应节点的kubelet</li>
-<li>kubelet部署pod</li>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402223352288.png"><img src="/images/k8s_1/image-20200402223352288.png" alt="image-20200402223352288" class="ui centered image"></a></p>
+<h5 id="3-&#x8C03;&#x5EA6;&#x5668;-&#x5206;&#x914D;&#x8282;&#x70B9;"><a href="#3-&#x8C03;&#x5EA6;&#x5668;-&#x5206;&#x914D;&#x8282;&#x70B9;" class="headerlink" title="3) &#x8C03;&#x5EA6;&#x5668; - &#x5206;&#x914D;&#x8282;&#x70B9;"></a>3) &#x8C03;&#x5EA6;&#x5668; - &#x5206;&#x914D;&#x8282;&#x70B9;</h5><p>&#x8C03;&#x5EA6;&#x5668;&#x8C03;&#x5EA6;&#x6D41;&#x7A0B;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x8C03;&#x5EA6;&#x5668;&#x76D1;&#x542C;api server&#x4E2D;&#x6240;&#x6709;&#x66F4;&#x65B0;&#x7684;pod&#x7684;&#x5B9A;&#x4E49;</li>
+<li>&#x9009;&#x62E9;&#x4E00;&#x4E2A;&#x5408;&#x9002;&#x7684;&#x8282;&#x70B9;&#xFF08;&#x6D89;&#x53CA;&#x5230;&#x8C03;&#x5EA6;&#x7B56;&#x7565;&#xFF09;</li>
+<li>&#x66F4;&#x6539;pod&#x4E2D;<code>nodeName</code>&#x7684;&#x58F0;&#x660E;</li>
+<li>apiserver&#x901A;&#x77E5;&#x5BF9;&#x5E94;&#x8282;&#x70B9;&#x7684;kubelet</li>
+<li>kubelet&#x90E8;&#x7F72;pod</li>
 </ol>
-<h5>4) controller manager - 让集群状态向api定义的期望状态收敛</h5>
-<p>控制器包括</p>
-<ul>
+<h5 id="4-controller-manager-&#x8BA9;&#x96C6;&#x7FA4;&#x72B6;&#x6001;&#x5411;api&#x5B9A;&#x4E49;&#x7684;&#x671F;&#x671B;&#x72B6;&#x6001;&#x6536;&#x655B;"><a href="#4-controller-manager-&#x8BA9;&#x96C6;&#x7FA4;&#x72B6;&#x6001;&#x5411;api&#x5B9A;&#x4E49;&#x7684;&#x671F;&#x671B;&#x72B6;&#x6001;&#x6536;&#x655B;" class="headerlink" title="4) controller manager - &#x8BA9;&#x96C6;&#x7FA4;&#x72B6;&#x6001;&#x5411;api&#x5B9A;&#x4E49;&#x7684;&#x671F;&#x671B;&#x72B6;&#x6001;&#x6536;&#x655B;"></a>4) controller manager - &#x8BA9;&#x96C6;&#x7FA4;&#x72B6;&#x6001;&#x5411;api&#x5B9A;&#x4E49;&#x7684;&#x671F;&#x671B;&#x72B6;&#x6001;&#x6536;&#x655B;</h5><p>&#x63A7;&#x5236;&#x5668;&#x5305;&#x62EC;</p>
+<ul class="ui list">
 <li>deployment controller</li>
 <li>node controller</li>
 <li>service controller</li>
 <li>endpoints controller</li>
 <li>namespace controller</li>
-<li>...</li>
+<li>&#x2026;</li>
 </ul>
-<p>有些controller依赖外部组件，比如ingress controller，就是坚挺apiserver里ingress资源的变更，然后更新ingress的基础设施(nginx/haproxy等)的配置，动态修改配置，让集群的状态变成我们期待的状态（资源声明)</p>
-<h5>5) kubelet</h5>
-<p>主要工作有：</p>
-<ol>
-<li>
-<p>注册node到apiserver</p>
+<p>&#x6709;&#x4E9B;controller&#x4F9D;&#x8D56;&#x5916;&#x90E8;&#x7EC4;&#x4EF6;&#xFF0C;&#x6BD4;&#x5982;ingress controller&#xFF0C;&#x5C31;&#x662F;&#x575A;&#x633A;apiserver&#x91CC;ingress&#x8D44;&#x6E90;&#x7684;&#x53D8;&#x66F4;&#xFF0C;&#x7136;&#x540E;&#x66F4;&#x65B0;ingress&#x7684;&#x57FA;&#x7840;&#x8BBE;&#x65BD;(nginx/haproxy&#x7B49;)&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x52A8;&#x6001;&#x4FEE;&#x6539;&#x914D;&#x7F6E;&#xFF0C;&#x8BA9;&#x96C6;&#x7FA4;&#x7684;&#x72B6;&#x6001;&#x53D8;&#x6210;&#x6211;&#x4EEC;&#x671F;&#x5F85;&#x7684;&#x72B6;&#x6001;&#xFF08;&#x8D44;&#x6E90;&#x58F0;&#x660E;)</p>
+<h5 id="5-kubelet"><a href="#5-kubelet" class="headerlink" title="5) kubelet"></a>5) kubelet</h5><p>&#x4E3B;&#x8981;&#x5DE5;&#x4F5C;&#x6709;&#xFF1A;</p>
+<ol class="ui list">
+<li><p>&#x6CE8;&#x518C;node&#x5230;apiserver</p>
 </li>
-<li>
-<p>启动pod容器</p>
+<li><p>&#x542F;&#x52A8;pod&#x5BB9;&#x5668;</p>
 </li>
-<li>
-<p>持续监控容器，向apiserver报告</p>
+<li><p>&#x6301;&#x7EED;&#x76D1;&#x63A7;&#x5BB9;&#x5668;&#xFF0C;&#x5411;apiserver&#x62A5;&#x544A;</p>
 </li>
 </ol>
-<h5>6）kube-proxy</h5>
-<p>Cluster IP与NodePort等概念是kube-proxy服务通过iptables的NAT转换实现的，kube-proxy在运行过程中动态创建与Service相关的iptables规则，这些规则实现了将访问服务（Cluster IP或NodePort）的请求负载分发到后端Pod的功能</p>
-<p><img src="/images/k8s_1/image-20200403011056624.png" alt="image-20200403011056624"></p>
-<h6>运行模式</h6>
-<p><img src="/images/k8s_1/image-20200402231301311.png" alt="image-20200402231301311"></p>
-<p>最开始用于修改iptable规则，同时作为proxy组件代理请求进出，所以叫kube-proxy(性能差， 内核和用户态之间传输数据)</p>
-<p><img src="/images/k8s_1/image-20200402231314698.png" alt="image-20200402231314698"></p>
-<p>完全iptable模式，性能较高</p>
-<h5>7) 插件</h5>
-<p>通过yaml声明，作为daemonset/deployment/replicationController资源部署</p>
-<h4>控制器工作流</h4>
-<p><img src="/images/k8s_1/image-20200402231908550.png" alt="image-20200402231908550"></p>
-<p>所有组件执行动作的时候都会生成一个事件资源发送给apiserver，可以直接观测到</p>
-<h4>跨pod网络(service/DNS/服务发现)</h4>
-<p>k8s的网络的原则：</p>
-<ol>
-<li>每个pod具有唯一的ip</li>
-<li>pod之间的通信没有NAT</li>
+<h5 id="6&#xFF09;kube-proxy"><a href="#6&#xFF09;kube-proxy" class="headerlink" title="6&#xFF09;kube-proxy"></a>6&#xFF09;kube-proxy</h5><p>Cluster IP&#x4E0E;NodePort&#x7B49;&#x6982;&#x5FF5;&#x662F;kube-proxy&#x670D;&#x52A1;&#x901A;&#x8FC7;iptables&#x7684;NAT&#x8F6C;&#x6362;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;kube-proxy&#x5728;&#x8FD0;&#x884C;&#x8FC7;&#x7A0B;&#x4E2D;&#x52A8;&#x6001;&#x521B;&#x5EFA;&#x4E0E;Service&#x76F8;&#x5173;&#x7684;iptables&#x89C4;&#x5219;&#xFF0C;&#x8FD9;&#x4E9B;&#x89C4;&#x5219;&#x5B9E;&#x73B0;&#x4E86;&#x5C06;&#x8BBF;&#x95EE;&#x670D;&#x52A1;&#xFF08;Cluster IP&#x6216;NodePort&#xFF09;&#x7684;&#x8BF7;&#x6C42;&#x8D1F;&#x8F7D;&#x5206;&#x53D1;&#x5230;&#x540E;&#x7AEF;Pod&#x7684;&#x529F;&#x80FD;</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200403011056624.png"><img src="/images/k8s_1/image-20200403011056624.png" alt="image-20200403011056624" class="ui centered image"></a></p>
+<h6 id="&#x8FD0;&#x884C;&#x6A21;&#x5F0F;"><a href="#&#x8FD0;&#x884C;&#x6A21;&#x5F0F;" class="headerlink" title="&#x8FD0;&#x884C;&#x6A21;&#x5F0F;"></a>&#x8FD0;&#x884C;&#x6A21;&#x5F0F;</h6><p><a class="magnific-img" href="/images/k8s_1/image-20200402231301311.png"><img src="/images/k8s_1/image-20200402231301311.png" alt="image-20200402231301311" class="ui centered image"></a></p>
+<p>&#x6700;&#x5F00;&#x59CB;&#x7528;&#x4E8E;&#x4FEE;&#x6539;iptable&#x89C4;&#x5219;&#xFF0C;&#x540C;&#x65F6;&#x4F5C;&#x4E3A;proxy&#x7EC4;&#x4EF6;&#x4EE3;&#x7406;&#x8BF7;&#x6C42;&#x8FDB;&#x51FA;&#xFF0C;&#x6240;&#x4EE5;&#x53EB;kube-proxy(&#x6027;&#x80FD;&#x5DEE;&#xFF0C; &#x5185;&#x6838;&#x548C;&#x7528;&#x6237;&#x6001;&#x4E4B;&#x95F4;&#x4F20;&#x8F93;&#x6570;&#x636E;)</p>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402231314698.png"><img src="/images/k8s_1/image-20200402231314698.png" alt="image-20200402231314698" class="ui centered image"></a></p>
+<p>&#x5B8C;&#x5168;iptable&#x6A21;&#x5F0F;&#xFF0C;&#x6027;&#x80FD;&#x8F83;&#x9AD8;</p>
+<h5 id="7-&#x63D2;&#x4EF6;"><a href="#7-&#x63D2;&#x4EF6;" class="headerlink" title="7) &#x63D2;&#x4EF6;"></a>7) &#x63D2;&#x4EF6;</h5><p>&#x901A;&#x8FC7;yaml&#x58F0;&#x660E;&#xFF0C;&#x4F5C;&#x4E3A;daemonset/deployment/replicationController&#x8D44;&#x6E90;&#x90E8;&#x7F72;</p>
+<h4 id="&#x63A7;&#x5236;&#x5668;&#x5DE5;&#x4F5C;&#x6D41;"><a href="#&#x63A7;&#x5236;&#x5668;&#x5DE5;&#x4F5C;&#x6D41;" class="headerlink" title="&#x63A7;&#x5236;&#x5668;&#x5DE5;&#x4F5C;&#x6D41;"></a>&#x63A7;&#x5236;&#x5668;&#x5DE5;&#x4F5C;&#x6D41;</h4><p><a class="magnific-img" href="/images/k8s_1/image-20200402231908550.png"><img src="/images/k8s_1/image-20200402231908550.png" alt="image-20200402231908550" class="ui centered image"></a></p>
+<p>&#x6240;&#x6709;&#x7EC4;&#x4EF6;&#x6267;&#x884C;&#x52A8;&#x4F5C;&#x7684;&#x65F6;&#x5019;&#x90FD;&#x4F1A;&#x751F;&#x6210;&#x4E00;&#x4E2A;&#x4E8B;&#x4EF6;&#x8D44;&#x6E90;&#x53D1;&#x9001;&#x7ED9;apiserver&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x89C2;&#x6D4B;&#x5230;</p>
+<h4 id="&#x8DE8;pod&#x7F51;&#x7EDC;-service-DNS-&#x670D;&#x52A1;&#x53D1;&#x73B0;"><a href="#&#x8DE8;pod&#x7F51;&#x7EDC;-service-DNS-&#x670D;&#x52A1;&#x53D1;&#x73B0;" class="headerlink" title="&#x8DE8;pod&#x7F51;&#x7EDC;(service/DNS/&#x670D;&#x52A1;&#x53D1;&#x73B0;)"></a>&#x8DE8;pod&#x7F51;&#x7EDC;(service/DNS/&#x670D;&#x52A1;&#x53D1;&#x73B0;)</h4><p>k8s&#x7684;&#x7F51;&#x7EDC;&#x7684;&#x539F;&#x5219;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x6BCF;&#x4E2A;pod&#x5177;&#x6709;&#x552F;&#x4E00;&#x7684;ip</li>
+<li>pod&#x4E4B;&#x95F4;&#x7684;&#x901A;&#x4FE1;&#x6CA1;&#x6709;NAT</li>
 </ol>
-<p><img src="/images/k8s_1/image-20200402232325392.png" alt="image-20200402232325392"></p>
-<h5>1. 同一个pod内不同的容器通信</h5>
-<p>同一个pod内的容器共享net namespace，共享协议栈，等同于在相同主机通信</p>
-<h5>2. 同一节点的通信原理（和docker的CNM一样</h5>
-<p><img src="/images/k8s_1/image-20200402232551057.png" alt="image-20200402232551057"></p>
-<h6>桥接网络模式</h6>
-<p>Pod a ping pod b:</p>
-<ol>
-<li>ping进程构造ICMP echo请求包，并通过socket发给协议栈，</li>
-<li>协议栈根据目的IP地址和系统路由表，知道去10.1.1.2的数据包应该要由10.1.1.1口出去</li>
-<li>由于是第一次访问10.1.1.1，且目的IP和本地IP在同一个网段，所以协议栈会先发送ARP出去，询问10.1.1.1的mac地址</li>
-<li>协议栈将ARP包交给eth0，让它发出去</li>
-<li>由于eth0的另一端连的是veth123，所以ARP请求包就转发给了veth123</li>
-<li>由于veth123的另一端连的是bridge，所以ARP请求包就转发给了bridge</li>
-<li>arp包继续到达beth234和podb的eth0</li>
-<li>eth0把arp包往上抛给协议栈，协议栈发现自己的设备有这个ip，返回arp应答（没有就抛弃</li>
+<p><a class="magnific-img" href="/images/k8s_1/image-20200402232325392.png"><img src="/images/k8s_1/image-20200402232325392.png" alt="image-20200402232325392" class="ui centered image"></a></p>
+<h5 id="1-&#x540C;&#x4E00;&#x4E2A;pod&#x5185;&#x4E0D;&#x540C;&#x7684;&#x5BB9;&#x5668;&#x901A;&#x4FE1;"><a href="#1-&#x540C;&#x4E00;&#x4E2A;pod&#x5185;&#x4E0D;&#x540C;&#x7684;&#x5BB9;&#x5668;&#x901A;&#x4FE1;" class="headerlink" title="1. &#x540C;&#x4E00;&#x4E2A;pod&#x5185;&#x4E0D;&#x540C;&#x7684;&#x5BB9;&#x5668;&#x901A;&#x4FE1;"></a>1. &#x540C;&#x4E00;&#x4E2A;pod&#x5185;&#x4E0D;&#x540C;&#x7684;&#x5BB9;&#x5668;&#x901A;&#x4FE1;</h5><p>&#x540C;&#x4E00;&#x4E2A;pod&#x5185;&#x7684;&#x5BB9;&#x5668;&#x5171;&#x4EAB;net namespace&#xFF0C;&#x5171;&#x4EAB;&#x534F;&#x8BAE;&#x6808;&#xFF0C;&#x7B49;&#x540C;&#x4E8E;&#x5728;&#x76F8;&#x540C;&#x4E3B;&#x673A;&#x901A;&#x4FE1;</p>
+<h5 id="2-&#x540C;&#x4E00;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;&#xFF08;&#x548C;docker&#x7684;CNM&#x4E00;&#x6837;"><a href="#2-&#x540C;&#x4E00;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;&#xFF08;&#x548C;docker&#x7684;CNM&#x4E00;&#x6837;" class="headerlink" title="2. &#x540C;&#x4E00;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;&#xFF08;&#x548C;docker&#x7684;CNM&#x4E00;&#x6837;"></a>2. &#x540C;&#x4E00;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;&#xFF08;&#x548C;docker&#x7684;CNM&#x4E00;&#x6837;</h5><p><a class="magnific-img" href="/images/k8s_1/image-20200402232551057.png"><img src="/images/k8s_1/image-20200402232551057.png" alt="image-20200402232551057" class="ui centered image"></a></p>
+<h6 id="&#x6865;&#x63A5;&#x7F51;&#x7EDC;&#x6A21;&#x5F0F;"><a href="#&#x6865;&#x63A5;&#x7F51;&#x7EDC;&#x6A21;&#x5F0F;" class="headerlink" title="&#x6865;&#x63A5;&#x7F51;&#x7EDC;&#x6A21;&#x5F0F;"></a>&#x6865;&#x63A5;&#x7F51;&#x7EDC;&#x6A21;&#x5F0F;</h6><p>Pod a ping pod b:</p>
+<ol class="ui list">
+<li>ping&#x8FDB;&#x7A0B;&#x6784;&#x9020;ICMP echo&#x8BF7;&#x6C42;&#x5305;&#xFF0C;&#x5E76;&#x901A;&#x8FC7;socket&#x53D1;&#x7ED9;&#x534F;&#x8BAE;&#x6808;&#xFF0C;</li>
+<li>&#x534F;&#x8BAE;&#x6808;&#x6839;&#x636E;&#x76EE;&#x7684;IP&#x5730;&#x5740;&#x548C;&#x7CFB;&#x7EDF;&#x8DEF;&#x7531;&#x8868;&#xFF0C;&#x77E5;&#x9053;&#x53BB;10.1.1.2&#x7684;&#x6570;&#x636E;&#x5305;&#x5E94;&#x8BE5;&#x8981;&#x7531;10.1.1.1&#x53E3;&#x51FA;&#x53BB;</li>
+<li>&#x7531;&#x4E8E;&#x662F;&#x7B2C;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;10.1.1.1&#xFF0C;&#x4E14;&#x76EE;&#x7684;IP&#x548C;&#x672C;&#x5730;IP&#x5728;&#x540C;&#x4E00;&#x4E2A;&#x7F51;&#x6BB5;&#xFF0C;&#x6240;&#x4EE5;&#x534F;&#x8BAE;&#x6808;&#x4F1A;&#x5148;&#x53D1;&#x9001;ARP&#x51FA;&#x53BB;&#xFF0C;&#x8BE2;&#x95EE;10.1.1.1&#x7684;mac&#x5730;&#x5740;</li>
+<li>&#x534F;&#x8BAE;&#x6808;&#x5C06;ARP&#x5305;&#x4EA4;&#x7ED9;eth0&#xFF0C;&#x8BA9;&#x5B83;&#x53D1;&#x51FA;&#x53BB;</li>
+<li>&#x7531;&#x4E8E;eth0&#x7684;&#x53E6;&#x4E00;&#x7AEF;&#x8FDE;&#x7684;&#x662F;veth123&#xFF0C;&#x6240;&#x4EE5;ARP&#x8BF7;&#x6C42;&#x5305;&#x5C31;&#x8F6C;&#x53D1;&#x7ED9;&#x4E86;veth123</li>
+<li>&#x7531;&#x4E8E;veth123&#x7684;&#x53E6;&#x4E00;&#x7AEF;&#x8FDE;&#x7684;&#x662F;bridge&#xFF0C;&#x6240;&#x4EE5;ARP&#x8BF7;&#x6C42;&#x5305;&#x5C31;&#x8F6C;&#x53D1;&#x7ED9;&#x4E86;bridge</li>
+<li>arp&#x5305;&#x7EE7;&#x7EED;&#x5230;&#x8FBE;beth234&#x548C;podb&#x7684;eth0</li>
+<li>eth0&#x628A;arp&#x5305;&#x5F80;&#x4E0A;&#x629B;&#x7ED9;&#x534F;&#x8BAE;&#x6808;&#xFF0C;&#x534F;&#x8BAE;&#x6808;&#x53D1;&#x73B0;&#x81EA;&#x5DF1;&#x7684;&#x8BBE;&#x5907;&#x6709;&#x8FD9;&#x4E2A;ip&#xFF0C;&#x8FD4;&#x56DE;arp&#x5E94;&#x7B54;&#xFF08;&#x6CA1;&#x6709;&#x5C31;&#x629B;&#x5F03;</li>
 </ol>
-<p>ps：公司使用的是host网络（容器和宿主机具有相同的ip地址</p>
-<h5>3. 跨节点的通信原理</h5>
-<p><img src="/images/k8s_1/image-20200402234517386.png" alt="image-20200402234517386"></p>
-<p>不同节点之间的网桥以某种形式连接</p>
-<ul>
-<li>
-<p>三层网络</p>
+<p>ps&#xFF1A;&#x516C;&#x53F8;&#x4F7F;&#x7528;&#x7684;&#x662F;host&#x7F51;&#x7EDC;&#xFF08;&#x5BB9;&#x5668;&#x548C;&#x5BBF;&#x4E3B;&#x673A;&#x5177;&#x6709;&#x76F8;&#x540C;&#x7684;ip&#x5730;&#x5740;</p>
+<h5 id="3-&#x8DE8;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;"><a href="#3-&#x8DE8;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;" class="headerlink" title="3. &#x8DE8;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;"></a>3. &#x8DE8;&#x8282;&#x70B9;&#x7684;&#x901A;&#x4FE1;&#x539F;&#x7406;</h5><p><a class="magnific-img" href="/images/k8s_1/image-20200402234517386.png"><img src="/images/k8s_1/image-20200402234517386.png" alt="image-20200402234517386" class="ui centered image"></a></p>
+<p>&#x4E0D;&#x540C;&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x7684;&#x7F51;&#x6865;&#x4EE5;&#x67D0;&#x79CD;&#x5F62;&#x5F0F;&#x8FDE;&#x63A5;</p>
+<ul class="ui list">
+<li><p>&#x4E09;&#x5C42;&#x7F51;&#x7EDC;</p>
 </li>
-<li>
-<p>二层网络</p>
+<li><p>&#x4E8C;&#x5C42;&#x7F51;&#x7EDC;</p>
 </li>
 </ul>
-<p>具体由CNI插件来实现</p>
-<ul>
+<p>&#x5177;&#x4F53;&#x7531;CNI&#x63D2;&#x4EF6;&#x6765;&#x5B9E;&#x73B0;</p>
+<ul class="ui list">
 <li>calico</li>
-<li>flannel
-<ul>
+<li>flannel<ul>
 <li>udp</li>
 <li>vxlan</li>
 <li>Host-gw</li>
 </ul>
 </li>
 </ul>
-<h6>UDP</h6>
-<p><img src="/images/k8s_1/image-20200402235448264.png" alt="image-20200402235448264"></p>
-<ul>
-<li>Docker0（br）通过host机器上的路由表，转发请求到flannel0</li>
-<li>flannel0是一个tun设备，把请求转发到用户空间的flanneld程序</li>
-<li>flanneld查找etcd，找到目的容器ip对应的节点ip</li>
-<li>套娃一层ip包</li>
-<li>通过宿主机etho0转发udp包到公网</li>
-<li>...</li>
+<h6 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h6><p><a class="magnific-img" href="/images/k8s_1/image-20200402235448264.png"><img src="/images/k8s_1/image-20200402235448264.png" alt="image-20200402235448264" class="ui centered image"></a></p>
+<ul class="ui list">
+<li>Docker0&#xFF08;br&#xFF09;&#x901A;&#x8FC7;host&#x673A;&#x5668;&#x4E0A;&#x7684;&#x8DEF;&#x7531;&#x8868;&#xFF0C;&#x8F6C;&#x53D1;&#x8BF7;&#x6C42;&#x5230;flannel0</li>
+<li>flannel0&#x662F;&#x4E00;&#x4E2A;tun&#x8BBE;&#x5907;&#xFF0C;&#x628A;&#x8BF7;&#x6C42;&#x8F6C;&#x53D1;&#x5230;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x7684;flanneld&#x7A0B;&#x5E8F;</li>
+<li>flanneld&#x67E5;&#x627E;etcd&#xFF0C;&#x627E;&#x5230;&#x76EE;&#x7684;&#x5BB9;&#x5668;ip&#x5BF9;&#x5E94;&#x7684;&#x8282;&#x70B9;ip</li>
+<li>&#x5957;&#x5A03;&#x4E00;&#x5C42;ip&#x5305;</li>
+<li>&#x901A;&#x8FC7;&#x5BBF;&#x4E3B;&#x673A;etho0&#x8F6C;&#x53D1;udp&#x5305;&#x5230;&#x516C;&#x7F51;</li>
+<li>&#x2026;</li>
 </ul>
-<h6>vxlan</h6>
-<p><img src="/images/k8s_1/image-20200403000010564.png" alt="image-20200403000010564"></p>
-<ul>
-<li>
-<p>在现有的三层网络之上，“覆盖”一层虚拟的、由内核 VXLAN 模块负责维护的二层网络，使得连接在这个 VXLAN 二层网络上的“主机”（虚拟机或者容器都可以）之间，可以像在同一个局域网（LAN）里那样自由通信</p>
+<h6 id="vxlan"><a href="#vxlan" class="headerlink" title="vxlan"></a>vxlan</h6><p><a class="magnific-img" href="/images/k8s_1/image-20200403000010564.png"><img src="/images/k8s_1/image-20200403000010564.png" alt="image-20200403000010564" class="ui centered image"></a></p>
+<ul class="ui list">
+<li><p>&#x5728;&#x73B0;&#x6709;&#x7684;&#x4E09;&#x5C42;&#x7F51;&#x7EDC;&#x4E4B;&#x4E0A;&#xFF0C;&#x201C;&#x8986;&#x76D6;&#x201D;&#x4E00;&#x5C42;&#x865A;&#x62DF;&#x7684;&#x3001;&#x7531;&#x5185;&#x6838; VXLAN &#x6A21;&#x5757;&#x8D1F;&#x8D23;&#x7EF4;&#x62A4;&#x7684;&#x4E8C;&#x5C42;&#x7F51;&#x7EDC;&#xFF0C;&#x4F7F;&#x5F97;&#x8FDE;&#x63A5;&#x5728;&#x8FD9;&#x4E2A; VXLAN &#x4E8C;&#x5C42;&#x7F51;&#x7EDC;&#x4E0A;&#x7684;&#x201C;&#x4E3B;&#x673A;&#x201D;&#xFF08;&#x865A;&#x62DF;&#x673A;&#x6216;&#x8005;&#x5BB9;&#x5668;&#x90FD;&#x53EF;&#x4EE5;&#xFF09;&#x4E4B;&#x95F4;&#xFF0C;&#x53EF;&#x4EE5;&#x50CF;&#x5728;&#x540C;&#x4E00;&#x4E2A;&#x5C40;&#x57DF;&#x7F51;&#xFF08;LAN&#xFF09;&#x91CC;&#x90A3;&#x6837;&#x81EA;&#x7531;&#x901A;&#x4FE1;</p>
 </li>
-<li>
-<p>目的 VTEP 设备的arp表在节点创建的时候生成</p>
+<li><p>&#x76EE;&#x7684; VTEP &#x8BBE;&#x5907;&#x7684;arp&#x8868;&#x5728;&#x8282;&#x70B9;&#x521B;&#x5EFA;&#x7684;&#x65F6;&#x5019;&#x751F;&#x6210;</p>
 </li>
 </ul>
-<h6>host-gw</h6>
-<p><img src="/images/k8s_1/image-20200403002417215.png" alt="image-20200403002417215"></p>
-<ul>
-<li>路径更短，性能更高</li>
-<li>但是节点之间必须是二层联通的（通过路由表吓一跳mac地址设置目的地址，通过二层网络传输</li>
+<h6 id="host-gw"><a href="#host-gw" class="headerlink" title="host-gw"></a>host-gw</h6><p><a class="magnific-img" href="/images/k8s_1/image-20200403002417215.png"><img src="/images/k8s_1/image-20200403002417215.png" alt="image-20200403002417215" class="ui centered image"></a></p>
+<ul class="ui list">
+<li>&#x8DEF;&#x5F84;&#x66F4;&#x77ED;&#xFF0C;&#x6027;&#x80FD;&#x66F4;&#x9AD8;</li>
+<li>&#x4F46;&#x662F;&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x5FC5;&#x987B;&#x662F;&#x4E8C;&#x5C42;&#x8054;&#x901A;&#x7684;&#xFF08;&#x901A;&#x8FC7;&#x8DEF;&#x7531;&#x8868;&#x5413;&#x4E00;&#x8DF3;mac&#x5730;&#x5740;&#x8BBE;&#x7F6E;&#x76EE;&#x7684;&#x5730;&#x5740;&#xFF0C;&#x901A;&#x8FC7;&#x4E8C;&#x5C42;&#x7F51;&#x7EDC;&#x4F20;&#x8F93;</li>
 </ul>
-<h2>常用kubectl的命令（持续更新</h2>
-<h4>资源信息</h4>
-<ol>
-<li>kubectl explain po/ns ...</li>
+<h2 id="&#x5E38;&#x7528;kubectl&#x7684;&#x547D;&#x4EE4;&#xFF08;&#x6301;&#x7EED;&#x66F4;&#x65B0;"><a href="#&#x5E38;&#x7528;kubectl&#x7684;&#x547D;&#x4EE4;&#xFF08;&#x6301;&#x7EED;&#x66F4;&#x65B0;" class="headerlink" title="&#x5E38;&#x7528;kubectl&#x7684;&#x547D;&#x4EE4;&#xFF08;&#x6301;&#x7EED;&#x66F4;&#x65B0;"></a>&#x5E38;&#x7528;kubectl&#x7684;&#x547D;&#x4EE4;&#xFF08;&#x6301;&#x7EED;&#x66F4;&#x65B0;</h2><h4 id="&#x8D44;&#x6E90;&#x4FE1;&#x606F;"><a href="#&#x8D44;&#x6E90;&#x4FE1;&#x606F;" class="headerlink" title="&#x8D44;&#x6E90;&#x4FE1;&#x606F;"></a>&#x8D44;&#x6E90;&#x4FE1;&#x606F;</h4><ol class="ui list">
+<li>kubectl explain po/ns &#x2026;</li>
 </ol>
-<h4>pod</h4>
-<h6>pod</h6>
-<ol>
-<li>
-<p>创建pod - 通过yaml文件</p>
+<h4 id="pod"><a href="#pod" class="headerlink" title="pod"></a>pod</h4><h6 id="pod-1"><a href="#pod-1" class="headerlink" title="pod"></a>pod</h6><ol class="ui list">
+<li><p>&#x521B;&#x5EFA;pod - &#x901A;&#x8FC7;yaml&#x6587;&#x4EF6;</p>
 <p>kubectl create -f xxx.yaml</p>
 </li>
-<li>
-<p>查看运行时pod的完整定义</p>
-<p>kubectl get po poname -o yaml（-o 表示格式yaml/json）</p>
+<li><p>&#x67E5;&#x770B;&#x8FD0;&#x884C;&#x65F6;pod&#x7684;&#x5B8C;&#x6574;&#x5B9A;&#x4E49;</p>
+<p>kubectl get po poname -o yaml&#xFF08;-o &#x8868;&#x793A;&#x683C;&#x5F0F;yaml/json&#xFF09;</p>
 </li>
-<li>
-<p>查看pod日志</p>
-<p>kubectl logs podname (只有一个容器时候)</p>
-<p>kubectl logs podname -c containername (不只有一个容器时候)</p>
+<li><p>&#x67E5;&#x770B;pod&#x65E5;&#x5FD7;</p>
+<p>kubectl logs podname (&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x5BB9;&#x5668;&#x65F6;&#x5019;)</p>
+<p>kubectl logs podname -c containername (&#x4E0D;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x5BB9;&#x5668;&#x65F6;&#x5019;)</p>
 </li>
-<li>
-<p>本地ssh端口转发</p>
+<li><p>&#x672C;&#x5730;ssh&#x7AEF;&#x53E3;&#x8F6C;&#x53D1;</p>
 <p>kubectl port-forward podname localPort:podPort</p>
 </li>
-<li>
-<p>删除pod</p>
+<li><p>&#x5220;&#x9664;pod</p>
 <p>kubectl delete po podname</p>
 <p>kubectl delete po -l labelKey=labelValue</p>
 <p>kubectl delete ns nsName</p>
-<p>kubectl delete po --all</p>
-<p>kubectl delete all --all</p>
+<p>kubectl delete po &#x2013;all</p>
+<p>kubectl delete all &#x2013;all</p>
 </li>
 </ol>
-<h6>label</h6>
-<ol>
-<li>创建标签
-<ul>
-<li>通过命令</li>
-<li>通过yaml文件</li>
+<h6 id="label"><a href="#label" class="headerlink" title="label"></a>label</h6><ol class="ui list">
+<li>&#x521B;&#x5EFA;&#x6807;&#x7B7E;<ul>
+<li>&#x901A;&#x8FC7;&#x547D;&#x4EE4;</li>
+<li>&#x901A;&#x8FC7;yaml&#x6587;&#x4EF6;</li>
 </ul>
 </li>
 </ol>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xxx</span><br><span class="line">metadata:</span><br><span class="line">	name: podname</span><br><span class="line">	labels:</span><br><span class="line">		labelkey: labelval</span><br></pre></td></tr></table></figure></p>
-<ol start="2">
-<li>
-<p>查看标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xxx</span><br><span class="line">metadata:</span><br><span class="line">	name: podname</span><br><span class="line">	labels:</span><br><span class="line">		labelkey: labelval</span><br></pre></td></tr></table></figure>
+<ol class="ui list">
+<li><p>&#x67E5;&#x770B;&#x6807;&#x7B7E;</p>
 <ul>
-<li>列表带标签</li>
+<li>&#x5217;&#x8868;&#x5E26;&#x6807;&#x7B7E;</li>
 </ul>
-<p>kubectl get po --show-labels</p>
-<p>Kubectl get po -L labelkey1，labelkey2</p>
+<p>kubectl get po &#x2013;show-labels </p>
+<p>Kubectl get po -L labelkey1&#xFF0C;labelkey2</p>
 <ul>
-<li>通过标签过滤</li>
+<li>&#x901A;&#x8FC7;&#x6807;&#x7B7E;&#x8FC7;&#x6EE4;</li>
 </ul>
 <p>Kubectl get po -l labelkey</p>
 <p>Kubectl get po -l labelkey=labelval</p>
-<p>Kubectl get po -l labelkey='!labelval'</p>
+<p>Kubectl get po -l labelkey=&#x2019;!labelval&#x2019;</p>
 </li>
-<li>
-<p>修改标签</p>
+<li><p>&#x4FEE;&#x6539;&#x6807;&#x7B7E;</p>
 <p>Kubectl label po podname labelkey=labbelval</p>
-<p>Kubectl label po podname labelkey=labbelval --overwrite(修改已存在的)</p>
+<p>Kubectl label po podname labelkey=labbelval &#x2013;overwrite(&#x4FEE;&#x6539;&#x5DF2;&#x5B58;&#x5728;&#x7684;)</p>
 </li>
-<li>
-<p>使用标签分类工作节点</p>
+<li><p>&#x4F7F;&#x7528;&#x6807;&#x7B7E;&#x5206;&#x7C7B;&#x5DE5;&#x4F5C;&#x8282;&#x70B9;</p>
 <p>Kubectl label node codename labelkey=labelval</p>
 </li>
-<li>
-<p>查看pod详细信息</p>
+<li><p>&#x67E5;&#x770B;pod&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;</p>
 <p>Kubectl describe po podname</p>
 </li>
-<li>
-<p>添加注解</p>
+<li><p>&#x6DFB;&#x52A0;&#x6CE8;&#x89E3;</p>
 <p>Kubectl annotate pod podname key=value</p>
 </li>
 </ol>
-<h6>namespace</h6>
-<ol>
-<li>
-<p>创建命名空间</p>
+<h6 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a>namespace</h6><ol class="ui list">
+<li><p>&#x521B;&#x5EFA;&#x547D;&#x540D;&#x7A7A;&#x95F4;</p>
 <ul>
 <li>yaml</li>
 </ul>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: custom-ns</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: custom-ns</span><br></pre></td></tr></table></figure>
 <ul>
-<li>
-<p>kubectl 方式:</p>
+<li><p>kubectl &#x65B9;&#x5F0F;:</p>
 <p>kubectl create namespace custom-ns</p>
 </li>
 </ul>
 </li>
-<li>
-<p>查看namespace</p>
+<li><p>&#x67E5;&#x770B;namespace</p>
 <p>kubectl get ns</p>
 </li>
-<li>
-<p>查看namespace中的所有pods</p>
+<li><p>&#x67E5;&#x770B;namespace&#x4E2D;&#x7684;&#x6240;&#x6709;pods</p>
 <p>kubectl get po -n namespaceName</p>
 </li>
 </ol>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2020/08/11/网络编程的那些事/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">网络编程的那些事</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2019/11/20/对数据系统架构设计权衡的思考/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">对数据系统架构设计权衡的思考</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">容器&amp;docker</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.</span> <span class="toc-text">docker的虚拟化原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">Namespace 做隔离</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.2.</span> <span class="toc-text">Cgroups 做限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.3.</span> <span class="toc-text">rootfs 做文件系统</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">容器编排&amp;kubernetes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">什么是容器编排(Container Orchestration）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">kubernetes的集群架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">kubernetes的资源对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. pod - 最小的调度单位(workloads)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">pod的结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">容器设计模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">pod的资源描述</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. deployment - 声明式的升级应用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">从replicationController(rc)说起</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">deployment直接作用的是rs不是pod</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.3.</span> <span class="toc-text">其他的编排对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.2.4.</span> <span class="toc-text">其他编排方式：蓝绿/金丝雀(灰度)...</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. service - 让客户端发现pod&amp;和pod通信</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">服务发现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">连接外部服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.</span> <span class="toc-text">对外暴露服务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.1.</span> <span class="toc-text">nodeport</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.2.</span> <span class="toc-text">负载均衡器</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.3.3.</span> <span class="toc-text">ingress</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.3.4.</span> <span class="toc-text">headless服务</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.</span> <span class="toc-text">4. volume - 将磁盘挂在到pod中</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">常用volume</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.1.</span> <span class="toc-text">emptyDir</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.2.</span> <span class="toc-text">hostPath</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.1.3.</span> <span class="toc-text">gitRepo</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.2.</span> <span class="toc-text">persistence volume</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.</span> <span class="toc-text">Projected Volume</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.1.</span> <span class="toc-text">configmap</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.2.</span> <span class="toc-text">secret</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.3.</span> <span class="toc-text">downward api</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.4.3.4.</span> <span class="toc-text">ServiceAccountToken</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">kubernetes运行原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.</span> <span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">1) etcd - 存储介质</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">2) apiserver - k8s的api，类似系统调用之于于操作系统</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.3.</span> <span class="toc-text">3) 调度器 - 分配节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.4.</span> <span class="toc-text">4) controller manager - 让集群状态向api定义的期望状态收敛</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.5.</span> <span class="toc-text">5) kubelet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.6.</span> <span class="toc-text">6）kube-proxy</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.6.1.</span> <span class="toc-text">运行模式</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.1.7.</span> <span class="toc-text">7) 插件</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.2.</span> <span class="toc-text">控制器工作流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.</span> <span class="toc-text">跨pod网络(service/DNS/服务发现)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.1.</span> <span class="toc-text">1. 同一个pod内不同的容器通信</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.2.</span> <span class="toc-text">2. 同一节点的通信原理（和docker的CNM一样</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.2.1.</span> <span class="toc-text">桥接网络模式</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.</span> <span class="toc-text">3. 跨节点的通信原理</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.1.</span> <span class="toc-text">UDP</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.2.</span> <span class="toc-text">vxlan</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.3.3.3.</span> <span class="toc-text">host-gw</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">常用kubectl的命令（持续更新</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.1.</span> <span class="toc-text">资源信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.</span> <span class="toc-text">pod</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.0.1.</span> <span class="toc-text">pod</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.0.2.</span> <span class="toc-text">label</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.2.0.3.</span> <span class="toc-text">namespace</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&text=面向开发人员的kubernetes笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&is_video=false&description=面向开发人员的kubernetes笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=面向开发人员的kubernetes笔记&body=Check out this article: http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&title=面向开发人员的kubernetes笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/&name=面向开发人员的kubernetes笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/面向开发人员的kubernetes笔记.md" data-title="面向开发人员的kubernetes笔记" data-url="http://lqczzz.github.io/2020/03/30/面向开发人员的kubernetes笔记/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

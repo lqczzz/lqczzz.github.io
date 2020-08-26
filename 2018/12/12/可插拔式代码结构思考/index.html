@@ -1,163 +1,124 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="什么是可插拔式框架 最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连">
-<meta property="og:type" content="article">
-<meta property="og:title" content="可插拔式代码结构思考">
-<meta property="og:url" content="http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="什么是可插拔式框架 最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-23T17:04:23.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="可插拔式代码结构思考">
-<meta name="twitter:description" content="什么是可插拔式框架 最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。 思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>可插拔式代码结构思考</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                可插拔式代码结构思考 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/12/24/怎样设计golang友好的api/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&text=可插拔式代码结构思考"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&is_video=false&description=可插拔式代码结构思考"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=可插拔式代码结构思考&body=Check out this article: http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&name=可插拔式代码结构思考&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">什么是可插拔式框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">可默认，可替换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">1. 默认参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2. 可选参数 + 默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">3. 接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">函数式参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">模块的抽象</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        可插拔式代码结构思考
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-12-12T11:10:36.000Z" itemprop="datePublished">2018-12-12</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h2>什么是可插拔式框架</h2>
-<p>最早接触可插拔式的框架是python的flask，当时觉得这玩意老牛逼了，任何组件都能替换，你可以用jinja2/mako来做模版引擎，你可以选择SQLAlchemy或者其他orm框架来操作数据库。</p>
-<p>思考了很久，pluggable的本质在于可替换。可替换在软件开发处处都可以体现，比如mysql驱动和mysql驱动实现，orm框架和数据库连接池，同样的orm框架，可以使用不同的连接池。而这种可替换在于抽象，golang标准库给我们提供了一套标准的sql操作接口，不同数据库只要实现这个接口。</p>
-<p>这样想，pluggable也是离不开抽象的。抽空研究了一下micro的代码，发现，确实如此。</p>
-<h2>可默认，可替换</h2>
-<h3>1. 默认参数</h3>
-<p><code>pluggable</code>,最直观的理解大概就是“可以替换，不替换也行”。在编码中，很多语言天生有一项能力和这个类似——默认参数：</p>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">可插拔式代码结构思考</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/12/12</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <h2 id="&#x4EC0;&#x4E48;&#x662F;&#x53EF;&#x63D2;&#x62D4;&#x5F0F;&#x6846;&#x67B6;"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x53EF;&#x63D2;&#x62D4;&#x5F0F;&#x6846;&#x67B6;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x53EF;&#x63D2;&#x62D4;&#x5F0F;&#x6846;&#x67B6;"></a>&#x4EC0;&#x4E48;&#x662F;&#x53EF;&#x63D2;&#x62D4;&#x5F0F;&#x6846;&#x67B6;</h2><p>&#x6700;&#x65E9;&#x63A5;&#x89E6;&#x53EF;&#x63D2;&#x62D4;&#x5F0F;&#x7684;&#x6846;&#x67B6;&#x662F;python&#x7684;flask&#xFF0C;&#x5F53;&#x65F6;&#x89C9;&#x5F97;&#x8FD9;&#x73A9;&#x610F;&#x8001;&#x725B;&#x903C;&#x4E86;&#xFF0C;&#x4EFB;&#x4F55;&#x7EC4;&#x4EF6;&#x90FD;&#x80FD;&#x66FF;&#x6362;&#xFF0C;&#x4F60;&#x53EF;&#x4EE5;&#x7528;jinja2/mako&#x6765;&#x505A;&#x6A21;&#x7248;&#x5F15;&#x64CE;&#xFF0C;&#x4F60;&#x53EF;&#x4EE5;&#x9009;&#x62E9;SQLAlchemy&#x6216;&#x8005;&#x5176;&#x4ED6;orm&#x6846;&#x67B6;&#x6765;&#x64CD;&#x4F5C;&#x6570;&#x636E;&#x5E93;&#x3002;</p>
+<p>&#x601D;&#x8003;&#x4E86;&#x5F88;&#x4E45;&#xFF0C;pluggable&#x7684;&#x672C;&#x8D28;&#x5728;&#x4E8E;&#x53EF;&#x66FF;&#x6362;&#x3002;&#x53EF;&#x66FF;&#x6362;&#x5728;&#x8F6F;&#x4EF6;&#x5F00;&#x53D1;&#x5904;&#x5904;&#x90FD;&#x53EF;&#x4EE5;&#x4F53;&#x73B0;&#xFF0C;&#x6BD4;&#x5982;mysql&#x9A71;&#x52A8;&#x548C;mysql&#x9A71;&#x52A8;&#x5B9E;&#x73B0;&#xFF0C;orm&#x6846;&#x67B6;&#x548C;&#x6570;&#x636E;&#x5E93;&#x8FDE;&#x63A5;&#x6C60;&#xFF0C;&#x540C;&#x6837;&#x7684;orm&#x6846;&#x67B6;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x4E0D;&#x540C;&#x7684;&#x8FDE;&#x63A5;&#x6C60;&#x3002;&#x800C;&#x8FD9;&#x79CD;&#x53EF;&#x66FF;&#x6362;&#x5728;&#x4E8E;&#x62BD;&#x8C61;&#xFF0C;golang&#x6807;&#x51C6;&#x5E93;&#x7ED9;&#x6211;&#x4EEC;&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x5957;&#x6807;&#x51C6;&#x7684;sql&#x64CD;&#x4F5C;&#x63A5;&#x53E3;&#xFF0C;&#x4E0D;&#x540C;&#x6570;&#x636E;&#x5E93;&#x53EA;&#x8981;&#x5B9E;&#x73B0;&#x8FD9;&#x4E2A;&#x63A5;&#x53E3;&#x3002;</p>
+<p>&#x8FD9;&#x6837;&#x60F3;&#xFF0C;pluggable&#x4E5F;&#x662F;&#x79BB;&#x4E0D;&#x5F00;&#x62BD;&#x8C61;&#x7684;&#x3002;&#x62BD;&#x7A7A;&#x7814;&#x7A76;&#x4E86;&#x4E00;&#x4E0B;micro&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x53D1;&#x73B0;&#xFF0C;&#x786E;&#x5B9E;&#x5982;&#x6B64;&#x3002;</p>
+<h2 id="&#x53EF;&#x9ED8;&#x8BA4;&#xFF0C;&#x53EF;&#x66FF;&#x6362;"><a href="#&#x53EF;&#x9ED8;&#x8BA4;&#xFF0C;&#x53EF;&#x66FF;&#x6362;" class="headerlink" title="&#x53EF;&#x9ED8;&#x8BA4;&#xFF0C;&#x53EF;&#x66FF;&#x6362;"></a>&#x53EF;&#x9ED8;&#x8BA4;&#xFF0C;&#x53EF;&#x66FF;&#x6362;</h2><h3 id="1-&#x9ED8;&#x8BA4;&#x53C2;&#x6570;"><a href="#1-&#x9ED8;&#x8BA4;&#x53C2;&#x6570;" class="headerlink" title="1. &#x9ED8;&#x8BA4;&#x53C2;&#x6570;"></a>1. &#x9ED8;&#x8BA4;&#x53C2;&#x6570;</h3><p><code>pluggable</code>,&#x6700;&#x76F4;&#x89C2;&#x7684;&#x7406;&#x89E3;&#x5927;&#x6982;&#x5C31;&#x662F;&#x201C;&#x53EF;&#x4EE5;&#x66FF;&#x6362;&#xFF0C;&#x4E0D;&#x66FF;&#x6362;&#x4E5F;&#x884C;&#x201D;&#x3002;&#x5728;&#x7F16;&#x7801;&#x4E2D;&#xFF0C;&#x5F88;&#x591A;&#x8BED;&#x8A00;&#x5929;&#x751F;&#x6709;&#x4E00;&#x9879;&#x80FD;&#x529B;&#x548C;&#x8FD9;&#x4E2A;&#x7C7B;&#x4F3C;&#x2014;&#x2014;&#x9ED8;&#x8BA4;&#x53C2;&#x6570;&#xFF1A;</p>
 <pre><code># python
 def test(name=&quot;lqczzz&quot;):
     print(name)
 
 test()  # &quot;lqczzz&quot;
 test(&quot;jack&quot;)  # &quot;jack&quot;
-</code></pre>
-<p>这里，name这个变量是可以替换的，某种意义上也可以说是“pluggable”</p>
-<h3>2. 可选参数 + 默认值</h3>
-<p>默认参数很方便，<code>golang</code>没有默认参数,可以通过可选参数和默认值来实现</p>
+</code></pre><p>&#x8FD9;&#x91CC;&#xFF0C;name&#x8FD9;&#x4E2A;&#x53D8;&#x91CF;&#x662F;&#x53EF;&#x4EE5;&#x66FF;&#x6362;&#x7684;&#xFF0C;&#x67D0;&#x79CD;&#x610F;&#x4E49;&#x4E0A;&#x4E5F;&#x53EF;&#x4EE5;&#x8BF4;&#x662F;&#x201C;pluggable&#x201D;</p>
+<h3 id="2-&#x53EF;&#x9009;&#x53C2;&#x6570;-&#x9ED8;&#x8BA4;&#x503C;"><a href="#2-&#x53EF;&#x9009;&#x53C2;&#x6570;-&#x9ED8;&#x8BA4;&#x503C;" class="headerlink" title="2. &#x53EF;&#x9009;&#x53C2;&#x6570; + &#x9ED8;&#x8BA4;&#x503C;"></a>2. &#x53EF;&#x9009;&#x53C2;&#x6570; + &#x9ED8;&#x8BA4;&#x503C;</h3><p>&#x9ED8;&#x8BA4;&#x53C2;&#x6570;&#x5F88;&#x65B9;&#x4FBF;&#xFF0C;<code>golang</code>&#x6CA1;&#x6709;&#x9ED8;&#x8BA4;&#x53C2;&#x6570;,&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x53EF;&#x9009;&#x53C2;&#x6570;&#x548C;&#x9ED8;&#x8BA4;&#x503C;&#x6765;&#x5B9E;&#x73B0;</p>
 <pre><code>const DefaultName = &quot;lqczzz&quot;
 
 func test(args ...string) {
@@ -167,13 +128,12 @@ func test(args ...string) {
     fmt.Println(name)
 }
 
-// 不传参数
+// &#x4E0D;&#x4F20;&#x53C2;&#x6570;
 test() // &quot;lqczzz&quot;
 
-// 传参数
+// &#x4F20;&#x53C2;&#x6570;
 test(&quot;jack&quot;) // &quot;jack&quot;
-</code></pre>
-<p>micro的可插拔式的实现本质上也是如此。</p>
+</code></pre><p>micro&#x7684;&#x53EF;&#x63D2;&#x62D4;&#x5F0F;&#x7684;&#x5B9E;&#x73B0;&#x672C;&#x8D28;&#x4E0A;&#x4E5F;&#x662F;&#x5982;&#x6B64;&#x3002;</p>
 <pre><code>// eg:
 type iBE interface {
     FeatureImpl()
@@ -199,140 +159,83 @@ be.FeatureImpl()
 // zhangiaolong add feature
 // qczzzl will implement it!
 
-// 换pm
+// &#x6362;pm
 newPm := &amp;pmLiyunlong{}
 be.opts.pm = newPm 
 be.FeatureImpl()
 // output:
 // liyunlong add feature
 // qczzzl will implement it!
-</code></pre>
-<h3>3. 接口</h3>
-<h2>函数式参数</h2>
-<h2>模块的抽象</h2>
-<p>变化和不变</p>
-<p>接口
-契约不变
-实现方式变化</p>
-<p>struct
-封装依赖的变化（不变的契约依赖）
-封装通用数据（不变的数据依赖）</p>
+</code></pre><h3 id="3-&#x63A5;&#x53E3;"><a href="#3-&#x63A5;&#x53E3;" class="headerlink" title="3. &#x63A5;&#x53E3;"></a>3. &#x63A5;&#x53E3;</h3><h2 id="&#x51FD;&#x6570;&#x5F0F;&#x53C2;&#x6570;"><a href="#&#x51FD;&#x6570;&#x5F0F;&#x53C2;&#x6570;" class="headerlink" title="&#x51FD;&#x6570;&#x5F0F;&#x53C2;&#x6570;"></a>&#x51FD;&#x6570;&#x5F0F;&#x53C2;&#x6570;</h2><h2 id="&#x6A21;&#x5757;&#x7684;&#x62BD;&#x8C61;"><a href="#&#x6A21;&#x5757;&#x7684;&#x62BD;&#x8C61;" class="headerlink" title="&#x6A21;&#x5757;&#x7684;&#x62BD;&#x8C61;"></a>&#x6A21;&#x5757;&#x7684;&#x62BD;&#x8C61;</h2><p>&#x53D8;&#x5316;&#x548C;&#x4E0D;&#x53D8;</p>
+<p>&#x63A5;&#x53E3;<br>&#x5951;&#x7EA6;&#x4E0D;&#x53D8;<br>&#x5B9E;&#x73B0;&#x65B9;&#x5F0F;&#x53D8;&#x5316;</p>
+<p>struct<br>&#x5C01;&#x88C5;&#x4F9D;&#x8D56;&#x7684;&#x53D8;&#x5316;&#xFF08;&#x4E0D;&#x53D8;&#x7684;&#x5951;&#x7EA6;&#x4F9D;&#x8D56;&#xFF09;<br>&#x5C01;&#x88C5;&#x901A;&#x7528;&#x6570;&#x636E;&#xFF08;&#x4E0D;&#x53D8;&#x7684;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#xFF09;</p>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/12/24/怎样设计golang友好的api/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">怎样设计golang友好的api</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/11/26/转-go服务监控指标-metric-上报open-falcon/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">[转]go服务监控指标(metric)上报open-falcon</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">什么是可插拔式框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">可默认，可替换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">1. 默认参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2. 可选参数 + 默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">3. 接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">函数式参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">模块的抽象</span></a></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&text=可插拔式代码结构思考"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&is_video=false&description=可插拔式代码结构思考"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=可插拔式代码结构思考&body=Check out this article: http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&title=可插拔式代码结构思考"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/&name=可插拔式代码结构思考&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/可插拔式代码结构思考.md" data-title="可插拔式代码结构思考" data-url="http://lqczzz.github.io/2018/12/12/可插拔式代码结构思考/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

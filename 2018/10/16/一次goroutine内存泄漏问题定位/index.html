@@ -1,170 +1,128 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="定位过程 问题：  Dump goroutines: ps aux | grep &apos;content_svr&apos; #43 kill -USR2 43  比较两小时间的Diff： 两小时前: $ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1 1 $ grep &apos;producer&apos; /proc/43/fd1 53  两小时后: $ grep &apos;cron/hash">
-<meta property="og:type" content="article">
-<meta property="og:title" content="一次goroutine内存泄漏问题定位">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="定位过程 问题：  Dump goroutines: ps aux | grep &apos;content_svr&apos; #43 kill -USR2 43  比较两小时间的Diff： 两小时前: $ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1 1 $ grep &apos;producer&apos; /proc/43/fd1 53  两小时后: $ grep &apos;cron/hash">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://lqczzz.github.io/images/goroutine-leak.png">
-<meta property="og:updated_time" content="2018-10-21T05:57:30.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一次goroutine内存泄漏问题定位">
-<meta name="twitter:description" content="定位过程 问题：  Dump goroutines: ps aux | grep &apos;content_svr&apos; #43 kill -USR2 43  比较两小时间的Diff： 两小时前: $ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1 1 $ grep &apos;producer&apos; /proc/43/fd1 53  两小时后: $ grep &apos;cron/hash">
-<meta name="twitter:image" content="http://lqczzz.github.io/images/goroutine-leak.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>一次goroutine内存泄漏问题定位</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                一次goroutine内存泄漏问题定位 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/10/17/golang的fmt包入门手动内存管理/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/10/13/elasticSearch学习笔记/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&text=一次goroutine内存泄漏问题定位"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&is_video=false&description=一次goroutine内存泄漏问题定位"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=一次goroutine内存泄漏问题定位&body=Check out this article: http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&name=一次goroutine内存泄漏问题定位&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">定位过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">问题代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">纠正</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        一次goroutine内存泄漏问题定位
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-10-16T05:38:08.000Z" itemprop="datePublished">2018-10-16</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h2>定位过程</h2>
-<p>问题：</p>
-<p><img src="/images/goroutine-leak.png" alt="goroutine-leak"></p>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">一次goroutine内存泄漏问题定位</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/10/16</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <h2 id="&#x5B9A;&#x4F4D;&#x8FC7;&#x7A0B;"><a href="#&#x5B9A;&#x4F4D;&#x8FC7;&#x7A0B;" class="headerlink" title="&#x5B9A;&#x4F4D;&#x8FC7;&#x7A0B;"></a>&#x5B9A;&#x4F4D;&#x8FC7;&#x7A0B;</h2><p>&#x95EE;&#x9898;&#xFF1A;</p>
+<p><a class="magnific-img" href="/images/goroutine-leak.png"><img src="/images/goroutine-leak.png" alt="goroutine-leak" class="ui centered image"></a></p>
 <p>Dump goroutines:</p>
-<pre><code>ps aux | grep 'content_svr' #43
+<pre><code>ps aux | grep &apos;content_svr&apos; #43
 kill -USR2 43
-</code></pre>
-<p>比较两小时间的Diff：
-两小时前:</p>
-<pre><code>$ grep 'cron/hashtag_suggestion' /proc/43/fd/1
+</code></pre><p>&#x6BD4;&#x8F83;&#x4E24;&#x5C0F;&#x65F6;&#x95F4;&#x7684;Diff&#xFF1A;<br>&#x4E24;&#x5C0F;&#x65F6;&#x524D;:</p>
+<pre><code>$ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1
 1
-$ grep 'producer' /proc/43/fd1
+$ grep &apos;producer&apos; /proc/43/fd1
 53
-</code></pre>
-<p>两小时后:</p>
-<pre><code>$ grep 'cron/hashtag_suggestion' /proc/43/fd/1
+</code></pre><p>&#x4E24;&#x5C0F;&#x65F6;&#x540E;:</p>
+<pre><code>$ grep &apos;cron/hashtag_suggestion&apos; /proc/43/fd/1
 41
-$ grep 'producer' /proc/43/fd1
+$ grep &apos;producer&apos; /proc/43/fd1
 221
-</code></pre>
-<h2>问题代码</h2>
-<pre><code>// 简化了业务逻辑
+</code></pre><h2 id="&#x95EE;&#x9898;&#x4EE3;&#x7801;"><a href="#&#x95EE;&#x9898;&#x4EE3;&#x7801;" class="headerlink" title="&#x95EE;&#x9898;&#x4EE3;&#x7801;"></a>&#x95EE;&#x9898;&#x4EE3;&#x7801;</h2><pre><code>// &#x7B80;&#x5316;&#x4E86;&#x4E1A;&#x52A1;&#x903B;&#x8F91;
 
 type Cron struct{
     ch1 chan []int
@@ -190,7 +148,7 @@ func (cron *Cron)doCron() {
 func (cron *Cron)step1() {
     go func(){
         cron.ch1 &lt;- []int{100}
-        // 注意这里没有关闭ch1，导致下面的goroutine一直没有关闭
+        // &#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x6CA1;&#x6709;&#x5173;&#x95ED;ch1&#xFF0C;&#x5BFC;&#x81F4;&#x4E0B;&#x9762;&#x7684;goroutine&#x4E00;&#x76F4;&#x6CA1;&#x6709;&#x5173;&#x95ED;
     }()
 }
 
@@ -199,7 +157,7 @@ func (cron *Cron)step2() {
         for item := range cron.ch1 {
             _ = item
             cron.ch2 &lt;- []int{200}
-            // 注意这里没有关闭ch2，导致下面的goroutine一直没有关闭
+            // &#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x6CA1;&#x6709;&#x5173;&#x95ED;ch2&#xFF0C;&#x5BFC;&#x81F4;&#x4E0B;&#x9762;&#x7684;goroutine&#x4E00;&#x76F4;&#x6CA1;&#x6709;&#x5173;&#x95ED;
         }
     }()
 }
@@ -211,10 +169,8 @@ func (cron *Cron)step3() {
         }
     }()
 }
-</code></pre>
-<h2>纠正</h2>
-<pre><code>// 1. 每次创建goroutine时候创建channel
-// 2. 每次使用完channel，close channel，退出goroutine
+</code></pre><h2 id="&#x7EA0;&#x6B63;"><a href="#&#x7EA0;&#x6B63;" class="headerlink" title="&#x7EA0;&#x6B63;"></a>&#x7EA0;&#x6B63;</h2><pre><code>// 1. &#x6BCF;&#x6B21;&#x521B;&#x5EFA;goroutine&#x65F6;&#x5019;&#x521B;&#x5EFA;channel
+// 2. &#x6BCF;&#x6B21;&#x4F7F;&#x7528;&#x5B8C;channel&#xFF0C;close channel&#xFF0C;&#x9000;&#x51FA;goroutine
 
 type Cron struct{
     ch1 chan []int
@@ -237,7 +193,7 @@ func (cron *Cron)start() {
 func (cron *Cron)doCron() {
     cron.ch1 = make(chan []int, concurrency) // fixed
     cron.ch2 = make(chan []int, concurrency) // fixed
-    
+
     cron.step1()
     cron.step2()
     cron.step3()
@@ -268,122 +224,72 @@ func (cron *Cron)step3() {
     }()
 }
 </code></pre>
-
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/10/17/golang的fmt包入门手动内存管理/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">从golang的fmt包入门手动内存管理</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/10/13/elasticSearch学习笔记/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">elasticSearch学习笔记</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">定位过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">问题代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">纠正</span></a></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&text=一次goroutine内存泄漏问题定位"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&is_video=false&description=一次goroutine内存泄漏问题定位"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=一次goroutine内存泄漏问题定位&body=Check out this article: http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&title=一次goroutine内存泄漏问题定位"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/&name=一次goroutine内存泄漏问题定位&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/一次goroutine内存泄漏问题定位.md" data-title="一次goroutine内存泄漏问题定位" data-url="http://lqczzz.github.io/2018/10/16/一次goroutine内存泄漏问题定位/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

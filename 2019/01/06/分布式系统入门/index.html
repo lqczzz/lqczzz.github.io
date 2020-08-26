@@ -1,604 +1,427 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="分布式基础 本文主要是《Distributed systems for fun and profit》的笔记 一.基础 计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统 当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标 分布式系统，我们想要：可扩展性——数">
-<meta property="og:type" content="article">
-<meta property="og:title" content="分布式系统入门">
-<meta property="og:url" content="http://lqczzz.github.io/2019/01/06/分布式系统入门/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="分布式基础 本文主要是《Distributed systems for fun and profit》的笔记 一.基础 计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统 当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标 分布式系统，我们想要：可扩展性——数">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/part-repl.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/system-of-2.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/CAP.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/global-clock.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/local-clock.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/vector_clock.svg.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/replication-sync.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/replication-async.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/google-transact09.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/system-of-2.png">
-<meta property="og:image" content="http://book.mixu.net/distsys/images/system-of-3.png">
-<meta property="og:updated_time" content="2019-03-15T17:32:40.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分布式系统入门">
-<meta name="twitter:description" content="分布式基础 本文主要是《Distributed systems for fun and profit》的笔记 一.基础 计算机主要做两个事情：  计算 存储  1. 为什么要用分布式系统 当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。 1.1 目标 分布式系统，我们想要：可扩展性——数">
-<meta name="twitter:image" content="http://book.mixu.net/distsys/images/part-repl.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>分布式系统入门</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                分布式系统入门 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2019/08/17/一个入行两年的菜鸟程序员的思考 /"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/12/24/怎样设计golang友好的api/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2019/01/06/分布式系统入门/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&text=分布式系统入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&is_video=false&description=分布式系统入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=分布式系统入门&body=Check out this article: http://lqczzz.github.io/2019/01/06/分布式系统入门/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&name=分布式系统入门&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">分布式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">一.基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么要用分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1 目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2 阻碍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 如何研究分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 抽象和模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.3.</span> <span class="toc-text">3 分布式实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">二.理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 公理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 FLP理论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 CAP理论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">2.2.1 一致性的扩展</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">三.时间和顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">3.1 全序和偏序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">3.2 时间匀速流逝</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">3.2.1 全局时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">3.2.2 本地时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">3.2.3 没有时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.</span> <span class="toc-text">3.2.4 逻辑时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.1.</span> <span class="toc-text">3.2.4.1 Lamport时钟</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.2.</span> <span class="toc-text">3.2.4.2 Vector clocks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3.3 失灵检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">3.4 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">四.replication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">4.1 拷贝范式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text">4.1.1 同步拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.2.</span> <span class="toc-text">4.1.2 异步拷贝</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">4.2 拷贝算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.1.</span> <span class="toc-text">4.2.1 overview</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.2.</span> <span class="toc-text">4.2.2 主从备份拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.3.</span> <span class="toc-text">4.2.3 两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.</span> <span class="toc-text">4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.1.</span> <span class="toc-text">什么是网络分割（Network Partition）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">遗留的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        分布式系统入门
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2019-01-06T12:26:51.000Z" itemprop="datePublished">2019-01-06</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h1>分布式基础</h1>
-<p>本文主要是<a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">《Distributed systems for fun and profit》</a>的笔记</p>
-<h2>一.基础</h2>
-<p>计算机主要做两个事情：</p>
-<ol>
-<li>计算</li>
-<li>存储</li>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">分布式系统入门</h1>
+
+          <section class="post-info">
+            <span class="post-date">2019/01/06</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <h1 id="&#x5206;&#x5E03;&#x5F0F;&#x57FA;&#x7840;"><a href="#&#x5206;&#x5E03;&#x5F0F;&#x57FA;&#x7840;" class="headerlink" title="&#x5206;&#x5E03;&#x5F0F;&#x57FA;&#x7840;"></a>&#x5206;&#x5E03;&#x5F0F;&#x57FA;&#x7840;</h1><p>&#x672C;&#x6587;&#x4E3B;&#x8981;&#x662F;<a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">&#x300A;Distributed systems for fun and profit&#x300B;</a>&#x7684;&#x7B14;&#x8BB0;</p>
+<h2 id="&#x4E00;-&#x57FA;&#x7840;"><a href="#&#x4E00;-&#x57FA;&#x7840;" class="headerlink" title="&#x4E00;.&#x57FA;&#x7840;"></a>&#x4E00;.&#x57FA;&#x7840;</h2><p>&#x8BA1;&#x7B97;&#x673A;&#x4E3B;&#x8981;&#x505A;&#x4E24;&#x4E2A;&#x4E8B;&#x60C5;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x8BA1;&#x7B97;</li>
+<li>&#x5B58;&#x50A8;</li>
 </ol>
-<h3>1. 为什么要用分布式系统</h3>
-<p>当单台机器的硬件升级也没法解决问题的时候，就需要分布式系统。理论上来说，添加一个服务节点可以线性提升性能，但是现实中，多台机器还涉及到数据拷贝，任务合作等问题。</p>
-<h4>1.1 目标</h4>
-<p>分布式系统，我们想要：<strong>可扩展性</strong>——数据或者问题规模变大，可以单纯的通过增加节点解决。</p>
-<p>扩展性，就要求规模，节点规模从小到大，就会遇到以下问题：</p>
-<ol>
-<li>
-<p>性能</p>
+<h3 id="1-&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;"><a href="#1-&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;" class="headerlink" title="1. &#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;"></a>1. &#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;</h3><p>&#x5F53;&#x5355;&#x53F0;&#x673A;&#x5668;&#x7684;&#x786C;&#x4EF6;&#x5347;&#x7EA7;&#x4E5F;&#x6CA1;&#x6CD5;&#x89E3;&#x51B3;&#x95EE;&#x9898;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5C31;&#x9700;&#x8981;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x3002;&#x7406;&#x8BBA;&#x4E0A;&#x6765;&#x8BF4;&#xFF0C;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x8282;&#x70B9;&#x53EF;&#x4EE5;&#x7EBF;&#x6027;&#x63D0;&#x5347;&#x6027;&#x80FD;&#xFF0C;&#x4F46;&#x662F;&#x73B0;&#x5B9E;&#x4E2D;&#xFF0C;&#x591A;&#x53F0;&#x673A;&#x5668;&#x8FD8;&#x6D89;&#x53CA;&#x5230;&#x6570;&#x636E;&#x62F7;&#x8D1D;&#xFF0C;&#x4EFB;&#x52A1;&#x5408;&#x4F5C;&#x7B49;&#x95EE;&#x9898;&#x3002;</p>
+<h4 id="1-1-&#x76EE;&#x6807;"><a href="#1-1-&#x76EE;&#x6807;" class="headerlink" title="1.1 &#x76EE;&#x6807;"></a>1.1 &#x76EE;&#x6807;</h4><p>&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#xFF0C;&#x6211;&#x4EEC;&#x60F3;&#x8981;&#xFF1A;<strong>&#x53EF;&#x6269;&#x5C55;&#x6027;</strong>&#x2014;&#x2014;&#x6570;&#x636E;&#x6216;&#x8005;&#x95EE;&#x9898;&#x89C4;&#x6A21;&#x53D8;&#x5927;&#xFF0C;&#x53EF;&#x4EE5;&#x5355;&#x7EAF;&#x7684;&#x901A;&#x8FC7;&#x589E;&#x52A0;&#x8282;&#x70B9;&#x89E3;&#x51B3;&#x3002;</p>
+<p>&#x6269;&#x5C55;&#x6027;&#xFF0C;&#x5C31;&#x8981;&#x6C42;&#x89C4;&#x6A21;&#xFF0C;&#x8282;&#x70B9;&#x89C4;&#x6A21;&#x4ECE;&#x5C0F;&#x5230;&#x5927;&#xFF0C;&#x5C31;&#x4F1A;&#x9047;&#x5230;&#x4EE5;&#x4E0B;&#x95EE;&#x9898;&#xFF1A;</p>
+<ol class="ui list">
+<li><p>&#x6027;&#x80FD;</p>
 <ul>
-<li>低时延</li>
-<li>高吞吐</li>
-<li>资源消耗低</li>
+<li>&#x4F4E;&#x65F6;&#x5EF6;</li>
+<li>&#x9AD8;&#x541E;&#x5410;</li>
+<li>&#x8D44;&#x6E90;&#x6D88;&#x8017;&#x4F4E;</li>
 </ul>
 </li>
-<li>
-<p>可用</p>
+<li><p>&#x53EF;&#x7528;</p>
 <ul>
-<li>容错性：允许某些节点失败</li>
-<li>延时不能过高</li>
+<li>&#x5BB9;&#x9519;&#x6027;&#xFF1A;&#x5141;&#x8BB8;&#x67D0;&#x4E9B;&#x8282;&#x70B9;&#x5931;&#x8D25;</li>
+<li>&#x5EF6;&#x65F6;&#x4E0D;&#x80FD;&#x8FC7;&#x9AD8;</li>
 <li><code>Availability = uptime / (uptime + downtime)</code></li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Availability %</th>
-<th>How much downtime is allowed per year?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>90% (&quot;one nine&quot;)</td>
-<td>More than a month</td>
-</tr>
-<tr>
-<td>99% (&quot;two nines&quot;)</td>
-<td>Less than 4 days</td>
-</tr>
-<tr>
-<td>99.9% (&quot;three nines&quot;)</td>
-<td>Less than 9 hours</td>
-</tr>
-<tr>
-<td>99.99% (&quot;four nines&quot;)</td>
-<td>Less than an hour</td>
-</tr>
-<tr>
-<td>99.999% (&quot;five nines&quot;)</td>
-<td>~ 5 minutes</td>
-</tr>
-<tr>
-<td>99.9999% (&quot;six nines&quot;)</td>
-<td>~ 31 seconds</td>
-</tr>
-</tbody>
-</table>
+<p>| Availability %         | How much downtime is allowed per year? |<br>| &#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;- | &#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2013; |<br>| 90% (&#x201C;one nine&#x201D;)       | More than a month                      |<br>| 99% (&#x201C;two nines&#x201D;)      | Less than 4 days                       |<br>| 99.9% (&#x201C;three nines&#x201D;)  | Less than 9 hours                      |<br>| 99.99% (&#x201C;four nines&#x201D;)  | Less than an hour                      |<br>| 99.999% (&#x201C;five nines&#x201D;) | ~ 5 minutes                            |<br>| 99.9999% (&#x201C;six nines&#x201D;) | ~ 31 seconds                           |</p>
 </li>
 </ol>
-<h4>1.2 阻碍</h4>
-<ol>
-<li>节点数量</li>
-<li>节点的距离</li>
+<h4 id="1-2-&#x963B;&#x788D;"><a href="#1-2-&#x963B;&#x788D;" class="headerlink" title="1.2 &#x963B;&#x788D;"></a>1.2 &#x963B;&#x788D;</h4><ol class="ui list">
+<li>&#x8282;&#x70B9;&#x6570;&#x91CF;</li>
+<li>&#x8282;&#x70B9;&#x7684;&#x8DDD;&#x79BB;</li>
 </ol>
-<p>光速传播速度和cpu频率决定了最低时延</p>
-<h3>2. 如何研究分布式系统</h3>
-<h4>2.1 抽象和模型</h4>
-<p><strong>抽象</strong>可以从现实世界的复杂中得到本质的东西，这种本质就是<strong>模型</strong></p>
-<p>分布式系统的本质可以归纳为三个模型：</p>
-<ol>
-<li>系统模型（同步／异步）</li>
-<li>容错模型（crash-fail/partition/拜占庭问题）</li>
-<li>一致性模型（强一致／弱一致）</li>
+<p>&#x5149;&#x901F;&#x4F20;&#x64AD;&#x901F;&#x5EA6;&#x548C;cpu&#x9891;&#x7387;&#x51B3;&#x5B9A;&#x4E86;&#x6700;&#x4F4E;&#x65F6;&#x5EF6;</p>
+<h3 id="2-&#x5982;&#x4F55;&#x7814;&#x7A76;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;"><a href="#2-&#x5982;&#x4F55;&#x7814;&#x7A76;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;" class="headerlink" title="2. &#x5982;&#x4F55;&#x7814;&#x7A76;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;"></a>2. &#x5982;&#x4F55;&#x7814;&#x7A76;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;</h3><h4 id="2-1-&#x62BD;&#x8C61;&#x548C;&#x6A21;&#x578B;"><a href="#2-1-&#x62BD;&#x8C61;&#x548C;&#x6A21;&#x578B;" class="headerlink" title="2.1 &#x62BD;&#x8C61;&#x548C;&#x6A21;&#x578B;"></a>2.1 &#x62BD;&#x8C61;&#x548C;&#x6A21;&#x578B;</h4><p><strong>&#x62BD;&#x8C61;</strong>&#x53EF;&#x4EE5;&#x4ECE;&#x73B0;&#x5B9E;&#x4E16;&#x754C;&#x7684;&#x590D;&#x6742;&#x4E2D;&#x5F97;&#x5230;&#x672C;&#x8D28;&#x7684;&#x4E1C;&#x897F;&#xFF0C;&#x8FD9;&#x79CD;&#x672C;&#x8D28;&#x5C31;&#x662F;<strong>&#x6A21;&#x578B;</strong></p>
+<p>&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x7684;&#x672C;&#x8D28;&#x53EF;&#x4EE5;&#x5F52;&#x7EB3;&#x4E3A;&#x4E09;&#x4E2A;&#x6A21;&#x578B;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x7CFB;&#x7EDF;&#x6A21;&#x578B;&#xFF08;&#x540C;&#x6B65;&#xFF0F;&#x5F02;&#x6B65;&#xFF09;</li>
+<li>&#x5BB9;&#x9519;&#x6A21;&#x578B;&#xFF08;crash-fail/partition/&#x62DC;&#x5360;&#x5EAD;&#x95EE;&#x9898;&#xFF09;</li>
+<li>&#x4E00;&#x81F4;&#x6027;&#x6A21;&#x578B;&#xFF08;&#x5F3A;&#x4E00;&#x81F4;&#xFF0F;&#x5F31;&#x4E00;&#x81F4;&#xFF09;</li>
 </ol>
-<p>抽象的目的就是为了让这个系统对外看起来像是一个节点。这里有一个矛盾，过分强调一致，会使得使用者容易理解，但是会导致性能不好，可用性降低，适当暴露一些细节会提高性能，但是增加了系统的理解成本。</p>
-<h3>3 分布式实现</h3>
-<p>本质上只有两种手段：</p>
-<ol>
-<li>数据分区（partition）</li>
-<li>数据复制（replication）</li>
+<p>&#x62BD;&#x8C61;&#x7684;&#x76EE;&#x7684;&#x5C31;&#x662F;&#x4E3A;&#x4E86;&#x8BA9;&#x8FD9;&#x4E2A;&#x7CFB;&#x7EDF;&#x5BF9;&#x5916;&#x770B;&#x8D77;&#x6765;&#x50CF;&#x662F;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x3002;&#x8FD9;&#x91CC;&#x6709;&#x4E00;&#x4E2A;&#x77DB;&#x76FE;&#xFF0C;&#x8FC7;&#x5206;&#x5F3A;&#x8C03;&#x4E00;&#x81F4;&#xFF0C;&#x4F1A;&#x4F7F;&#x5F97;&#x4F7F;&#x7528;&#x8005;&#x5BB9;&#x6613;&#x7406;&#x89E3;&#xFF0C;&#x4F46;&#x662F;&#x4F1A;&#x5BFC;&#x81F4;&#x6027;&#x80FD;&#x4E0D;&#x597D;&#xFF0C;&#x53EF;&#x7528;&#x6027;&#x964D;&#x4F4E;&#xFF0C;&#x9002;&#x5F53;&#x66B4;&#x9732;&#x4E00;&#x4E9B;&#x7EC6;&#x8282;&#x4F1A;&#x63D0;&#x9AD8;&#x6027;&#x80FD;&#xFF0C;&#x4F46;&#x662F;&#x589E;&#x52A0;&#x4E86;&#x7CFB;&#x7EDF;&#x7684;&#x7406;&#x89E3;&#x6210;&#x672C;&#x3002;</p>
+<h3 id="3-&#x5206;&#x5E03;&#x5F0F;&#x5B9E;&#x73B0;"><a href="#3-&#x5206;&#x5E03;&#x5F0F;&#x5B9E;&#x73B0;" class="headerlink" title="3 &#x5206;&#x5E03;&#x5F0F;&#x5B9E;&#x73B0;"></a>3 &#x5206;&#x5E03;&#x5F0F;&#x5B9E;&#x73B0;</h3><p>&#x672C;&#x8D28;&#x4E0A;&#x53EA;&#x6709;&#x4E24;&#x79CD;&#x624B;&#x6BB5;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x6570;&#x636E;&#x5206;&#x533A;&#xFF08;partition&#xFF09;</li>
+<li>&#x6570;&#x636E;&#x590D;&#x5236;&#xFF08;replication&#xFF09;</li>
 </ol>
-<p><img src="http://book.mixu.net/distsys/images/part-repl.png" alt="partition/replication"></p>
-<p><strong>partition</strong>可以把数据分成几块，解决了单一节点的存储限制</p>
-<p><strong>replication</strong>允许我们实现可扩展，容错，但是涉及到数据的同步，是很多问题的源泉，<strong>一致性模型</strong>就是为了描述这个问题而存在的</p>
-<h2>二.理论</h2>
-<p>抽象可以提取实物的本质，再通过这个本质可以推导出某种公理性的东西</p>
-<p>系统模型就是分布式系统的抽象</p>
-<h3>1. 系统模型</h3>
-<p>分布式系统模型的抽象取决于假设的多少，一般来说，假设越少越好，系统模型有三个基本的假设</p>
-<ol>
-<li>节点独立运行</li>
-<li>节点通过网络连接</li>
-<li>节点之间的内存和时钟不共享</li>
+<p><a class="magnific-img" href="http://book.mixu.net/distsys/images/part-repl.png"><img src="http://book.mixu.net/distsys/images/part-repl.png" alt="partition/replication" class="ui centered image"></a></p>
+<p><strong>partition</strong>&#x53EF;&#x4EE5;&#x628A;&#x6570;&#x636E;&#x5206;&#x6210;&#x51E0;&#x5757;&#xFF0C;&#x89E3;&#x51B3;&#x4E86;&#x5355;&#x4E00;&#x8282;&#x70B9;&#x7684;&#x5B58;&#x50A8;&#x9650;&#x5236;</p>
+<p><strong>replication</strong>&#x5141;&#x8BB8;&#x6211;&#x4EEC;&#x5B9E;&#x73B0;&#x53EF;&#x6269;&#x5C55;&#xFF0C;&#x5BB9;&#x9519;&#xFF0C;&#x4F46;&#x662F;&#x6D89;&#x53CA;&#x5230;&#x6570;&#x636E;&#x7684;&#x540C;&#x6B65;&#xFF0C;&#x662F;&#x5F88;&#x591A;&#x95EE;&#x9898;&#x7684;&#x6E90;&#x6CC9;&#xFF0C;<strong>&#x4E00;&#x81F4;&#x6027;&#x6A21;&#x578B;</strong>&#x5C31;&#x662F;&#x4E3A;&#x4E86;&#x63CF;&#x8FF0;&#x8FD9;&#x4E2A;&#x95EE;&#x9898;&#x800C;&#x5B58;&#x5728;&#x7684;</p>
+<h2 id="&#x4E8C;-&#x7406;&#x8BBA;"><a href="#&#x4E8C;-&#x7406;&#x8BBA;" class="headerlink" title="&#x4E8C;.&#x7406;&#x8BBA;"></a>&#x4E8C;.&#x7406;&#x8BBA;</h2><p>&#x62BD;&#x8C61;&#x53EF;&#x4EE5;&#x63D0;&#x53D6;&#x5B9E;&#x7269;&#x7684;&#x672C;&#x8D28;&#xFF0C;&#x518D;&#x901A;&#x8FC7;&#x8FD9;&#x4E2A;&#x672C;&#x8D28;&#x53EF;&#x4EE5;&#x63A8;&#x5BFC;&#x51FA;&#x67D0;&#x79CD;&#x516C;&#x7406;&#x6027;&#x7684;&#x4E1C;&#x897F;</p>
+<p>&#x7CFB;&#x7EDF;&#x6A21;&#x578B;&#x5C31;&#x662F;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x7684;&#x62BD;&#x8C61;</p>
+<h3 id="1-&#x7CFB;&#x7EDF;&#x6A21;&#x578B;"><a href="#1-&#x7CFB;&#x7EDF;&#x6A21;&#x578B;" class="headerlink" title="1. &#x7CFB;&#x7EDF;&#x6A21;&#x578B;"></a>1. &#x7CFB;&#x7EDF;&#x6A21;&#x578B;</h3><p>&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x6A21;&#x578B;&#x7684;&#x62BD;&#x8C61;&#x53D6;&#x51B3;&#x4E8E;&#x5047;&#x8BBE;&#x7684;&#x591A;&#x5C11;&#xFF0C;&#x4E00;&#x822C;&#x6765;&#x8BF4;&#xFF0C;&#x5047;&#x8BBE;&#x8D8A;&#x5C11;&#x8D8A;&#x597D;&#xFF0C;&#x7CFB;&#x7EDF;&#x6A21;&#x578B;&#x6709;&#x4E09;&#x4E2A;&#x57FA;&#x672C;&#x7684;&#x5047;&#x8BBE;</p>
+<ol class="ui list">
+<li>&#x8282;&#x70B9;&#x72EC;&#x7ACB;&#x8FD0;&#x884C;</li>
+<li>&#x8282;&#x70B9;&#x901A;&#x8FC7;&#x7F51;&#x7EDC;&#x8FDE;&#x63A5;</li>
+<li>&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x7684;&#x5185;&#x5B58;&#x548C;&#x65F6;&#x949F;&#x4E0D;&#x5171;&#x4EAB;</li>
 </ol>
-<p>假设越少，推演出来的理论和算法的适用范围越广，如增加假设：<code>节点从来不会失灵</code>，则推演出来的算法会忽略掉节点失灵的错误处理，系统就会变得不健壮。</p>
-<p>关于节点——节点提供了：</p>
-<ul>
-<li>可执行程序</li>
-<li>数据存储到内存和磁盘</li>
-<li>本地时钟</li>
+<p>&#x5047;&#x8BBE;&#x8D8A;&#x5C11;&#xFF0C;&#x63A8;&#x6F14;&#x51FA;&#x6765;&#x7684;&#x7406;&#x8BBA;&#x548C;&#x7B97;&#x6CD5;&#x7684;&#x9002;&#x7528;&#x8303;&#x56F4;&#x8D8A;&#x5E7F;&#xFF0C;&#x5982;&#x589E;&#x52A0;&#x5047;&#x8BBE;&#xFF1A;<code>&#x8282;&#x70B9;&#x4ECE;&#x6765;&#x4E0D;&#x4F1A;&#x5931;&#x7075;</code>&#xFF0C;&#x5219;&#x63A8;&#x6F14;&#x51FA;&#x6765;&#x7684;&#x7B97;&#x6CD5;&#x4F1A;&#x5FFD;&#x7565;&#x6389;&#x8282;&#x70B9;&#x5931;&#x7075;&#x7684;&#x9519;&#x8BEF;&#x5904;&#x7406;&#xFF0C;&#x7CFB;&#x7EDF;&#x5C31;&#x4F1A;&#x53D8;&#x5F97;&#x4E0D;&#x5065;&#x58EE;&#x3002;</p>
+<p>&#x5173;&#x4E8E;&#x8282;&#x70B9;&#x2014;&#x2014;&#x8282;&#x70B9;&#x63D0;&#x4F9B;&#x4E86;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x53EF;&#x6267;&#x884C;&#x7A0B;&#x5E8F;</li>
+<li>&#x6570;&#x636E;&#x5B58;&#x50A8;&#x5230;&#x5185;&#x5B58;&#x548C;&#x78C1;&#x76D8;</li>
+<li>&#x672C;&#x5730;&#x65F6;&#x949F;</li>
 </ul>
-<p>节点的状态：</p>
-<ul>
-<li>失灵（fail）</li>
+<p>&#x8282;&#x70B9;&#x7684;&#x72B6;&#x6001;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x5931;&#x7075;&#xFF08;fail&#xFF09;</li>
 <li>crash</li>
-<li>拜占庭将军问题：(叛徒)</li>
+<li>&#x62DC;&#x5360;&#x5EAD;&#x5C06;&#x519B;&#x95EE;&#x9898;&#xFF1A;(&#x53DB;&#x5F92;)</li>
 </ul>
-<p>节点通信的两种异常：左边是节点失灵，右边是网络</p>
-<p><img src="http://book.mixu.net/distsys/images/system-of-2.png" alt="node"></p>
-<h3>2. 公理</h3>
-<p>有了系统模型，我们推演出了一些公理</p>
-<h4>2.1 FLP理论</h4>
-<p>假设：</p>
-<ul>
-<li>节点 Fail by crash （不会出现拜占庭将军问题）</li>
-<li>网络可靠</li>
-<li>异步系统模型 消息可能无限delay</li>
+<p>&#x8282;&#x70B9;&#x901A;&#x4FE1;&#x7684;&#x4E24;&#x79CD;&#x5F02;&#x5E38;&#xFF1A;&#x5DE6;&#x8FB9;&#x662F;&#x8282;&#x70B9;&#x5931;&#x7075;&#xFF0C;&#x53F3;&#x8FB9;&#x662F;&#x7F51;&#x7EDC;</p>
+<p><a class="magnific-img" href="http://book.mixu.net/distsys/images/system-of-2.png"><img src="http://book.mixu.net/distsys/images/system-of-2.png" alt="node" class="ui centered image"></a></p>
+<h3 id="2-&#x516C;&#x7406;"><a href="#2-&#x516C;&#x7406;" class="headerlink" title="2. &#x516C;&#x7406;"></a>2. &#x516C;&#x7406;</h3><p>&#x6709;&#x4E86;&#x7CFB;&#x7EDF;&#x6A21;&#x578B;&#xFF0C;&#x6211;&#x4EEC;&#x63A8;&#x6F14;&#x51FA;&#x4E86;&#x4E00;&#x4E9B;&#x516C;&#x7406;</p>
+<h4 id="2-1-FLP&#x7406;&#x8BBA;"><a href="#2-1-FLP&#x7406;&#x8BBA;" class="headerlink" title="2.1 FLP&#x7406;&#x8BBA;"></a>2.1 FLP&#x7406;&#x8BBA;</h4><p>&#x5047;&#x8BBE;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x8282;&#x70B9; Fail by crash &#xFF08;&#x4E0D;&#x4F1A;&#x51FA;&#x73B0;&#x62DC;&#x5360;&#x5EAD;&#x5C06;&#x519B;&#x95EE;&#x9898;&#xFF09;</li>
+<li>&#x7F51;&#x7EDC;&#x53EF;&#x9760;</li>
+<li>&#x5F02;&#x6B65;&#x7CFB;&#x7EDF;&#x6A21;&#x578B; &#x6D88;&#x606F;&#x53EF;&#x80FD;&#x65E0;&#x9650;delay</li>
 </ul>
-<p>结论</p>
-<p>​	在异步通信场景，即使只有一个进程失败，也没有任何算法能保证非失败进程达到一致性</p>
+<p>&#x7ED3;&#x8BBA;</p>
+<p>&#x200B;    &#x5728;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x573A;&#x666F;&#xFF0C;&#x5373;&#x4F7F;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x5931;&#x8D25;&#xFF0C;&#x4E5F;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x7B97;&#x6CD5;&#x80FD;&#x4FDD;&#x8BC1;&#x975E;&#x5931;&#x8D25;&#x8FDB;&#x7A0B;&#x8FBE;&#x5230;&#x4E00;&#x81F4;&#x6027;</p>
 <blockquote>
-<p>证明见参考</p>
+<p>&#x8BC1;&#x660E;&#x89C1;&#x53C2;&#x8003;</p>
 </blockquote>
-<h4>2.2 CAP理论</h4>
-<p><img src="http://book.mixu.net/distsys/images/CAP.png" alt="cap"></p>
-<ul>
-<li>consistency:  所有节点在同一时刻看到同样的值</li>
-<li>availability：某些节点失效并不影响剩余节点运行</li>
-<li>Partition tolerance：即使因为网络分割或者节点失效造成的消息丢失，系统正常运行</li>
+<h4 id="2-2-CAP&#x7406;&#x8BBA;"><a href="#2-2-CAP&#x7406;&#x8BBA;" class="headerlink" title="2.2 CAP&#x7406;&#x8BBA;"></a>2.2 CAP&#x7406;&#x8BBA;</h4><p><a class="magnific-img" href="http://book.mixu.net/distsys/images/CAP.png"><img src="http://book.mixu.net/distsys/images/CAP.png" alt="cap" class="ui centered image"></a></p>
+<ul class="ui list">
+<li>consistency:  &#x6240;&#x6709;&#x8282;&#x70B9;&#x5728;&#x540C;&#x4E00;&#x65F6;&#x523B;&#x770B;&#x5230;&#x540C;&#x6837;&#x7684;&#x503C;</li>
+<li>availability&#xFF1A;&#x67D0;&#x4E9B;&#x8282;&#x70B9;&#x5931;&#x6548;&#x5E76;&#x4E0D;&#x5F71;&#x54CD;&#x5269;&#x4F59;&#x8282;&#x70B9;&#x8FD0;&#x884C;</li>
+<li>Partition tolerance&#xFF1A;&#x5373;&#x4F7F;&#x56E0;&#x4E3A;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x6216;&#x8005;&#x8282;&#x70B9;&#x5931;&#x6548;&#x9020;&#x6210;&#x7684;&#x6D88;&#x606F;&#x4E22;&#x5931;&#xFF0C;&#x7CFB;&#x7EDF;&#x6B63;&#x5E38;&#x8FD0;&#x884C;</li>
 </ul>
-<p>同时满足三个性质的系统是不存在的。</p>
-<p>比如你要强一致，并且保证高可用性，任何节点失效系统都不失效，那么对网络分割就没办法容忍了，每条消息都不能丢失。</p>
-<ul>
-<li>CA（Consistency + Availability）如two-phase commit</li>
-<li>CP（Consistency + Partition tolerance）如Paxos，raft</li>
-<li>AP (Availibity + Partition tolerance) 弱一致系统，如gossip</li>
+<p>&#x540C;&#x65F6;&#x6EE1;&#x8DB3;&#x4E09;&#x4E2A;&#x6027;&#x8D28;&#x7684;&#x7CFB;&#x7EDF;&#x662F;&#x4E0D;&#x5B58;&#x5728;&#x7684;&#x3002;</p>
+<p>&#x6BD4;&#x5982;&#x4F60;&#x8981;&#x5F3A;&#x4E00;&#x81F4;&#xFF0C;&#x5E76;&#x4E14;&#x4FDD;&#x8BC1;&#x9AD8;&#x53EF;&#x7528;&#x6027;&#xFF0C;&#x4EFB;&#x4F55;&#x8282;&#x70B9;&#x5931;&#x6548;&#x7CFB;&#x7EDF;&#x90FD;&#x4E0D;&#x5931;&#x6548;&#xFF0C;&#x90A3;&#x4E48;&#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5C31;&#x6CA1;&#x529E;&#x6CD5;&#x5BB9;&#x5FCD;&#x4E86;&#xFF0C;&#x6BCF;&#x6761;&#x6D88;&#x606F;&#x90FD;&#x4E0D;&#x80FD;&#x4E22;&#x5931;&#x3002;</p>
+<ul class="ui list">
+<li>CA&#xFF08;Consistency + Availability&#xFF09;&#x5982;two-phase commit</li>
+<li>CP&#xFF08;Consistency + Partition tolerance&#xFF09;&#x5982;Paxos&#xFF0C;raft</li>
+<li>AP (Availibity + Partition tolerance) &#x5F31;&#x4E00;&#x81F4;&#x7CFB;&#x7EDF;&#xFF0C;&#x5982;gossip</li>
 </ul>
-<p>通常，分布式系统我们需要保证P，所以要在CA作取舍</p>
+<p>&#x901A;&#x5E38;&#xFF0C;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x4FDD;&#x8BC1;P&#xFF0C;&#x6240;&#x4EE5;&#x8981;&#x5728;CA&#x4F5C;&#x53D6;&#x820D;</p>
 <blockquote>
-<p>实践中我们大多已经采取了弱一致性的异步延时同步方案，以提高可用性</p>
+<p>&#x5B9E;&#x8DF5;&#x4E2D;&#x6211;&#x4EEC;&#x5927;&#x591A;&#x5DF2;&#x7ECF;&#x91C7;&#x53D6;&#x4E86;&#x5F31;&#x4E00;&#x81F4;&#x6027;&#x7684;&#x5F02;&#x6B65;&#x5EF6;&#x65F6;&#x540C;&#x6B65;&#x65B9;&#x6848;&#xFF0C;&#x4EE5;&#x63D0;&#x9AD8;&#x53EF;&#x7528;&#x6027;</p>
 </blockquote>
-<h5>2.2.1 一致性的扩展</h5>
-<p>这里，CAP的C理解为多个数据副本的读写一致性问题，其实C可以在很多场景拓展</p>
-<ul>
-<li>多个数据副本的读写</li>
-<li>事务</li>
-<li>关联</li>
+<h5 id="2-2-1-&#x4E00;&#x81F4;&#x6027;&#x7684;&#x6269;&#x5C55;"><a href="#2-2-1-&#x4E00;&#x81F4;&#x6027;&#x7684;&#x6269;&#x5C55;" class="headerlink" title="2.2.1 &#x4E00;&#x81F4;&#x6027;&#x7684;&#x6269;&#x5C55;"></a>2.2.1 &#x4E00;&#x81F4;&#x6027;&#x7684;&#x6269;&#x5C55;</h5><p>&#x8FD9;&#x91CC;&#xFF0C;CAP&#x7684;C&#x7406;&#x89E3;&#x4E3A;&#x591A;&#x4E2A;&#x6570;&#x636E;&#x526F;&#x672C;&#x7684;&#x8BFB;&#x5199;&#x4E00;&#x81F4;&#x6027;&#x95EE;&#x9898;&#xFF0C;&#x5176;&#x5B9E;C&#x53EF;&#x4EE5;&#x5728;&#x5F88;&#x591A;&#x573A;&#x666F;&#x62D3;&#x5C55;</p>
+<ul class="ui list">
+<li>&#x591A;&#x4E2A;&#x6570;&#x636E;&#x526F;&#x672C;&#x7684;&#x8BFB;&#x5199;</li>
+<li>&#x4E8B;&#x52A1;</li>
+<li>&#x5173;&#x8054;</li>
 </ul>
-<p>关系数据库关于事务操作，必须遵循ACID原则：原子性（Atomicity，或称不可分割性）、一致性（Consistency）、隔离性（Isolation，又称独立性）和持久性（Durability）</p>
-<p>这里的C表示一个事务中多个操作成功失败是一致的。</p>
+<p>&#x5173;&#x7CFB;&#x6570;&#x636E;&#x5E93;&#x5173;&#x4E8E;&#x4E8B;&#x52A1;&#x64CD;&#x4F5C;&#xFF0C;&#x5FC5;&#x987B;&#x9075;&#x5FAA;ACID&#x539F;&#x5219;&#xFF1A;&#x539F;&#x5B50;&#x6027;&#xFF08;Atomicity&#xFF0C;&#x6216;&#x79F0;&#x4E0D;&#x53EF;&#x5206;&#x5272;&#x6027;&#xFF09;&#x3001;&#x4E00;&#x81F4;&#x6027;&#xFF08;Consistency&#xFF09;&#x3001;&#x9694;&#x79BB;&#x6027;&#xFF08;Isolation&#xFF0C;&#x53C8;&#x79F0;&#x72EC;&#x7ACB;&#x6027;&#xFF09;&#x548C;&#x6301;&#x4E45;&#x6027;&#xFF08;Durability&#xFF09;</p>
+<p>&#x8FD9;&#x91CC;&#x7684;C&#x8868;&#x793A;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x4E2D;&#x591A;&#x4E2A;&#x64CD;&#x4F5C;&#x6210;&#x529F;&#x5931;&#x8D25;&#x662F;&#x4E00;&#x81F4;&#x7684;&#x3002;</p>
 <blockquote>
-<p>众所周知，分布式事务一般采用两阶段提交策略来实现，这是一个非常耗时的复杂过程，会严重影响系统效率，在实践中我们尽量避免使用它。在实践过程中，如果我们为了扩展数据容量将数据分布式存储，而事务的要求又完全不能降低。那么，系统的可用性一定会大大降低，在现实中我们一般都采用对这些数据不分散存储的策略。</p>
+<p>&#x4F17;&#x6240;&#x5468;&#x77E5;&#xFF0C;&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;&#x4E00;&#x822C;&#x91C7;&#x7528;&#x4E24;&#x9636;&#x6BB5;&#x63D0;&#x4EA4;&#x7B56;&#x7565;&#x6765;&#x5B9E;&#x73B0;&#xFF0C;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x975E;&#x5E38;&#x8017;&#x65F6;&#x7684;&#x590D;&#x6742;&#x8FC7;&#x7A0B;&#xFF0C;&#x4F1A;&#x4E25;&#x91CD;&#x5F71;&#x54CD;&#x7CFB;&#x7EDF;&#x6548;&#x7387;&#xFF0C;&#x5728;&#x5B9E;&#x8DF5;&#x4E2D;&#x6211;&#x4EEC;&#x5C3D;&#x91CF;&#x907F;&#x514D;&#x4F7F;&#x7528;&#x5B83;&#x3002;&#x5728;&#x5B9E;&#x8DF5;&#x8FC7;&#x7A0B;&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x6211;&#x4EEC;&#x4E3A;&#x4E86;&#x6269;&#x5C55;&#x6570;&#x636E;&#x5BB9;&#x91CF;&#x5C06;&#x6570;&#x636E;&#x5206;&#x5E03;&#x5F0F;&#x5B58;&#x50A8;&#xFF0C;&#x800C;&#x4E8B;&#x52A1;&#x7684;&#x8981;&#x6C42;&#x53C8;&#x5B8C;&#x5168;&#x4E0D;&#x80FD;&#x964D;&#x4F4E;&#x3002;&#x90A3;&#x4E48;&#xFF0C;&#x7CFB;&#x7EDF;&#x7684;&#x53EF;&#x7528;&#x6027;&#x4E00;&#x5B9A;&#x4F1A;&#x5927;&#x5927;&#x964D;&#x4F4E;&#xFF0C;&#x5728;&#x73B0;&#x5B9E;&#x4E2D;&#x6211;&#x4EEC;&#x4E00;&#x822C;&#x90FD;&#x91C7;&#x7528;&#x5BF9;&#x8FD9;&#x4E9B;&#x6570;&#x636E;&#x4E0D;&#x5206;&#x6563;&#x5B58;&#x50A8;&#x7684;&#x7B56;&#x7565;&#x3002;</p>
 </blockquote>
-<p>nosql数据库为了实现P，牺牲了C，也即牺牲了事务，事务遵循<em>BASE</em>而不是<em>ACID</em></p>
-<h2>三.时间和顺序</h2>
-<h4>3.1 全序和偏序</h4>
-<p>全序就是在集合里任何两个元素都可以比较，分出大小。偏序中，某些元素是没办法比较大小的。</p>
-<p>在分布式的系统里，每个节点的指令运行顺序都取决于本地节点的时钟，所以分布式系统是偏序。</p>
-<h4>3.2 时间匀速流逝</h4>
-<p>时间是顺序的来源，分布式系统中每个节点都有独立的本地时间和时间戳，于是事件的发生有本地的顺序，但是该顺序和其他节点完全独立，很难做到全部节点有序。当然也不是做不到全序，维持一个全局时钟就是一种方法，只是这种方法的代价太大。</p>
-<ul>
-<li>全局时钟（Global Clock）</li>
-<li>本地时钟（Local Clock）</li>
-<li>没有时钟存在（No Clock）</li>
+<p>nosql&#x6570;&#x636E;&#x5E93;&#x4E3A;&#x4E86;&#x5B9E;&#x73B0;P&#xFF0C;&#x727A;&#x7272;&#x4E86;C&#xFF0C;&#x4E5F;&#x5373;&#x727A;&#x7272;&#x4E86;&#x4E8B;&#x52A1;&#xFF0C;&#x4E8B;&#x52A1;&#x9075;&#x5FAA;<em>BASE</em>&#x800C;&#x4E0D;&#x662F;<em>ACID</em></p>
+<h2 id="&#x4E09;-&#x65F6;&#x95F4;&#x548C;&#x987A;&#x5E8F;"><a href="#&#x4E09;-&#x65F6;&#x95F4;&#x548C;&#x987A;&#x5E8F;" class="headerlink" title="&#x4E09;.&#x65F6;&#x95F4;&#x548C;&#x987A;&#x5E8F;"></a>&#x4E09;.&#x65F6;&#x95F4;&#x548C;&#x987A;&#x5E8F;</h2><h4 id="3-1-&#x5168;&#x5E8F;&#x548C;&#x504F;&#x5E8F;"><a href="#3-1-&#x5168;&#x5E8F;&#x548C;&#x504F;&#x5E8F;" class="headerlink" title="3.1 &#x5168;&#x5E8F;&#x548C;&#x504F;&#x5E8F;"></a>3.1 &#x5168;&#x5E8F;&#x548C;&#x504F;&#x5E8F;</h4><p>&#x5168;&#x5E8F;&#x5C31;&#x662F;&#x5728;&#x96C6;&#x5408;&#x91CC;&#x4EFB;&#x4F55;&#x4E24;&#x4E2A;&#x5143;&#x7D20;&#x90FD;&#x53EF;&#x4EE5;&#x6BD4;&#x8F83;&#xFF0C;&#x5206;&#x51FA;&#x5927;&#x5C0F;&#x3002;&#x504F;&#x5E8F;&#x4E2D;&#xFF0C;&#x67D0;&#x4E9B;&#x5143;&#x7D20;&#x662F;&#x6CA1;&#x529E;&#x6CD5;&#x6BD4;&#x8F83;&#x5927;&#x5C0F;&#x7684;&#x3002;</p>
+<p>&#x5728;&#x5206;&#x5E03;&#x5F0F;&#x7684;&#x7CFB;&#x7EDF;&#x91CC;&#xFF0C;&#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x7684;&#x6307;&#x4EE4;&#x8FD0;&#x884C;&#x987A;&#x5E8F;&#x90FD;&#x53D6;&#x51B3;&#x4E8E;&#x672C;&#x5730;&#x8282;&#x70B9;&#x7684;&#x65F6;&#x949F;&#xFF0C;&#x6240;&#x4EE5;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x662F;&#x504F;&#x5E8F;&#x3002;</p>
+<h4 id="3-2-&#x65F6;&#x95F4;&#x5300;&#x901F;&#x6D41;&#x901D;"><a href="#3-2-&#x65F6;&#x95F4;&#x5300;&#x901F;&#x6D41;&#x901D;" class="headerlink" title="3.2 &#x65F6;&#x95F4;&#x5300;&#x901F;&#x6D41;&#x901D;"></a>3.2 &#x65F6;&#x95F4;&#x5300;&#x901F;&#x6D41;&#x901D;</h4><p>&#x65F6;&#x95F4;&#x662F;&#x987A;&#x5E8F;&#x7684;&#x6765;&#x6E90;&#xFF0C;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x4E2D;&#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x90FD;&#x6709;&#x72EC;&#x7ACB;&#x7684;&#x672C;&#x5730;&#x65F6;&#x95F4;&#x548C;&#x65F6;&#x95F4;&#x6233;&#xFF0C;&#x4E8E;&#x662F;&#x4E8B;&#x4EF6;&#x7684;&#x53D1;&#x751F;&#x6709;&#x672C;&#x5730;&#x7684;&#x987A;&#x5E8F;&#xFF0C;&#x4F46;&#x662F;&#x8BE5;&#x987A;&#x5E8F;&#x548C;&#x5176;&#x4ED6;&#x8282;&#x70B9;&#x5B8C;&#x5168;&#x72EC;&#x7ACB;&#xFF0C;&#x5F88;&#x96BE;&#x505A;&#x5230;&#x5168;&#x90E8;&#x8282;&#x70B9;&#x6709;&#x5E8F;&#x3002;&#x5F53;&#x7136;&#x4E5F;&#x4E0D;&#x662F;&#x505A;&#x4E0D;&#x5230;&#x5168;&#x5E8F;&#xFF0C;&#x7EF4;&#x6301;&#x4E00;&#x4E2A;&#x5168;&#x5C40;&#x65F6;&#x949F;&#x5C31;&#x662F;&#x4E00;&#x79CD;&#x65B9;&#x6CD5;&#xFF0C;&#x53EA;&#x662F;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x7684;&#x4EE3;&#x4EF7;&#x592A;&#x5927;&#x3002;</p>
+<ul class="ui list">
+<li>&#x5168;&#x5C40;&#x65F6;&#x949F;&#xFF08;Global Clock&#xFF09;</li>
+<li>&#x672C;&#x5730;&#x65F6;&#x949F;&#xFF08;Local Clock&#xFF09;</li>
+<li>&#x6CA1;&#x6709;&#x65F6;&#x949F;&#x5B58;&#x5728;&#xFF08;No Clock&#xFF09;</li>
 </ul>
-<h5>3.2.1 全局时钟</h5>
-<p><img src="http://book.mixu.net/distsys/images/global-clock.png" alt="全局时钟"></p>
-<p>完美的时钟，走时同步，存在于所有节点。这是分布式系统的理想假设。实际上，时钟同步只能保证有限的精度。用户可能随机地改变本机时间，新节点加入，都有可能破坏全局时钟的假设。</p>
+<h5 id="3-2-1-&#x5168;&#x5C40;&#x65F6;&#x949F;"><a href="#3-2-1-&#x5168;&#x5C40;&#x65F6;&#x949F;" class="headerlink" title="3.2.1 &#x5168;&#x5C40;&#x65F6;&#x949F;"></a>3.2.1 &#x5168;&#x5C40;&#x65F6;&#x949F;</h5><p><a class="magnific-img" href="http://book.mixu.net/distsys/images/global-clock.png"><img src="http://book.mixu.net/distsys/images/global-clock.png" alt="&#x5168;&#x5C40;&#x65F6;&#x949F;" class="ui centered image"></a></p>
+<p>&#x5B8C;&#x7F8E;&#x7684;&#x65F6;&#x949F;&#xFF0C;&#x8D70;&#x65F6;&#x540C;&#x6B65;&#xFF0C;&#x5B58;&#x5728;&#x4E8E;&#x6240;&#x6709;&#x8282;&#x70B9;&#x3002;&#x8FD9;&#x662F;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x7684;&#x7406;&#x60F3;&#x5047;&#x8BBE;&#x3002;&#x5B9E;&#x9645;&#x4E0A;&#xFF0C;&#x65F6;&#x949F;&#x540C;&#x6B65;&#x53EA;&#x80FD;&#x4FDD;&#x8BC1;&#x6709;&#x9650;&#x7684;&#x7CBE;&#x5EA6;&#x3002;&#x7528;&#x6237;&#x53EF;&#x80FD;&#x968F;&#x673A;&#x5730;&#x6539;&#x53D8;&#x672C;&#x673A;&#x65F6;&#x95F4;&#xFF0C;&#x65B0;&#x8282;&#x70B9;&#x52A0;&#x5165;&#xFF0C;&#x90FD;&#x6709;&#x53EF;&#x80FD;&#x7834;&#x574F;&#x5168;&#x5C40;&#x65F6;&#x949F;&#x7684;&#x5047;&#x8BBE;&#x3002;</p>
 <blockquote>
-<p>现实系统也有做出这个假设的。FB的Cassandra，就是使用时间戳来解决write的冲突的</p>
+<p>&#x73B0;&#x5B9E;&#x7CFB;&#x7EDF;&#x4E5F;&#x6709;&#x505A;&#x51FA;&#x8FD9;&#x4E2A;&#x5047;&#x8BBE;&#x7684;&#x3002;FB&#x7684;Cassandra&#xFF0C;&#x5C31;&#x662F;&#x4F7F;&#x7528;&#x65F6;&#x95F4;&#x6233;&#x6765;&#x89E3;&#x51B3;write&#x7684;&#x51B2;&#x7A81;&#x7684;</p>
 </blockquote>
-<h5>3.2.2 本地时钟</h5>
-<p><img src="http://book.mixu.net/distsys/images/local-clock.png" alt="local clock"></p>
-<p>本地时钟无法保证全局有序</p>
-<h5>3.2.3 没有时钟</h5>
-<p>完全不使用”时钟”这个概念，取而代之，“逻辑时间”。因为时间戳么，只不过是当前世界状态的一个快照，那我们用一个计数器（Counter），并和节点之间交流就可以做到了。</p>
-<p>这样，我们可以在不同的节点之间决定事件顺序。不过有个坏处，因为缺乏时钟，没办法决定timeout。</p>
-<p>“没有时钟”的假设的实现有：</p>
-<ol>
-<li>
-<p>Lamport时钟</p>
+<h5 id="3-2-2-&#x672C;&#x5730;&#x65F6;&#x949F;"><a href="#3-2-2-&#x672C;&#x5730;&#x65F6;&#x949F;" class="headerlink" title="3.2.2 &#x672C;&#x5730;&#x65F6;&#x949F;"></a>3.2.2 &#x672C;&#x5730;&#x65F6;&#x949F;</h5><p><a class="magnific-img" href="http://book.mixu.net/distsys/images/local-clock.png"><img src="http://book.mixu.net/distsys/images/local-clock.png" alt="local clock" class="ui centered image"></a></p>
+<p>&#x672C;&#x5730;&#x65F6;&#x949F;&#x65E0;&#x6CD5;&#x4FDD;&#x8BC1;&#x5168;&#x5C40;&#x6709;&#x5E8F;</p>
+<h5 id="3-2-3-&#x6CA1;&#x6709;&#x65F6;&#x949F;"><a href="#3-2-3-&#x6CA1;&#x6709;&#x65F6;&#x949F;" class="headerlink" title="3.2.3 &#x6CA1;&#x6709;&#x65F6;&#x949F;"></a>3.2.3 &#x6CA1;&#x6709;&#x65F6;&#x949F;</h5><p>&#x5B8C;&#x5168;&#x4E0D;&#x4F7F;&#x7528;&#x201D;&#x65F6;&#x949F;&#x201D;&#x8FD9;&#x4E2A;&#x6982;&#x5FF5;&#xFF0C;&#x53D6;&#x800C;&#x4EE3;&#x4E4B;&#xFF0C;&#x201C;&#x903B;&#x8F91;&#x65F6;&#x95F4;&#x201D;&#x3002;&#x56E0;&#x4E3A;&#x65F6;&#x95F4;&#x6233;&#x4E48;&#xFF0C;&#x53EA;&#x4E0D;&#x8FC7;&#x662F;&#x5F53;&#x524D;&#x4E16;&#x754C;&#x72B6;&#x6001;&#x7684;&#x4E00;&#x4E2A;&#x5FEB;&#x7167;&#xFF0C;&#x90A3;&#x6211;&#x4EEC;&#x7528;&#x4E00;&#x4E2A;&#x8BA1;&#x6570;&#x5668;&#xFF08;Counter&#xFF09;&#xFF0C;&#x5E76;&#x548C;&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x4EA4;&#x6D41;&#x5C31;&#x53EF;&#x4EE5;&#x505A;&#x5230;&#x4E86;&#x3002;</p>
+<p>&#x8FD9;&#x6837;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x51B3;&#x5B9A;&#x4E8B;&#x4EF6;&#x987A;&#x5E8F;&#x3002;&#x4E0D;&#x8FC7;&#x6709;&#x4E2A;&#x574F;&#x5904;&#xFF0C;&#x56E0;&#x4E3A;&#x7F3A;&#x4E4F;&#x65F6;&#x949F;&#xFF0C;&#x6CA1;&#x529E;&#x6CD5;&#x51B3;&#x5B9A;timeout&#x3002;</p>
+<p>&#x201C;&#x6CA1;&#x6709;&#x65F6;&#x949F;&#x201D;&#x7684;&#x5047;&#x8BBE;&#x7684;&#x5B9E;&#x73B0;&#x6709;&#xFF1A;</p>
+<ol class="ui list">
+<li><p>Lamport&#x65F6;&#x949F;</p>
 </li>
-<li>
-<p>Vector clocks</p>
+<li><p>Vector clocks</p>
 </li>
 </ol>
 <blockquote>
-<p>Cassandra的cousin Riak 和 Vodemort（LinkedIn）是它的应用。这些系统避免了全局or本地时钟漂移带来的不确定性。</p>
+<p>Cassandra&#x7684;cousin Riak &#x548C; Vodemort&#xFF08;LinkedIn&#xFF09;&#x662F;&#x5B83;&#x7684;&#x5E94;&#x7528;&#x3002;&#x8FD9;&#x4E9B;&#x7CFB;&#x7EDF;&#x907F;&#x514D;&#x4E86;&#x5168;&#x5C40;or&#x672C;&#x5730;&#x65F6;&#x949F;&#x6F02;&#x79FB;&#x5E26;&#x6765;&#x7684;&#x4E0D;&#x786E;&#x5B9A;&#x6027;&#x3002;</p>
 </blockquote>
-<h5>3.2.4 逻辑时钟</h5>
-<p><strong>Lamport时钟</strong>和<strong>向量时钟</strong>通过计数器和通信来决定分布式系统中事件发生顺序的。计数器可以在不同节点之前进行比较。</p>
-<h6>3.2.4.1 Lamport时钟</h6>
-<p>每个进程都维护一个计时器。</p>
-<ul>
-<li>当进程做了任意一件事，增加计时器计数。</li>
-<li>进程发送的消息中包含计时器计数。</li>
-<li>当收到消息以后，计数器设置如下：max(local_counter, received_counter) + 1</li>
+<h5 id="3-2-4-&#x903B;&#x8F91;&#x65F6;&#x949F;"><a href="#3-2-4-&#x903B;&#x8F91;&#x65F6;&#x949F;" class="headerlink" title="3.2.4 &#x903B;&#x8F91;&#x65F6;&#x949F;"></a>3.2.4 &#x903B;&#x8F91;&#x65F6;&#x949F;</h5><p><strong>Lamport&#x65F6;&#x949F;</strong>&#x548C;<strong>&#x5411;&#x91CF;&#x65F6;&#x949F;</strong>&#x901A;&#x8FC7;&#x8BA1;&#x6570;&#x5668;&#x548C;&#x901A;&#x4FE1;&#x6765;&#x51B3;&#x5B9A;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x4E2D;&#x4E8B;&#x4EF6;&#x53D1;&#x751F;&#x987A;&#x5E8F;&#x7684;&#x3002;&#x8BA1;&#x6570;&#x5668;&#x53EF;&#x4EE5;&#x5728;&#x4E0D;&#x540C;&#x8282;&#x70B9;&#x4E4B;&#x524D;&#x8FDB;&#x884C;&#x6BD4;&#x8F83;&#x3002;</p>
+<h6 id="3-2-4-1-Lamport&#x65F6;&#x949F;"><a href="#3-2-4-1-Lamport&#x65F6;&#x949F;" class="headerlink" title="3.2.4.1 Lamport&#x65F6;&#x949F;"></a>3.2.4.1 Lamport&#x65F6;&#x949F;</h6><p>&#x6BCF;&#x4E2A;&#x8FDB;&#x7A0B;&#x90FD;&#x7EF4;&#x62A4;&#x4E00;&#x4E2A;&#x8BA1;&#x65F6;&#x5668;&#x3002;</p>
+<ul class="ui list">
+<li>&#x5F53;&#x8FDB;&#x7A0B;&#x505A;&#x4E86;&#x4EFB;&#x610F;&#x4E00;&#x4EF6;&#x4E8B;&#xFF0C;&#x589E;&#x52A0;&#x8BA1;&#x65F6;&#x5668;&#x8BA1;&#x6570;&#x3002;</li>
+<li>&#x8FDB;&#x7A0B;&#x53D1;&#x9001;&#x7684;&#x6D88;&#x606F;&#x4E2D;&#x5305;&#x542B;&#x8BA1;&#x65F6;&#x5668;&#x8BA1;&#x6570;&#x3002;</li>
+<li>&#x5F53;&#x6536;&#x5230;&#x6D88;&#x606F;&#x4EE5;&#x540E;&#xFF0C;&#x8BA1;&#x6570;&#x5668;&#x8BBE;&#x7F6E;&#x5982;&#x4E0B;&#xFF1A;max(local_counter, received_counter) + 1</li>
 </ul>
-<p>Lamport时钟定义了一个偏序，如果 timestamp(a) &lt; timestamp(b):</p>
-<ul>
-<li>a 可能发生在b之前</li>
-<li>a和b压根没法比较</li>
+<p>Lamport&#x65F6;&#x949F;&#x5B9A;&#x4E49;&#x4E86;&#x4E00;&#x4E2A;&#x504F;&#x5E8F;&#xFF0C;&#x5982;&#x679C; timestamp(a) &lt; timestamp(b):</p>
+<ul class="ui list">
+<li>a &#x53EF;&#x80FD;&#x53D1;&#x751F;&#x5728;b&#x4E4B;&#x524D;</li>
+<li>a&#x548C;b&#x538B;&#x6839;&#x6CA1;&#x6CD5;&#x6BD4;&#x8F83;</li>
 </ul>
-<p>第二种情况发生在a和b所在的Partition没有发送通信。</p>
-<h6>3.2.4.2 Vector clocks</h6>
-<p>向量时钟是Lamport时钟的一种扩展。它维护大小为N的数列[t1, t2, ....]，N为节点数。每个节点都更新自己的时钟。</p>
-<ul>
-<li>每当进程做了事情，更新该node的时钟。</li>
-<li>进程发送的消息，包含上面提到的数组。</li>
-<li>当收到消息以后，更新本地的数组里面的每个元素max(local, received)；为当前节点的counter加1</li>
+<p>&#x7B2C;&#x4E8C;&#x79CD;&#x60C5;&#x51B5;&#x53D1;&#x751F;&#x5728;a&#x548C;b&#x6240;&#x5728;&#x7684;Partition&#x6CA1;&#x6709;&#x53D1;&#x9001;&#x901A;&#x4FE1;&#x3002;</p>
+<h6 id="3-2-4-2-Vector-clocks"><a href="#3-2-4-2-Vector-clocks" class="headerlink" title="3.2.4.2 Vector clocks"></a>3.2.4.2 Vector clocks</h6><p>&#x5411;&#x91CF;&#x65F6;&#x949F;&#x662F;Lamport&#x65F6;&#x949F;&#x7684;&#x4E00;&#x79CD;&#x6269;&#x5C55;&#x3002;&#x5B83;&#x7EF4;&#x62A4;&#x5927;&#x5C0F;&#x4E3A;N&#x7684;&#x6570;&#x5217;[t1, t2, &#x2026;.]&#xFF0C;N&#x4E3A;&#x8282;&#x70B9;&#x6570;&#x3002;&#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x90FD;&#x66F4;&#x65B0;&#x81EA;&#x5DF1;&#x7684;&#x65F6;&#x949F;&#x3002;</p>
+<ul class="ui list">
+<li>&#x6BCF;&#x5F53;&#x8FDB;&#x7A0B;&#x505A;&#x4E86;&#x4E8B;&#x60C5;&#xFF0C;&#x66F4;&#x65B0;&#x8BE5;node&#x7684;&#x65F6;&#x949F;&#x3002;</li>
+<li>&#x8FDB;&#x7A0B;&#x53D1;&#x9001;&#x7684;&#x6D88;&#x606F;&#xFF0C;&#x5305;&#x542B;&#x4E0A;&#x9762;&#x63D0;&#x5230;&#x7684;&#x6570;&#x7EC4;&#x3002;</li>
+<li>&#x5F53;&#x6536;&#x5230;&#x6D88;&#x606F;&#x4EE5;&#x540E;&#xFF0C;&#x66F4;&#x65B0;&#x672C;&#x5730;&#x7684;&#x6570;&#x7EC4;&#x91CC;&#x9762;&#x7684;&#x6BCF;&#x4E2A;&#x5143;&#x7D20;max(local, received)&#xFF1B;&#x4E3A;&#x5F53;&#x524D;&#x8282;&#x70B9;&#x7684;counter&#x52A0;1</li>
 </ul>
-<p>如图：</p>
-<p><img src="http://book.mixu.net/distsys/images/vector_clock.svg.png" alt=""></p>
-<h4>3.3 失灵检测</h4>
-<p>对于一个节点上的程序，它怎么知道远程某个节点失效了呢？在缺乏有效准确的全局信息下，我们可以通过一个合理的timeout值来确定。但是合理的timeout值该怎么确定呢？</p>
-<p>失灵检测器可以通过使用心跳消息来实现timeout。节点之间交换心跳消息。如果消息在timeout之前没有收到响应，就可以认为出现失效。这种检测要么太冲动(把正常的节点算成失效），要么太保守，很长时间才能检测出错误。</p>
-<p><a href="http://www.google.com/search?q=Unreliable%20Failure%20Detectors%20for%20Reliable%20Distributed%20Systems" target="_blank" rel="noopener">论文</a> 讨论了失灵检测在解决一致性问题中的两大属性：<strong>完整性</strong>和<strong>精准性</strong></p>
-<h4>3.4 总结</h4>
-<p>在分布式系统中应假设偏序而不是全序。而要承诺全序也是可能的，但是代价非常大。</p>
-<p>时间，顺序和同步真的必要么？看情况。有时候可能你只不过需要最后的结果而不关系中间事件发生的顺序。</p>
-<h2>四.replication</h2>
-<p>拷贝其实是一组通信问题，为一些子问题，例如选举，失灵检测，一致性和原子广播提供了上下文</p>
-<p>拷贝本质就只有两种：</p>
-<ol>
-<li>同步拷贝</li>
-<li>异步拷贝</li>
+<p>&#x5982;&#x56FE;&#xFF1A;</p>
+<p><a class="magnific-img" href="http://book.mixu.net/distsys/images/vector_clock.svg.png"><img src="http://book.mixu.net/distsys/images/vector_clock.svg.png" alt="" class="ui centered image"></a></p>
+<h4 id="3-3-&#x5931;&#x7075;&#x68C0;&#x6D4B;"><a href="#3-3-&#x5931;&#x7075;&#x68C0;&#x6D4B;" class="headerlink" title="3.3 &#x5931;&#x7075;&#x68C0;&#x6D4B;"></a>3.3 &#x5931;&#x7075;&#x68C0;&#x6D4B;</h4><p>&#x5BF9;&#x4E8E;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x4E0A;&#x7684;&#x7A0B;&#x5E8F;&#xFF0C;&#x5B83;&#x600E;&#x4E48;&#x77E5;&#x9053;&#x8FDC;&#x7A0B;&#x67D0;&#x4E2A;&#x8282;&#x70B9;&#x5931;&#x6548;&#x4E86;&#x5462;&#xFF1F;&#x5728;&#x7F3A;&#x4E4F;&#x6709;&#x6548;&#x51C6;&#x786E;&#x7684;&#x5168;&#x5C40;&#x4FE1;&#x606F;&#x4E0B;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x5408;&#x7406;&#x7684;timeout&#x503C;&#x6765;&#x786E;&#x5B9A;&#x3002;&#x4F46;&#x662F;&#x5408;&#x7406;&#x7684;timeout&#x503C;&#x8BE5;&#x600E;&#x4E48;&#x786E;&#x5B9A;&#x5462;&#xFF1F;</p>
+<p>&#x5931;&#x7075;&#x68C0;&#x6D4B;&#x5668;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x4F7F;&#x7528;&#x5FC3;&#x8DF3;&#x6D88;&#x606F;&#x6765;&#x5B9E;&#x73B0;timeout&#x3002;&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x4EA4;&#x6362;&#x5FC3;&#x8DF3;&#x6D88;&#x606F;&#x3002;&#x5982;&#x679C;&#x6D88;&#x606F;&#x5728;timeout&#x4E4B;&#x524D;&#x6CA1;&#x6709;&#x6536;&#x5230;&#x54CD;&#x5E94;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x8BA4;&#x4E3A;&#x51FA;&#x73B0;&#x5931;&#x6548;&#x3002;&#x8FD9;&#x79CD;&#x68C0;&#x6D4B;&#x8981;&#x4E48;&#x592A;&#x51B2;&#x52A8;(&#x628A;&#x6B63;&#x5E38;&#x7684;&#x8282;&#x70B9;&#x7B97;&#x6210;&#x5931;&#x6548;&#xFF09;&#xFF0C;&#x8981;&#x4E48;&#x592A;&#x4FDD;&#x5B88;&#xFF0C;&#x5F88;&#x957F;&#x65F6;&#x95F4;&#x624D;&#x80FD;&#x68C0;&#x6D4B;&#x51FA;&#x9519;&#x8BEF;&#x3002;            </p>
+<p><a href="http://www.google.com/search?q=Unreliable%20Failure%20Detectors%20for%20Reliable%20Distributed%20Systems" target="_blank" rel="noopener">&#x8BBA;&#x6587;</a> &#x8BA8;&#x8BBA;&#x4E86;&#x5931;&#x7075;&#x68C0;&#x6D4B;&#x5728;&#x89E3;&#x51B3;&#x4E00;&#x81F4;&#x6027;&#x95EE;&#x9898;&#x4E2D;&#x7684;&#x4E24;&#x5927;&#x5C5E;&#x6027;&#xFF1A;<strong>&#x5B8C;&#x6574;&#x6027;</strong>&#x548C;<strong>&#x7CBE;&#x51C6;&#x6027;</strong></p>
+<h4 id="3-4-&#x603B;&#x7ED3;"><a href="#3-4-&#x603B;&#x7ED3;" class="headerlink" title="3.4 &#x603B;&#x7ED3;"></a>3.4 &#x603B;&#x7ED3;</h4><p>&#x5728;&#x5206;&#x5E03;&#x5F0F;&#x7CFB;&#x7EDF;&#x4E2D;&#x5E94;&#x5047;&#x8BBE;&#x504F;&#x5E8F;&#x800C;&#x4E0D;&#x662F;&#x5168;&#x5E8F;&#x3002;&#x800C;&#x8981;&#x627F;&#x8BFA;&#x5168;&#x5E8F;&#x4E5F;&#x662F;&#x53EF;&#x80FD;&#x7684;&#xFF0C;&#x4F46;&#x662F;&#x4EE3;&#x4EF7;&#x975E;&#x5E38;&#x5927;&#x3002;</p>
+<p>&#x65F6;&#x95F4;&#xFF0C;&#x987A;&#x5E8F;&#x548C;&#x540C;&#x6B65;&#x771F;&#x7684;&#x5FC5;&#x8981;&#x4E48;&#xFF1F;&#x770B;&#x60C5;&#x51B5;&#x3002;&#x6709;&#x65F6;&#x5019;&#x53EF;&#x80FD;&#x4F60;&#x53EA;&#x4E0D;&#x8FC7;&#x9700;&#x8981;&#x6700;&#x540E;&#x7684;&#x7ED3;&#x679C;&#x800C;&#x4E0D;&#x5173;&#x7CFB;&#x4E2D;&#x95F4;&#x4E8B;&#x4EF6;&#x53D1;&#x751F;&#x7684;&#x987A;&#x5E8F;&#x3002;</p>
+<h2 id="&#x56DB;-replication"><a href="#&#x56DB;-replication" class="headerlink" title="&#x56DB;.replication"></a>&#x56DB;.replication</h2><p>&#x62F7;&#x8D1D;&#x5176;&#x5B9E;&#x662F;&#x4E00;&#x7EC4;&#x901A;&#x4FE1;&#x95EE;&#x9898;&#xFF0C;&#x4E3A;&#x4E00;&#x4E9B;&#x5B50;&#x95EE;&#x9898;&#xFF0C;&#x4F8B;&#x5982;&#x9009;&#x4E3E;&#xFF0C;&#x5931;&#x7075;&#x68C0;&#x6D4B;&#xFF0C;&#x4E00;&#x81F4;&#x6027;&#x548C;&#x539F;&#x5B50;&#x5E7F;&#x64AD;&#x63D0;&#x4F9B;&#x4E86;&#x4E0A;&#x4E0B;&#x6587;</p>
+<p>&#x62F7;&#x8D1D;&#x672C;&#x8D28;&#x5C31;&#x53EA;&#x6709;&#x4E24;&#x79CD;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x540C;&#x6B65;&#x62F7;&#x8D1D;</li>
+<li>&#x5F02;&#x6B65;&#x62F7;&#x8D1D;</li>
 </ol>
-<h4>4.1 拷贝范式</h4>
-<h5>4.1.1 同步拷贝</h5>
-<p><img src="http://book.mixu.net/distsys/images/replication-sync.png" alt=""></p>
-<p>首先client发送请求。然后同步拷贝，同步意味着这时候client还在等待着请求返回。最后，服务器返回。</p>
-<p>这就是N-of-N write，只有等所有N个节点成功写，才返回写成功给client。系统不容忍任何服务器下线。从性能上说，最慢的服务器决定了写的速度</p>
-<h5>4.1.2 异步拷贝</h5>
-<p><img src="http://book.mixu.net/distsys/images/replication-async.png" alt=""></p>
-<p>master节点立即返回。该节点可能在本地做了复制，但是不会向其他服务器发送拷贝。只有在返回以后，异步的任务在开始执行。</p>
-<p>相对地，这是1-of-N write。性能上说，快。但是不能提供强一致性保证。</p>
-<h4>4.2 拷贝算法</h4>
-<h5>4.2.1 overview</h5>
-<p>一致性的强弱可以用来区分拷贝算法</p>
+<h4 id="4-1-&#x62F7;&#x8D1D;&#x8303;&#x5F0F;"><a href="#4-1-&#x62F7;&#x8D1D;&#x8303;&#x5F0F;" class="headerlink" title="4.1 &#x62F7;&#x8D1D;&#x8303;&#x5F0F;"></a>4.1 &#x62F7;&#x8D1D;&#x8303;&#x5F0F;</h4><h5 id="4-1-1-&#x540C;&#x6B65;&#x62F7;&#x8D1D;"><a href="#4-1-1-&#x540C;&#x6B65;&#x62F7;&#x8D1D;" class="headerlink" title="4.1.1 &#x540C;&#x6B65;&#x62F7;&#x8D1D;"></a>4.1.1 &#x540C;&#x6B65;&#x62F7;&#x8D1D;</h5><p><a class="magnific-img" href="http://book.mixu.net/distsys/images/replication-sync.png"><img src="http://book.mixu.net/distsys/images/replication-sync.png" alt="" class="ui centered image"></a></p>
+<p>&#x9996;&#x5148;client&#x53D1;&#x9001;&#x8BF7;&#x6C42;&#x3002;&#x7136;&#x540E;&#x540C;&#x6B65;&#x62F7;&#x8D1D;&#xFF0C;&#x540C;&#x6B65;&#x610F;&#x5473;&#x7740;&#x8FD9;&#x65F6;&#x5019;client&#x8FD8;&#x5728;&#x7B49;&#x5F85;&#x7740;&#x8BF7;&#x6C42;&#x8FD4;&#x56DE;&#x3002;&#x6700;&#x540E;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x8FD4;&#x56DE;&#x3002;</p>
+<p>&#x8FD9;&#x5C31;&#x662F;N-of-N write&#xFF0C;&#x53EA;&#x6709;&#x7B49;&#x6240;&#x6709;N&#x4E2A;&#x8282;&#x70B9;&#x6210;&#x529F;&#x5199;&#xFF0C;&#x624D;&#x8FD4;&#x56DE;&#x5199;&#x6210;&#x529F;&#x7ED9;client&#x3002;&#x7CFB;&#x7EDF;&#x4E0D;&#x5BB9;&#x5FCD;&#x4EFB;&#x4F55;&#x670D;&#x52A1;&#x5668;&#x4E0B;&#x7EBF;&#x3002;&#x4ECE;&#x6027;&#x80FD;&#x4E0A;&#x8BF4;&#xFF0C;&#x6700;&#x6162;&#x7684;&#x670D;&#x52A1;&#x5668;&#x51B3;&#x5B9A;&#x4E86;&#x5199;&#x7684;&#x901F;&#x5EA6;</p>
+<h5 id="4-1-2-&#x5F02;&#x6B65;&#x62F7;&#x8D1D;"><a href="#4-1-2-&#x5F02;&#x6B65;&#x62F7;&#x8D1D;" class="headerlink" title="4.1.2 &#x5F02;&#x6B65;&#x62F7;&#x8D1D;"></a>4.1.2 &#x5F02;&#x6B65;&#x62F7;&#x8D1D;</h5><p><a class="magnific-img" href="http://book.mixu.net/distsys/images/replication-async.png"><img src="http://book.mixu.net/distsys/images/replication-async.png" alt="" class="ui centered image"></a></p>
+<p>master&#x8282;&#x70B9;&#x7ACB;&#x5373;&#x8FD4;&#x56DE;&#x3002;&#x8BE5;&#x8282;&#x70B9;&#x53EF;&#x80FD;&#x5728;&#x672C;&#x5730;&#x505A;&#x4E86;&#x590D;&#x5236;&#xFF0C;&#x4F46;&#x662F;&#x4E0D;&#x4F1A;&#x5411;&#x5176;&#x4ED6;&#x670D;&#x52A1;&#x5668;&#x53D1;&#x9001;&#x62F7;&#x8D1D;&#x3002;&#x53EA;&#x6709;&#x5728;&#x8FD4;&#x56DE;&#x4EE5;&#x540E;&#xFF0C;&#x5F02;&#x6B65;&#x7684;&#x4EFB;&#x52A1;&#x5728;&#x5F00;&#x59CB;&#x6267;&#x884C;&#x3002;</p>
+<p>&#x76F8;&#x5BF9;&#x5730;&#xFF0C;&#x8FD9;&#x662F;1-of-N write&#x3002;&#x6027;&#x80FD;&#x4E0A;&#x8BF4;&#xFF0C;&#x5FEB;&#x3002;&#x4F46;&#x662F;&#x4E0D;&#x80FD;&#x63D0;&#x4F9B;&#x5F3A;&#x4E00;&#x81F4;&#x6027;&#x4FDD;&#x8BC1;&#x3002;</p>
+<h4 id="4-2-&#x62F7;&#x8D1D;&#x7B97;&#x6CD5;"><a href="#4-2-&#x62F7;&#x8D1D;&#x7B97;&#x6CD5;" class="headerlink" title="4.2 &#x62F7;&#x8D1D;&#x7B97;&#x6CD5;"></a>4.2 &#x62F7;&#x8D1D;&#x7B97;&#x6CD5;</h4><h5 id="4-2-1-overview"><a href="#4-2-1-overview" class="headerlink" title="4.2.1 overview"></a>4.2.1 overview</h5><p>&#x4E00;&#x81F4;&#x6027;&#x7684;&#x5F3A;&#x5F31;&#x53EF;&#x4EE5;&#x7528;&#x6765;&#x533A;&#x5206;&#x62F7;&#x8D1D;&#x7B97;&#x6CD5;</p>
 <blockquote>
-<p>一致性就是所有的节点都同意某一个值，具体的说，一致性包括：</p>
-<p>协议：每个正确的流程必须就相同的价值达成一致。
-完整性：每个正确的过程最多决定一个值，如果它决定某个值，那么它必须由某个过程提出。
-终止：所有流程最终都会做出决定。
-有效性：如果所有正确的过程提出相同的值V，那么所有正确的过程决定V</p>
+<p> &#x4E00;&#x81F4;&#x6027;&#x5C31;&#x662F;&#x6240;&#x6709;&#x7684;&#x8282;&#x70B9;&#x90FD;&#x540C;&#x610F;&#x67D0;&#x4E00;&#x4E2A;&#x503C;&#xFF0C;&#x5177;&#x4F53;&#x7684;&#x8BF4;&#xFF0C;&#x4E00;&#x81F4;&#x6027;&#x5305;&#x62EC;&#xFF1A;</p>
+<p>&#x534F;&#x8BAE;&#xFF1A;&#x6BCF;&#x4E2A;&#x6B63;&#x786E;&#x7684;&#x6D41;&#x7A0B;&#x5FC5;&#x987B;&#x5C31;&#x76F8;&#x540C;&#x7684;&#x4EF7;&#x503C;&#x8FBE;&#x6210;&#x4E00;&#x81F4;&#x3002;<br>&#x5B8C;&#x6574;&#x6027;&#xFF1A;&#x6BCF;&#x4E2A;&#x6B63;&#x786E;&#x7684;&#x8FC7;&#x7A0B;&#x6700;&#x591A;&#x51B3;&#x5B9A;&#x4E00;&#x4E2A;&#x503C;&#xFF0C;&#x5982;&#x679C;&#x5B83;&#x51B3;&#x5B9A;&#x67D0;&#x4E2A;&#x503C;&#xFF0C;&#x90A3;&#x4E48;&#x5B83;&#x5FC5;&#x987B;&#x7531;&#x67D0;&#x4E2A;&#x8FC7;&#x7A0B;&#x63D0;&#x51FA;&#x3002;<br>&#x7EC8;&#x6B62;&#xFF1A;&#x6240;&#x6709;&#x6D41;&#x7A0B;&#x6700;&#x7EC8;&#x90FD;&#x4F1A;&#x505A;&#x51FA;&#x51B3;&#x5B9A;&#x3002;<br>&#x6709;&#x6548;&#x6027;&#xFF1A;&#x5982;&#x679C;&#x6240;&#x6709;&#x6B63;&#x786E;&#x7684;&#x8FC7;&#x7A0B;&#x63D0;&#x51FA;&#x76F8;&#x540C;&#x7684;&#x503C;V&#xFF0C;&#x90A3;&#x4E48;&#x6240;&#x6709;&#x6B63;&#x786E;&#x7684;&#x8FC7;&#x7A0B;&#x51B3;&#x5B9A;V</p>
 </blockquote>
-<p>互斥，leader选举，多播和原子广播都是更普遍的一致性问题</p>
-<p>单拷贝系统按照一次执行中传递的消息数目，可以做一下分类：</p>
-<ul>
-<li>1n messages（异步 主从备份）</li>
-<li>2n messages（同步 主从备份）</li>
-<li>4n messages（2-phase commit，Multi-Paxos)</li>
-<li>6n messages （3-phase commit，Paxos with repeated leader election）</li>
+<p>&#x4E92;&#x65A5;&#xFF0C;leader&#x9009;&#x4E3E;&#xFF0C;&#x591A;&#x64AD;&#x548C;&#x539F;&#x5B50;&#x5E7F;&#x64AD;&#x90FD;&#x662F;&#x66F4;&#x666E;&#x904D;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x95EE;&#x9898;</p>
+<p>&#x5355;&#x62F7;&#x8D1D;&#x7CFB;&#x7EDF;&#x6309;&#x7167;&#x4E00;&#x6B21;&#x6267;&#x884C;&#x4E2D;&#x4F20;&#x9012;&#x7684;&#x6D88;&#x606F;&#x6570;&#x76EE;&#xFF0C;&#x53EF;&#x4EE5;&#x505A;&#x4E00;&#x4E0B;&#x5206;&#x7C7B;&#xFF1A;</p>
+<ul class="ui list">
+<li>1n messages&#xFF08;&#x5F02;&#x6B65; &#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#xFF09;</li>
+<li>2n messages&#xFF08;&#x540C;&#x6B65; &#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#xFF09;</li>
+<li>4n messages&#xFF08;2-phase commit&#xFF0C;Multi-Paxos)</li>
+<li>6n messages &#xFF08;3-phase commit&#xFF0C;Paxos with repeated leader election&#xFF09;</li>
 </ul>
-<p><img src="http://book.mixu.net/distsys/images/google-transact09.png" alt=""></p>
-<p>上图列出的复制算法不难发现，一致性强的算法，相应的延时高，性能低，这是一种取舍，得此失彼。</p>
-<h5>4.2.2 主从备份拷贝</h5>
-<p>最常见最基本的拷贝方式。所有的update发生在primary，并且以log的形式拷贝到backup 服务器。主从备份也分同步和异步两种。</p>
-<p>MySQL和MongoDB都使用异步主从备份。同步主从备份保证在返回给client之前，backup节点成功存储了拷贝（Replica）。不过即使这样，同步方式也仅能保证较弱的承诺。考虑下面的场景：</p>
-<ul>
-<li>主服务器收到write，发送到backup</li>
-<li>backup 写成功。返回ACK</li>
-<li>主服务器fail，client超时，认为写失败。</li>
+<p><a class="magnific-img" href="http://book.mixu.net/distsys/images/google-transact09.png"><img src="http://book.mixu.net/distsys/images/google-transact09.png" alt="" class="ui centered image"></a></p>
+<p>&#x4E0A;&#x56FE;&#x5217;&#x51FA;&#x7684;&#x590D;&#x5236;&#x7B97;&#x6CD5;&#x4E0D;&#x96BE;&#x53D1;&#x73B0;&#xFF0C;&#x4E00;&#x81F4;&#x6027;&#x5F3A;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x76F8;&#x5E94;&#x7684;&#x5EF6;&#x65F6;&#x9AD8;&#xFF0C;&#x6027;&#x80FD;&#x4F4E;&#xFF0C;&#x8FD9;&#x662F;&#x4E00;&#x79CD;&#x53D6;&#x820D;&#xFF0C;&#x5F97;&#x6B64;&#x5931;&#x5F7C;&#x3002;</p>
+<h5 id="4-2-2-&#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x62F7;&#x8D1D;"><a href="#4-2-2-&#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x62F7;&#x8D1D;" class="headerlink" title="4.2.2 &#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x62F7;&#x8D1D;"></a>4.2.2 &#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x62F7;&#x8D1D;</h5><p>&#x6700;&#x5E38;&#x89C1;&#x6700;&#x57FA;&#x672C;&#x7684;&#x62F7;&#x8D1D;&#x65B9;&#x5F0F;&#x3002;&#x6240;&#x6709;&#x7684;update&#x53D1;&#x751F;&#x5728;primary&#xFF0C;&#x5E76;&#x4E14;&#x4EE5;log&#x7684;&#x5F62;&#x5F0F;&#x62F7;&#x8D1D;&#x5230;backup &#x670D;&#x52A1;&#x5668;&#x3002;&#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x4E5F;&#x5206;&#x540C;&#x6B65;&#x548C;&#x5F02;&#x6B65;&#x4E24;&#x79CD;&#x3002;</p>
+<p>MySQL&#x548C;MongoDB&#x90FD;&#x4F7F;&#x7528;&#x5F02;&#x6B65;&#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x3002;&#x540C;&#x6B65;&#x4E3B;&#x4ECE;&#x5907;&#x4EFD;&#x4FDD;&#x8BC1;&#x5728;&#x8FD4;&#x56DE;&#x7ED9;client&#x4E4B;&#x524D;&#xFF0C;backup&#x8282;&#x70B9;&#x6210;&#x529F;&#x5B58;&#x50A8;&#x4E86;&#x62F7;&#x8D1D;&#xFF08;Replica&#xFF09;&#x3002;&#x4E0D;&#x8FC7;&#x5373;&#x4F7F;&#x8FD9;&#x6837;&#xFF0C;&#x540C;&#x6B65;&#x65B9;&#x5F0F;&#x4E5F;&#x4EC5;&#x80FD;&#x4FDD;&#x8BC1;&#x8F83;&#x5F31;&#x7684;&#x627F;&#x8BFA;&#x3002;&#x8003;&#x8651;&#x4E0B;&#x9762;&#x7684;&#x573A;&#x666F;&#xFF1A;</p>
+<ul class="ui list">
+<li>&#x4E3B;&#x670D;&#x52A1;&#x5668;&#x6536;&#x5230;write&#xFF0C;&#x53D1;&#x9001;&#x5230;backup</li>
+<li>backup &#x5199;&#x6210;&#x529F;&#x3002;&#x8FD4;&#x56DE;ACK</li>
+<li>&#x4E3B;&#x670D;&#x52A1;&#x5668;fail&#xFF0C;client&#x8D85;&#x65F6;&#xFF0C;&#x8BA4;&#x4E3A;&#x5199;&#x5931;&#x8D25;&#x3002;</li>
 </ul>
-<p>client现在认为写失败，但是backup其实成功。如果backup promote成为primary，那么就不对了</p>
-<h5>4.2.3 两阶段提交（2PC）</h5>
-<p>2PC在很多经典的关系型数据库中都使用到了。例如MySQL 集群使用2PC提供同步拷贝。下面是2PC的基本流程</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ Coordinator ] -&gt; OK to commit?     [ Peers ]</span><br><span class="line">                &lt;- Yes / No</span><br><span class="line"></span><br><span class="line">[ Coordinator ] -&gt; Commit / Rollback [ Peers ]</span><br><span class="line">                &lt;- ACK</span><br></pre></td></tr></table></figure></p>
-<p>在第一阶段，<strong>投票</strong>，协调者（Coordinator）给所有参与者发送update。每个参与者投票决定是否commit。如果选择commit，结果首先存放在临时区域（the write-ahead log）。除非第二阶段完成，这部分都只算“临时”的update。</p>
-<p>在第二阶段，<strong>决策</strong>，协调者决定结果，并通知参与者。如果所有参与者都选择commit，那结果从临时区域移除，而成为最终结果。</p>
-<p>2PC在最后commit之前，有一个临时区域，就能够在节点失效的时候，从而允许回滚。</p>
-<p>之前讨论过，2PC属于CA，所以它没有考虑网络分割，对网络分割并没有容错。同时由于是N-of-N write，所以性能上会有一些折扣</p>
-<h5>4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</h5>
-<p>对网络分割容错的一致性算法其实就是实现了CAP的CP，同时保重了一定的A。</p>
-<h6>什么是网络分割（Network Partition）</h6>
-<p>节点本身正常运行，但是网络链路发生问题。不同的Partition甚至还能接收client的请求。</p>
-<p>2节点，节点失效 vs 网络分割</p>
-<p><img src="http://book.mixu.net/distsys/images/system-of-2.png" alt=""></p>
-<p>3节点，节点失效 vs网络分割</p>
-<p><img src="http://book.mixu.net/distsys/images/system-of-3.png" alt=""></p>
-<p><strong>对这类算法会在学习MIT6.824公开课深入学习，to be continues...</strong></p>
-<h4>4.3 总结</h4>
-<p>总结下各类算法的一些关键特征。</p>
-<p><strong>主从备份</strong></p>
-<ul>
-<li>单独的，静态的master节点</li>
-<li>复制日志，slaves节点并不参与执行具体操作</li>
-<li>拷贝操作的延时没有上限</li>
-<li>无法容错网络分割</li>
-<li>在不一致和错误发生情况下，需要手工干涉</li>
+<p>client&#x73B0;&#x5728;&#x8BA4;&#x4E3A;&#x5199;&#x5931;&#x8D25;&#xFF0C;&#x4F46;&#x662F;backup&#x5176;&#x5B9E;&#x6210;&#x529F;&#x3002;&#x5982;&#x679C;backup promote&#x6210;&#x4E3A;primary&#xFF0C;&#x90A3;&#x4E48;&#x5C31;&#x4E0D;&#x5BF9;&#x4E86;</p>
+<h5 id="4-2-3-&#x4E24;&#x9636;&#x6BB5;&#x63D0;&#x4EA4;&#xFF08;2PC&#xFF09;"><a href="#4-2-3-&#x4E24;&#x9636;&#x6BB5;&#x63D0;&#x4EA4;&#xFF08;2PC&#xFF09;" class="headerlink" title="4.2.3 &#x4E24;&#x9636;&#x6BB5;&#x63D0;&#x4EA4;&#xFF08;2PC&#xFF09;"></a>4.2.3 &#x4E24;&#x9636;&#x6BB5;&#x63D0;&#x4EA4;&#xFF08;2PC&#xFF09;</h5><p>2PC&#x5728;&#x5F88;&#x591A;&#x7ECF;&#x5178;&#x7684;&#x5173;&#x7CFB;&#x578B;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x90FD;&#x4F7F;&#x7528;&#x5230;&#x4E86;&#x3002;&#x4F8B;&#x5982;MySQL &#x96C6;&#x7FA4;&#x4F7F;&#x7528;2PC&#x63D0;&#x4F9B;&#x540C;&#x6B65;&#x62F7;&#x8D1D;&#x3002;&#x4E0B;&#x9762;&#x662F;2PC&#x7684;&#x57FA;&#x672C;&#x6D41;&#x7A0B;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ Coordinator ] -&gt; OK to commit?     [ Peers ]</span><br><span class="line">                &lt;- Yes / No</span><br><span class="line"></span><br><span class="line">[ Coordinator ] -&gt; Commit / Rollback [ Peers ]</span><br><span class="line">                &lt;- ACK</span><br></pre></td></tr></table></figure>
+<p>&#x5728;&#x7B2C;&#x4E00;&#x9636;&#x6BB5;&#xFF0C;<strong>&#x6295;&#x7968;</strong>&#xFF0C;&#x534F;&#x8C03;&#x8005;&#xFF08;Coordinator&#xFF09;&#x7ED9;&#x6240;&#x6709;&#x53C2;&#x4E0E;&#x8005;&#x53D1;&#x9001;update&#x3002;&#x6BCF;&#x4E2A;&#x53C2;&#x4E0E;&#x8005;&#x6295;&#x7968;&#x51B3;&#x5B9A;&#x662F;&#x5426;commit&#x3002;&#x5982;&#x679C;&#x9009;&#x62E9;commit&#xFF0C;&#x7ED3;&#x679C;&#x9996;&#x5148;&#x5B58;&#x653E;&#x5728;&#x4E34;&#x65F6;&#x533A;&#x57DF;&#xFF08;the write-ahead log&#xFF09;&#x3002;&#x9664;&#x975E;&#x7B2C;&#x4E8C;&#x9636;&#x6BB5;&#x5B8C;&#x6210;&#xFF0C;&#x8FD9;&#x90E8;&#x5206;&#x90FD;&#x53EA;&#x7B97;&#x201C;&#x4E34;&#x65F6;&#x201D;&#x7684;update&#x3002;</p>
+<p>&#x5728;&#x7B2C;&#x4E8C;&#x9636;&#x6BB5;&#xFF0C;<strong>&#x51B3;&#x7B56;</strong>&#xFF0C;&#x534F;&#x8C03;&#x8005;&#x51B3;&#x5B9A;&#x7ED3;&#x679C;&#xFF0C;&#x5E76;&#x901A;&#x77E5;&#x53C2;&#x4E0E;&#x8005;&#x3002;&#x5982;&#x679C;&#x6240;&#x6709;&#x53C2;&#x4E0E;&#x8005;&#x90FD;&#x9009;&#x62E9;commit&#xFF0C;&#x90A3;&#x7ED3;&#x679C;&#x4ECE;&#x4E34;&#x65F6;&#x533A;&#x57DF;&#x79FB;&#x9664;&#xFF0C;&#x800C;&#x6210;&#x4E3A;&#x6700;&#x7EC8;&#x7ED3;&#x679C;&#x3002;</p>
+<p>2PC&#x5728;&#x6700;&#x540E;commit&#x4E4B;&#x524D;&#xFF0C;&#x6709;&#x4E00;&#x4E2A;&#x4E34;&#x65F6;&#x533A;&#x57DF;&#xFF0C;&#x5C31;&#x80FD;&#x591F;&#x5728;&#x8282;&#x70B9;&#x5931;&#x6548;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4ECE;&#x800C;&#x5141;&#x8BB8;&#x56DE;&#x6EDA;&#x3002;</p>
+<p>&#x4E4B;&#x524D;&#x8BA8;&#x8BBA;&#x8FC7;&#xFF0C;2PC&#x5C5E;&#x4E8E;CA&#xFF0C;&#x6240;&#x4EE5;&#x5B83;&#x6CA1;&#x6709;&#x8003;&#x8651;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#xFF0C;&#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5E76;&#x6CA1;&#x6709;&#x5BB9;&#x9519;&#x3002;&#x540C;&#x65F6;&#x7531;&#x4E8E;&#x662F;N-of-N write&#xFF0C;&#x6240;&#x4EE5;&#x6027;&#x80FD;&#x4E0A;&#x4F1A;&#x6709;&#x4E00;&#x4E9B;&#x6298;&#x6263;</p>
+<h5 id="4-2-4-&#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5BB9;&#x9519;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x7B97;&#x6CD5;&#xFF1A;gossip-raft&#x548C;ZAB"><a href="#4-2-4-&#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5BB9;&#x9519;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x7B97;&#x6CD5;&#xFF1A;gossip-raft&#x548C;ZAB" class="headerlink" title="4.2.4 &#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5BB9;&#x9519;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x7B97;&#x6CD5;&#xFF1A;gossip/raft&#x548C;ZAB"></a>4.2.4 &#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5BB9;&#x9519;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x7B97;&#x6CD5;&#xFF1A;gossip/raft&#x548C;ZAB</h5><p>&#x5BF9;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#x5BB9;&#x9519;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x7B97;&#x6CD5;&#x5176;&#x5B9E;&#x5C31;&#x662F;&#x5B9E;&#x73B0;&#x4E86;CAP&#x7684;CP&#xFF0C;&#x540C;&#x65F6;&#x4FDD;&#x91CD;&#x4E86;&#x4E00;&#x5B9A;&#x7684;A&#x3002;</p>
+<h6 id="&#x4EC0;&#x4E48;&#x662F;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#xFF08;Network-Partition&#xFF09;"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#xFF08;Network-Partition&#xFF09;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#xFF08;Network Partition&#xFF09;"></a>&#x4EC0;&#x4E48;&#x662F;&#x7F51;&#x7EDC;&#x5206;&#x5272;&#xFF08;Network Partition&#xFF09;</h6><p>&#x8282;&#x70B9;&#x672C;&#x8EAB;&#x6B63;&#x5E38;&#x8FD0;&#x884C;&#xFF0C;&#x4F46;&#x662F;&#x7F51;&#x7EDC;&#x94FE;&#x8DEF;&#x53D1;&#x751F;&#x95EE;&#x9898;&#x3002;&#x4E0D;&#x540C;&#x7684;Partition&#x751A;&#x81F3;&#x8FD8;&#x80FD;&#x63A5;&#x6536;client&#x7684;&#x8BF7;&#x6C42;&#x3002;</p>
+<p>2&#x8282;&#x70B9;&#xFF0C;&#x8282;&#x70B9;&#x5931;&#x6548; vs &#x7F51;&#x7EDC;&#x5206;&#x5272;</p>
+<p><a class="magnific-img" href="http://book.mixu.net/distsys/images/system-of-2.png"><img src="http://book.mixu.net/distsys/images/system-of-2.png" alt="" class="ui centered image"></a></p>
+<p>3&#x8282;&#x70B9;&#xFF0C;&#x8282;&#x70B9;&#x5931;&#x6548; vs&#x7F51;&#x7EDC;&#x5206;&#x5272;</p>
+<p><a class="magnific-img" href="http://book.mixu.net/distsys/images/system-of-3.png"><img src="http://book.mixu.net/distsys/images/system-of-3.png" alt="" class="ui centered image"></a></p>
+<p><strong>&#x5BF9;&#x8FD9;&#x7C7B;&#x7B97;&#x6CD5;&#x4F1A;&#x5728;&#x5B66;&#x4E60;MIT6.824&#x516C;&#x5F00;&#x8BFE;&#x6DF1;&#x5165;&#x5B66;&#x4E60;&#xFF0C;to be continues&#x2026;</strong></p>
+<h4 id="4-3-&#x603B;&#x7ED3;"><a href="#4-3-&#x603B;&#x7ED3;" class="headerlink" title="4.3 &#x603B;&#x7ED3;"></a>4.3 &#x603B;&#x7ED3;</h4><p>&#x603B;&#x7ED3;&#x4E0B;&#x5404;&#x7C7B;&#x7B97;&#x6CD5;&#x7684;&#x4E00;&#x4E9B;&#x5173;&#x952E;&#x7279;&#x5F81;&#x3002;</p>
+<p><strong>&#x4E3B;&#x4ECE;&#x5907;&#x4EFD;</strong></p>
+<ul class="ui list">
+<li>&#x5355;&#x72EC;&#x7684;&#xFF0C;&#x9759;&#x6001;&#x7684;master&#x8282;&#x70B9;</li>
+<li>&#x590D;&#x5236;&#x65E5;&#x5FD7;&#xFF0C;slaves&#x8282;&#x70B9;&#x5E76;&#x4E0D;&#x53C2;&#x4E0E;&#x6267;&#x884C;&#x5177;&#x4F53;&#x64CD;&#x4F5C;</li>
+<li>&#x62F7;&#x8D1D;&#x64CD;&#x4F5C;&#x7684;&#x5EF6;&#x65F6;&#x6CA1;&#x6709;&#x4E0A;&#x9650;</li>
+<li>&#x65E0;&#x6CD5;&#x5BB9;&#x9519;&#x7F51;&#x7EDC;&#x5206;&#x5272;</li>
+<li>&#x5728;&#x4E0D;&#x4E00;&#x81F4;&#x548C;&#x9519;&#x8BEF;&#x53D1;&#x751F;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x9700;&#x8981;&#x624B;&#x5DE5;&#x5E72;&#x6D89;</li>
 </ul>
 <p><strong>2PC</strong></p>
-<ul>
-<li>统一投票：提交或者放弃</li>
-<li>静态的master节点</li>
-<li>协调者和普通节点同时挂掉情况下无法保证一致性</li>
-<li>无法容错网络分割</li>
+<ul class="ui list">
+<li>&#x7EDF;&#x4E00;&#x6295;&#x7968;&#xFF1A;&#x63D0;&#x4EA4;&#x6216;&#x8005;&#x653E;&#x5F03;</li>
+<li>&#x9759;&#x6001;&#x7684;master&#x8282;&#x70B9;</li>
+<li>&#x534F;&#x8C03;&#x8005;&#x548C;&#x666E;&#x901A;&#x8282;&#x70B9;&#x540C;&#x65F6;&#x6302;&#x6389;&#x60C5;&#x51B5;&#x4E0B;&#x65E0;&#x6CD5;&#x4FDD;&#x8BC1;&#x4E00;&#x81F4;&#x6027;</li>
+<li>&#x65E0;&#x6CD5;&#x5BB9;&#x9519;&#x7F51;&#x7EDC;&#x5206;&#x5272;</li>
 </ul>
-<p><strong>Paxos like</strong></p>
-<ul>
-<li>
-<p>多数投票</p>
+<p><strong>Paxos like</strong> </p>
+<ul class="ui list">
+<li><p>&#x591A;&#x6570;&#x6295;&#x7968;</p>
 </li>
-<li>
-<p>动态master节点</p>
+<li><p>&#x52A8;&#x6001;master&#x8282;&#x70B9;</p>
 </li>
-<li>
-<p>允许n/2-1节点挂</p>
+<li><p>&#x5141;&#x8BB8;n/2-1&#x8282;&#x70B9;&#x6302;</p>
 </li>
-<li>
-<p>对延时并不太敏感</p>
+<li><p>&#x5BF9;&#x5EF6;&#x65F6;&#x5E76;&#x4E0D;&#x592A;&#x654F;&#x611F;</p>
 </li>
 </ul>
-<h2>遗留的问题</h2>
-<ol>
-<li>拜占庭将军问题</li>
+<h2 id="&#x9057;&#x7559;&#x7684;&#x95EE;&#x9898;"><a href="#&#x9057;&#x7559;&#x7684;&#x95EE;&#x9898;" class="headerlink" title="&#x9057;&#x7559;&#x7684;&#x95EE;&#x9898;"></a>&#x9057;&#x7559;&#x7684;&#x95EE;&#x9898;</h2><ol class="ui list">
+<li>&#x62DC;&#x5360;&#x5EAD;&#x5C06;&#x519B;&#x95EE;&#x9898;</li>
 <li>2PC</li>
-<li>flp实现</li>
+<li>flp&#x5B9E;&#x73B0;</li>
 </ol>
-<h2>参考</h2>
-<p><a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">1. ebook</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/41329283" target="_blank" rel="noopener">2. 区块链时代的拜占庭将军们</a></p>
+<h2 id="&#x53C2;&#x8003;"><a href="#&#x53C2;&#x8003;" class="headerlink" title="&#x53C2;&#x8003;"></a>&#x53C2;&#x8003;</h2><p><a href="http://book.mixu.net/distsys/ebook.html#abstractions" target="_blank" rel="noopener">1. ebook</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/41329283" target="_blank" rel="noopener">2. &#x533A;&#x5757;&#x94FE;&#x65F6;&#x4EE3;&#x7684;&#x62DC;&#x5360;&#x5EAD;&#x5C06;&#x519B;&#x4EEC;</a></p>
 <p><a href="https://blog.csdn.net/chen77716/article/details/27963079" target="_blank" rel="noopener">3. FLP impossible</a></p>
-<p><a href="https://www.jdon.com/bigdata/how-to-understand-cap.html" target="_blank" rel="noopener">4. 如何正确理解CAP</a></p>
+<p><a href="https://www.jdon.com/bigdata/how-to-understand-cap.html" target="_blank" rel="noopener">4. &#x5982;&#x4F55;&#x6B63;&#x786E;&#x7406;&#x89E3;CAP</a></p>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2019/08/17/一个入行两年的菜鸟程序员的思考 /" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">一个入行两年的菜鸟程序员的思考</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/12/24/怎样设计golang友好的api/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">怎样设计golang友好的api</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">分布式基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">一.基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么要用分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1 目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2 阻碍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 如何研究分布式系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 抽象和模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.3.</span> <span class="toc-text">3 分布式实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">二.理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 公理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 FLP理论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 CAP理论</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">2.2.1 一致性的扩展</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">三.时间和顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">3.1 全序和偏序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">3.2 时间匀速流逝</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">3.2.1 全局时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">3.2.2 本地时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">3.2.3 没有时钟</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.</span> <span class="toc-text">3.2.4 逻辑时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.1.</span> <span class="toc-text">3.2.4.1 Lamport时钟</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.2.4.2.</span> <span class="toc-text">3.2.4.2 Vector clocks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3.3 失灵检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">3.4 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.</span> <span class="toc-text">四.replication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">4.1 拷贝范式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text">4.1.1 同步拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.1.2.</span> <span class="toc-text">4.1.2 异步拷贝</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">4.2 拷贝算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.1.</span> <span class="toc-text">4.2.1 overview</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.2.</span> <span class="toc-text">4.2.2 主从备份拷贝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.3.</span> <span class="toc-text">4.2.3 两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.</span> <span class="toc-text">4.2.4 对网络分割容错的一致性算法：gossip/raft和ZAB</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.2.4.1.</span> <span class="toc-text">什么是网络分割（Network Partition）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.5.</span> <span class="toc-text">遗留的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.6.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2019/01/06/分布式系统入门/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&text=分布式系统入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&is_video=false&description=分布式系统入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=分布式系统入门&body=Check out this article: http://lqczzz.github.io/2019/01/06/分布式系统入门/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&title=分布式系统入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2019/01/06/分布式系统入门/&name=分布式系统入门&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/分布式系统入门.md" data-title="分布式系统入门" data-url="http://lqczzz.github.io/2019/01/06/分布式系统入门/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

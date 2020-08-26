@@ -1,165 +1,125 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="矫情的话 在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优">
-<meta name="keywords" content="timeline重构任重道远">
-<meta property="og:type" content="article">
-<meta property="og:title" content="从golang的fmt包入门手动内存管理">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="矫情的话 在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-17T15:05:48.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="从golang的fmt包入门手动内存管理">
-<meta name="twitter:description" content="矫情的话 在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。 痛定几周之后决定思痛，要参考学习优">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>从golang的fmt包入门手动内存管理</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                从golang的fmt包入门手动内存管理 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/10/18/优秀的博文记录/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/10/16/一次goroutine内存泄漏问题定位/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&text=从golang的fmt包入门手动内存管理"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&is_video=false&description=从golang的fmt包入门手动内存管理"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=从golang的fmt包入门手动内存管理&body=Check out this article: http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&name=从golang的fmt包入门手动内存管理&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">矫情的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">fmt包源码摘要和笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">sync.Pool测试</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        从golang的fmt包入门手动内存管理
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-10-17T14:01:43.000Z" itemprop="datePublished">2018-10-17</time>
-        
-      
-    </div>
-
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/timeline重构任重道远/">timeline重构任重道远</a>
-    </div>
-
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h2>矫情的话</h2>
-<p>在做feed流开发的时候，我负责timeline的业务开发，刚开始设计的时候我以为也就是个业务代码开发，能有啥难度。结果开发完了之后，被leader疯狂吐槽。代码组织不好，这些都能通过对业务的深入理解，去重新设计，但是说到一个内存管理的问题，我是完全没想到的，以前没有接触过高并发场景，不知道在高并发场景下，依赖语言自身的gc会导致内存的频繁申请和回收。</p>
-<p>痛定几周之后决定思痛，要参考学习优秀的代码
-于是我想，哪里会有优秀的涉及到内存管理的代码呢！</p>
-<p>官方库！！</p>
-<p>然后想，timeline涉及网络io，io才会有大量的内存分配和回收的场景！！</p>
-<p>直接看net包？太尼玛复杂了
-ok，看fmt包</p>
-<h2>fmt包源码摘要和笔记</h2>
-<blockquote>
-<p>来自fmt/print.go</p>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">从golang的fmt包入门手动内存管理</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/10/17</span>
+            
+            
+            <span class="post-tags">
+              <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/timeline重构任重道远/">timeline重构任重道远</a></li></ul>
+            </span>
+            
+          </section>
+
+          <section class="post-content">
+            <h2 id="&#x77EB;&#x60C5;&#x7684;&#x8BDD;"><a href="#&#x77EB;&#x60C5;&#x7684;&#x8BDD;" class="headerlink" title="&#x77EB;&#x60C5;&#x7684;&#x8BDD;"></a>&#x77EB;&#x60C5;&#x7684;&#x8BDD;</h2><p>&#x5728;&#x505A;feed&#x6D41;&#x5F00;&#x53D1;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6211;&#x8D1F;&#x8D23;timeline&#x7684;&#x4E1A;&#x52A1;&#x5F00;&#x53D1;&#xFF0C;&#x521A;&#x5F00;&#x59CB;&#x8BBE;&#x8BA1;&#x7684;&#x65F6;&#x5019;&#x6211;&#x4EE5;&#x4E3A;&#x4E5F;&#x5C31;&#x662F;&#x4E2A;&#x4E1A;&#x52A1;&#x4EE3;&#x7801;&#x5F00;&#x53D1;&#xFF0C;&#x80FD;&#x6709;&#x5565;&#x96BE;&#x5EA6;&#x3002;&#x7ED3;&#x679C;&#x5F00;&#x53D1;&#x5B8C;&#x4E86;&#x4E4B;&#x540E;&#xFF0C;&#x88AB;leader&#x75AF;&#x72C2;&#x5410;&#x69FD;&#x3002;&#x4EE3;&#x7801;&#x7EC4;&#x7EC7;&#x4E0D;&#x597D;&#xFF0C;&#x8FD9;&#x4E9B;&#x90FD;&#x80FD;&#x901A;&#x8FC7;&#x5BF9;&#x4E1A;&#x52A1;&#x7684;&#x6DF1;&#x5165;&#x7406;&#x89E3;&#xFF0C;&#x53BB;&#x91CD;&#x65B0;&#x8BBE;&#x8BA1;&#xFF0C;&#x4F46;&#x662F;&#x8BF4;&#x5230;&#x4E00;&#x4E2A;&#x5185;&#x5B58;&#x7BA1;&#x7406;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x6211;&#x662F;&#x5B8C;&#x5168;&#x6CA1;&#x60F3;&#x5230;&#x7684;&#xFF0C;&#x4EE5;&#x524D;&#x6CA1;&#x6709;&#x63A5;&#x89E6;&#x8FC7;&#x9AD8;&#x5E76;&#x53D1;&#x573A;&#x666F;&#xFF0C;&#x4E0D;&#x77E5;&#x9053;&#x5728;&#x9AD8;&#x5E76;&#x53D1;&#x573A;&#x666F;&#x4E0B;&#xFF0C;&#x4F9D;&#x8D56;&#x8BED;&#x8A00;&#x81EA;&#x8EAB;&#x7684;gc&#x4F1A;&#x5BFC;&#x81F4;&#x5185;&#x5B58;&#x7684;&#x9891;&#x7E41;&#x7533;&#x8BF7;&#x548C;&#x56DE;&#x6536;&#x3002;</p>
+<p>&#x75DB;&#x5B9A;&#x51E0;&#x5468;&#x4E4B;&#x540E;&#x51B3;&#x5B9A;&#x601D;&#x75DB;&#xFF0C;&#x8981;&#x53C2;&#x8003;&#x5B66;&#x4E60;&#x4F18;&#x79C0;&#x7684;&#x4EE3;&#x7801;<br>&#x4E8E;&#x662F;&#x6211;&#x60F3;&#xFF0C;&#x54EA;&#x91CC;&#x4F1A;&#x6709;&#x4F18;&#x79C0;&#x7684;&#x6D89;&#x53CA;&#x5230;&#x5185;&#x5B58;&#x7BA1;&#x7406;&#x7684;&#x4EE3;&#x7801;&#x5462;&#xFF01;</p>
+<p>&#x5B98;&#x65B9;&#x5E93;&#xFF01;&#xFF01;</p>
+<p>&#x7136;&#x540E;&#x60F3;&#xFF0C;timeline&#x6D89;&#x53CA;&#x7F51;&#x7EDC;io&#xFF0C;io&#x624D;&#x4F1A;&#x6709;&#x5927;&#x91CF;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#x548C;&#x56DE;&#x6536;&#x7684;&#x573A;&#x666F;&#xFF01;&#xFF01;</p>
+<p>&#x76F4;&#x63A5;&#x770B;net&#x5305;&#xFF1F;&#x592A;&#x5C3C;&#x739B;&#x590D;&#x6742;&#x4E86;<br>ok&#xFF0C;&#x770B;fmt&#x5305;</p>
+<h2 id="fmt&#x5305;&#x6E90;&#x7801;&#x6458;&#x8981;&#x548C;&#x7B14;&#x8BB0;"><a href="#fmt&#x5305;&#x6E90;&#x7801;&#x6458;&#x8981;&#x548C;&#x7B14;&#x8BB0;" class="headerlink" title="fmt&#x5305;&#x6E90;&#x7801;&#x6458;&#x8981;&#x548C;&#x7B14;&#x8BB0;"></a>fmt&#x5305;&#x6E90;&#x7801;&#x6458;&#x8981;&#x548C;&#x7B14;&#x8BB0;</h2><blockquote>
+<p>&#x6765;&#x81EA;fmt/print.go</p>
 </blockquote>
-<pre><code>// Fprintf根据w的不同，调用w的write方法，很容易做到打印日志到不同地方
+<pre><code>// Fprintf&#x6839;&#x636E;w&#x7684;&#x4E0D;&#x540C;&#xFF0C;&#x8C03;&#x7528;w&#x7684;write&#x65B9;&#x6CD5;&#xFF0C;&#x5F88;&#x5BB9;&#x6613;&#x505A;&#x5230;&#x6253;&#x5370;&#x65E5;&#x5FD7;&#x5230;&#x4E0D;&#x540C;&#x5730;&#x65B9;
 func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
     p := newPrinter()
     p.doPrintf(format, a)
@@ -168,7 +128,7 @@ func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
     return
 }
 
-// Printf调用了Fprintf，打印的地方是os.Stdout
+// Printf&#x8C03;&#x7528;&#x4E86;Fprintf&#xFF0C;&#x6253;&#x5370;&#x7684;&#x5730;&#x65B9;&#x662F;os.Stdout
 func Printf(format string, a ...interface{}) (n int, err error) {
     return Fprintf(os.Stdout, format, a...)
 }
@@ -180,19 +140,17 @@ func Sprintf(format string, a ...interface{}) string {
     p.free()
     return s
 }
-</code></pre>
-<p>这里至少有三点可以学:</p>
-<ol>
-<li>包本身就是模块化的一种方式，对外提供的函数不一定非得属于某个对象</li>
-<li>接口作为参数的好处：封装变化
-这里，变化指的是[]byte的去向，比如os.Stdout</li>
-<li><code>p := newPrinter()</code>这里采用了临时对象池来实现内存的管理</li>
+</code></pre><p>&#x8FD9;&#x91CC;&#x81F3;&#x5C11;&#x6709;&#x4E09;&#x70B9;&#x53EF;&#x4EE5;&#x5B66;:</p>
+<ol class="ui list">
+<li>&#x5305;&#x672C;&#x8EAB;&#x5C31;&#x662F;&#x6A21;&#x5757;&#x5316;&#x7684;&#x4E00;&#x79CD;&#x65B9;&#x5F0F;&#xFF0C;&#x5BF9;&#x5916;&#x63D0;&#x4F9B;&#x7684;&#x51FD;&#x6570;&#x4E0D;&#x4E00;&#x5B9A;&#x975E;&#x5F97;&#x5C5E;&#x4E8E;&#x67D0;&#x4E2A;&#x5BF9;&#x8C61;</li>
+<li>&#x63A5;&#x53E3;&#x4F5C;&#x4E3A;&#x53C2;&#x6570;&#x7684;&#x597D;&#x5904;&#xFF1A;&#x5C01;&#x88C5;&#x53D8;&#x5316;<br> &#x8FD9;&#x91CC;&#xFF0C;&#x53D8;&#x5316;&#x6307;&#x7684;&#x662F;[]byte&#x7684;&#x53BB;&#x5411;&#xFF0C;&#x6BD4;&#x5982;os.Stdout</li>
+<li><code>p := newPrinter()</code>&#x8FD9;&#x91CC;&#x91C7;&#x7528;&#x4E86;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x6C60;&#x6765;&#x5B9E;&#x73B0;&#x5185;&#x5B58;&#x7684;&#x7BA1;&#x7406;</li>
 </ol>
-<p>看下去：</p>
-<pre><code>// pp is used to store a printer's state and is reused with sync.Pool to avoid allocations.
+<p>&#x770B;&#x4E0B;&#x53BB;&#xFF1A;</p>
+<pre><code>// pp is used to store a printer&apos;s state and is reused with sync.Pool to avoid allocations.
 type pp struct {
     buf buffer
-    // 省略
+    // &#x7701;&#x7565;
 }
 
 var ppFree = sync.Pool{
@@ -210,18 +168,14 @@ func newPrinter() *pp {
 
 // free saves used pp structs in ppFree; avoids an allocation per invocation.
 func (p *pp) free() {
-    p.buf = p.buf[:0]   // 清空slice
+    p.buf = p.buf[:0]   // &#x6E05;&#x7A7A;slice
     p.arg = nil 
     p.value = reflect.Value{}
-    ppFree.Put(p)   // 放回对象池里
+    ppFree.Put(p)   // &#x653E;&#x56DE;&#x5BF9;&#x8C61;&#x6C60;&#x91CC;
 }
-</code></pre>
-<p>一个sync.Pool对象就是一组临时对象的集合。Pool是协程安全的。
-Pool用于存储那些被分配了但是没有被使用，而未来可能会使用的值，以减小垃圾回收的压力。</p>
-<p>fmt包总是需要使用一些[]byte之类的对象，golang建立了一个临时对象池，存放着这些对象，如果需要使用一个[]byte，就去Pool里面拿，如果拿不到就分配一份。
-这比起不停生成新的[]byte，用完了再等待gc回收来要高效得多</p>
-<h2>sync.Pool测试</h2>
-<pre><code>// 一个[]byte的对象池，每个对象为一个[]byte
+</code></pre><p>&#x4E00;&#x4E2A;sync.Pool&#x5BF9;&#x8C61;&#x5C31;&#x662F;&#x4E00;&#x7EC4;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x7684;&#x96C6;&#x5408;&#x3002;Pool&#x662F;&#x534F;&#x7A0B;&#x5B89;&#x5168;&#x7684;&#x3002;<br>Pool&#x7528;&#x4E8E;&#x5B58;&#x50A8;&#x90A3;&#x4E9B;&#x88AB;&#x5206;&#x914D;&#x4E86;&#x4F46;&#x662F;&#x6CA1;&#x6709;&#x88AB;&#x4F7F;&#x7528;&#xFF0C;&#x800C;&#x672A;&#x6765;&#x53EF;&#x80FD;&#x4F1A;&#x4F7F;&#x7528;&#x7684;&#x503C;&#xFF0C;&#x4EE5;&#x51CF;&#x5C0F;&#x5783;&#x573E;&#x56DE;&#x6536;&#x7684;&#x538B;&#x529B;&#x3002;</p>
+<p>fmt&#x5305;&#x603B;&#x662F;&#x9700;&#x8981;&#x4F7F;&#x7528;&#x4E00;&#x4E9B;[]byte&#x4E4B;&#x7C7B;&#x7684;&#x5BF9;&#x8C61;&#xFF0C;golang&#x5EFA;&#x7ACB;&#x4E86;&#x4E00;&#x4E2A;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x6C60;&#xFF0C;&#x5B58;&#x653E;&#x7740;&#x8FD9;&#x4E9B;&#x5BF9;&#x8C61;&#xFF0C;&#x5982;&#x679C;&#x9700;&#x8981;&#x4F7F;&#x7528;&#x4E00;&#x4E2A;[]byte&#xFF0C;&#x5C31;&#x53BB;Pool&#x91CC;&#x9762;&#x62FF;&#xFF0C;&#x5982;&#x679C;&#x62FF;&#x4E0D;&#x5230;&#x5C31;&#x5206;&#x914D;&#x4E00;&#x4EFD;&#x3002;<br>&#x8FD9;&#x6BD4;&#x8D77;&#x4E0D;&#x505C;&#x751F;&#x6210;&#x65B0;&#x7684;[]byte&#xFF0C;&#x7528;&#x5B8C;&#x4E86;&#x518D;&#x7B49;&#x5F85;gc&#x56DE;&#x6536;&#x6765;&#x8981;&#x9AD8;&#x6548;&#x5F97;&#x591A;</p>
+<h2 id="sync-Pool&#x6D4B;&#x8BD5;"><a href="#sync-Pool&#x6D4B;&#x8BD5;" class="headerlink" title="sync.Pool&#x6D4B;&#x8BD5;"></a>sync.Pool&#x6D4B;&#x8BD5;</h2><pre><code>// &#x4E00;&#x4E2A;[]byte&#x7684;&#x5BF9;&#x8C61;&#x6C60;&#xFF0C;&#x6BCF;&#x4E2A;&#x5BF9;&#x8C61;&#x4E3A;&#x4E00;&#x4E2A;[]byte
 var bytePool = sync.Pool{
     New: func() interface{} {
         b := make([]byte, 1024)
@@ -231,13 +185,13 @@ var bytePool = sync.Pool{
 
 func main() {
     a := time.Now().Unix()
-    // 不使用对象池
+    // &#x4E0D;&#x4F7F;&#x7528;&#x5BF9;&#x8C61;&#x6C60;
     for i := 0; i &lt; 1000000000; i++ {
         obj := make([]byte, 1024)
         _ = obj
     }
     b := time.Now().Unix()
-    // 使用对象池
+    // &#x4F7F;&#x7528;&#x5BF9;&#x8C61;&#x6C60;
     for i := 0; i &lt; 1000000000; i++ {
         obj := bytePool.Get().(*[]byte)
         _ = obj
@@ -247,133 +201,82 @@ func main() {
     fmt.Println(&quot;without pool &quot;, b-a, &quot;s&quot;)
     fmt.Println(&quot;with    pool &quot;, c-b, &quot;s&quot;)
 }
-</code></pre>
-<blockquote>
-<p>来自：<a href="https://www.jianshu.com/p/2bd41a8f2254" target="_blank" rel="noopener">go的临时对象池--sync.Pool
+</code></pre><blockquote>
+<p>&#x6765;&#x81EA;&#xFF1A;<a href="https://www.jianshu.com/p/2bd41a8f2254" target="_blank" rel="noopener">go&#x7684;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x6C60;&#x2013;sync.Pool
 </a></p>
 </blockquote>
-<p>测试效果：</p>
-<pre><code>// 数据量更大更明显
+<p>&#x6D4B;&#x8BD5;&#x6548;&#x679C;&#xFF1A;</p>
+<pre><code>// &#x6570;&#x636E;&#x91CF;&#x66F4;&#x5927;&#x66F4;&#x660E;&#x663E;
 without pool  21 s
 with    pool  16 s
-</code></pre>
-<p>the end...</p>
+</code></pre><p>the end&#x2026;</p>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/10/18/优秀的博文记录/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">优秀的博文记录</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/10/16/一次goroutine内存泄漏问题定位/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">一次goroutine内存泄漏问题定位</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">矫情的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">fmt包源码摘要和笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">sync.Pool测试</span></a></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&text=从golang的fmt包入门手动内存管理"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&is_video=false&description=从golang的fmt包入门手动内存管理"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=从golang的fmt包入门手动内存管理&body=Check out this article: http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&title=从golang的fmt包入门手动内存管理"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/&name=从golang的fmt包入门手动内存管理&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/golang的fmt包入门手动内存管理.md" data-title="从golang的fmt包入门手动内存管理" data-url="http://lqczzz.github.io/2018/10/17/golang的fmt包入门手动内存管理/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

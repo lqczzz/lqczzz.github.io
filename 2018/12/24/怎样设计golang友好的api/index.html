@@ -1,365 +1,269 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。  我想用一个故事作为开头。 在2014年的晚些">
-<meta property="og:type" content="article">
-<meta property="og:title" content="怎样设计golang友好的api">
-<meta property="og:url" content="http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。  我想用一个故事作为开头。 在2014年的晚些">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://btfak.com/images/api-design1.png">
-<meta property="og:image" content="http://btfak.com/images/api-design2.png">
-<meta property="og:image" content="http://btfak.com/images/api-design3.png">
-<meta property="og:image" content="http://btfak.com/images/api-design4.png">
-<meta property="og:image" content="http://btfak.com/images/api-design5.png">
-<meta property="og:image" content="http://btfak.com/images/api-design6.png">
-<meta property="og:image" content="http://btfak.com/images/api-design7.png">
-<meta property="og:image" content="http://btfak.com/images/api-design8.png">
-<meta property="og:image" content="http://btfak.com/images/api-design9.png">
-<meta property="og:image" content="http://btfak.com/images/api-design10.png">
-<meta property="og:image" content="http://btfak.com/images/api-design11.png">
-<meta property="og:updated_time" content="2018-12-23T17:13:28.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="怎样设计golang友好的api">
-<meta name="twitter:description" content="这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里 正文开始： 下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。  我想用一个故事作为开头。 在2014年的晚些">
-<meta name="twitter:image" content="http://btfak.com/images/api-design1.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>怎样设计golang友好的api</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                怎样设计golang友好的api | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2019/01/06/分布式系统入门/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/12/12/可插拔式代码结构思考/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&text=怎样设计golang友好的api"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&is_video=false&description=怎样设计golang友好的api"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=怎样设计golang友好的api&body=Check out this article: http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&name=怎样设计golang友好的api&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        怎样设计golang友好的api
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-12-23T17:08:47.000Z" itemprop="datePublished">2018-12-24</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <p>这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API。原文看这里</p>
-<p>正文开始：</p>
-<p>下面的内容是我的一次演示的文字版本，这是我在dotGo上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。</p>
-<p><img src="http://btfak.com/images/api-design1.png" alt="">
-我想用一个故事作为开头。</p>
-<p>在2014年的晚些时候，你的公司发布了一款革命性的分布式社交网络工具，很明智的，你选择了Go来开发你的产品。</p>
-<p>你分配到的任务是编写极为重要的服务端组件，看起来可能像这样</p>
-<p><img src="http://btfak.com/images/api-design2.png" alt=""></p>
-<p>这里有一些不可导出的字段需要初始化，通过一个goroutine运行起来，响应请求。</p>
-<p>这个包有很简单的API，非常容易使用。</p>
-<p>但有一个问题，当你发布了你的第一个版本后，新的需求不断的被提出来。</p>
-<p><img src="http://btfak.com/images/api-design3.png" alt=""></p>
-<p>手机客户端经常是响应的很慢，甚至停止响应。你需要添加支持来对慢的客户端主动断开连接。</p>
-<p>为了增加安全，新的需求是增加安全连接（TLS）。</p>
-<p>然后，你的某些用户是在一个很小的服务器上运行服务，他们需要限制客户端数量的方式。</p>
-<p>下面是想要对并发数进行限制。</p>
-<p>不断的新需求…</p>
-<p>限制你需要调整你的API来满足这一系列的新需求</p>
-<p><img src="http://btfak.com/images/api-design4.png" alt=""></p>
-<p>还需要考虑不同版本直接接口的兼容性问题。</p>
-<p>实话说，谁用过这样的API？</p>
-<p>谁编写过这样的API?</p>
-<p>谁的代码以为依赖了这样的包，而不能正常使用了？</p>
-<p>明显的这种解决方式是笨重而脆弱的，同时也不容易发现问题。</p>
-<p>你的包的新用户，不知道哪些参数是可选的，哪些是必须的。</p>
-<p>比如说，如果我想创建一个服务的实例作为测试，我需要提供一个真实的TLS证书吗，如果不需要，我需要在接口中提供什么？</p>
-<p>如果我不关心最大连接数，或者最大并发数，我应该在参数中设置什么值，我应该使用0？0听起来是合理的，但这依赖于具体的接口是怎样实现的，这也许真的会导致并发数限制为0。</p>
-<p>在我看来，这样写API是容易的，同时你把正确使用接口的责任抛给了使用者。</p>
-<p>这个例子甚至代码写的很糟糕，文档也不友好，我想这示范了一个看起来华丽，其实很脆弱的API设计。</p>
-<p>现在我们定位了问题，我们看看解决方案。</p>
-<p><img src="http://btfak.com/images/api-design5.png" alt=""></p>
-<p>与其提供一个单独的接口处理多种情况，一种解决方案是提供一系列的接口。</p>
-<p>用户按需调用即可。</p>
-<p>但你很快会发现，提供如此大量的接口，很快会让你不堪重负。</p>
-<p>让我们看看另一种方式。</p>
-<p><img src="http://btfak.com/images/api-design6.png" alt=""></p>
-<p>一种非常简单的方式是提供一个配置结构体。</p>
-<p>这有一些优势。</p>
-<p>使用这种方式，如果有新的需求加入，在结构体中增加选项即可。对外的公共API仍然保持不变。这也能让文档更加友好、可读。</p>
-<p>在结构体上注明这是NewServer的参数，文档上也很容易识别。</p>
-<p>潜在的它也允许用户使用0作为参数的值。</p>
-<p><img src="http://btfak.com/images/api-design7.png" alt=""></p>
-<p>但是这种模式并不完美。</p>
-<p>对于默认值是有歧义的，特别是0的值如果有特别的含义。</p>
-<p>比如在这里的配置结构中，如果port没有被设置，NewServer会监听8080端口。</p>
-<p>但是这有一个负面影响，你也许想设置为0，然后服务端默认分配一个随机端口，但你设置的0与默认值是相同的。</p>
-<p><img src="http://btfak.com/images/api-design8.png" alt=""></p>
-<p>大部分时候，你的API用户只是想使用你的默认值。</p>
-<p>即使他们不想改变你的配置的任何内容，仍然不得不传入一些参数。</p>
-<p>当你的用户读你的测试代码或者示例代码时，在想着怎样使用你的包，他们会看到这个魔幻的空字符串参数。</p>
-<p>对我来说，这让我感觉很糟糕。</p>
-<p>为什么你的API的用户需要传入一个空的值，只是简单的让你的函数满足声明需求？</p>
-<p><img src="http://btfak.com/images/api-design9.png" alt=""></p>
-<p>一个常见的解决办法是传入一个结构体指针，这让调用者可以传入nil，而不用考虑空值的问题。</p>
-<p>在我看来，这个方案有前面的示例中的所有问题，甚至让问题更复杂了。</p>
-<p>首先，我们仍然需要在第二个参数传入点什么，但目前，这个参数可以是nil了，而且大部分时候，对于默认的使用者，它就是nil。</p>
-<p>使用指针的方式，包的作者和使用者都会担心的是，他们引用了同一份数据，随时有可能在运行中这份数据被修改而发生突变。</p>
-<p>我想设计精良的API不应该要求用户传递这些额外的参数，只是为了应对一些罕见的情况。</p>
-<p>我认为我们，Go程序员，应该努力确保不要求用户传递一个nil作为参数。</p>
-<p>如果我们想要传递配置信息时，这应该是自解释的，尽量的有表达性。</p>
-<p>现在，我们怀着这样的理念，我讨论一下我认为更好的解决方案。</p>
-<p><img src="http://btfak.com/images/api-design10.png" alt=""></p>
-<p>我们可以让API把不必须的参数作为一个变参。</p>
-<p>不是传入nil，或者一些值为0的结构体，这种函数的设计发出了这样的信号：你不需要在config上传入任何参数。</p>
-<p>在我看来这解决了两个问题。</p>
-<p>首先，默认的调用方式变得简介命了。</p>
-<p>其次，NewServer现在只接受config的值，不是指针，移除了nil和其他可能的参数，确保用户不会修改已经传入的参数。</p>
-<p>我认为这个一个巨大的提升。</p>
-<p>但我们深究一下，这仍然有问题。</p>
-<p>明显对你的预期是提供最多一个config值，但这个参数是变参，实现的时候需要考虑用户传入多个参数的情况。</p>
-<p>我们可以既能使用变参，同时也能提高我们的参数的表达性吗？</p>
-<p>我认为这就是结局方案。</p>
-<p><img src="http://btfak.com/images/api-design11.png" alt=""></p>
-<p>在这里我想要说清楚，函数式参数的想法是来自于Rob Pike的这篇文章：<a href="http://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html" target="_blank" rel="noopener">Self referential functions and design</a> ，我鼓励每个人都去看看。</p>
-<p>这种方式与上面的例子关键的不同在于，服务的定制化并不是通过传递参数实现的，而是通过函数来直接修改server的配置本身。</p>
-<p>正如前面看到的，不传递变参让我们使用默认的方式。</p>
-<p>当需要进行配置时，我们传递一个操作server的配置的函数。</p>
-<p>上面的代码中，timeout这个函数是用于改变server的配置中的timeout字段。</p>
-<p>在NewServer的实现内部，直接应用这些函数即可。</p>
-<p>在上面的代码中，我们调用了一个 net.Listener，在server的示例中，我们使用了这个默认的listener。</p>
-<p>然后，对于每个传入的option，我们都调用它，把我们的配置传入进去。</p>
-<p>很明显，如果没有option传递进来，我们就使用的是默认的server.</p>
-<p>使用这种方式，我们可以让API有这样的特性</p>
-<ul>
-<li>默认情况是实用的</li>
-<li>高度可配置</li>
-<li>配置可以不断增长</li>
-<li>自解释的文档</li>
-<li>对新的使用者很安全</li>
-<li>不会要求传入一个nil的或者空值（只是为了让编译通过）</li>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">怎样设计golang友好的api</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/12/24</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <p>&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#x662F;Dave Cheney&#x5728;2014&#x5E74;&#x53D1;&#x8868;&#x7684;&#xFF0C;&#x6211;&#x8BA4;&#x4E3A;&#x5728;go&#x8BED;&#x8A00;&#x7684;&#x63A5;&#x53E3;&#x8BBE;&#x8BA1;&#x4E0A;&#xFF0C;&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#x8D77;&#x5230;&#x4E86;&#x6307;&#x660E;&#x706F;&#x7684;&#x4F5C;&#x7528;&#xFF0C;&#x5305;&#x62EC;Micro&#x5728;&#x5185;&#x7684;&#x6846;&#x67B6;&#xFF0C;&#x90FD;&#x4F7F;&#x7528;&#x4E86;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x63D0;&#x4F9B;API&#x3002;&#x539F;&#x6587;&#x770B;&#x8FD9;&#x91CC;</p>
+<p>&#x6B63;&#x6587;&#x5F00;&#x59CB;&#xFF1A;</p>
+<p>&#x4E0B;&#x9762;&#x7684;&#x5185;&#x5BB9;&#x662F;&#x6211;&#x7684;&#x4E00;&#x6B21;&#x6F14;&#x793A;&#x7684;&#x6587;&#x5B57;&#x7248;&#x672C;&#xFF0C;&#x8FD9;&#x662F;&#x6211;&#x5728;dotGo&#x4E0A;&#x6F14;&#x8BB2;&#x7684;&#x300E;Functional options for friendly APIs&#x300F;&#xFF0C;&#x5728;&#x8FD9;&#x91CC;&#x5DF2;&#x7ECF;&#x7F16;&#x8F91;&#x7684;&#x53EF;&#x8BFB;&#x4E86;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design1.png"><img src="http://btfak.com/images/api-design1.png" alt="" class="ui centered image"></a><br>&#x6211;&#x60F3;&#x7528;&#x4E00;&#x4E2A;&#x6545;&#x4E8B;&#x4F5C;&#x4E3A;&#x5F00;&#x5934;&#x3002;</p>
+<p>&#x5728;2014&#x5E74;&#x7684;&#x665A;&#x4E9B;&#x65F6;&#x5019;&#xFF0C;&#x4F60;&#x7684;&#x516C;&#x53F8;&#x53D1;&#x5E03;&#x4E86;&#x4E00;&#x6B3E;&#x9769;&#x547D;&#x6027;&#x7684;&#x5206;&#x5E03;&#x5F0F;&#x793E;&#x4EA4;&#x7F51;&#x7EDC;&#x5DE5;&#x5177;&#xFF0C;&#x5F88;&#x660E;&#x667A;&#x7684;&#xFF0C;&#x4F60;&#x9009;&#x62E9;&#x4E86;Go&#x6765;&#x5F00;&#x53D1;&#x4F60;&#x7684;&#x4EA7;&#x54C1;&#x3002;</p>
+<p>&#x4F60;&#x5206;&#x914D;&#x5230;&#x7684;&#x4EFB;&#x52A1;&#x662F;&#x7F16;&#x5199;&#x6781;&#x4E3A;&#x91CD;&#x8981;&#x7684;&#x670D;&#x52A1;&#x7AEF;&#x7EC4;&#x4EF6;&#xFF0C;&#x770B;&#x8D77;&#x6765;&#x53EF;&#x80FD;&#x50CF;&#x8FD9;&#x6837;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design2.png"><img src="http://btfak.com/images/api-design2.png" alt="" class="ui centered image"></a></p>
+<p>&#x8FD9;&#x91CC;&#x6709;&#x4E00;&#x4E9B;&#x4E0D;&#x53EF;&#x5BFC;&#x51FA;&#x7684;&#x5B57;&#x6BB5;&#x9700;&#x8981;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;goroutine&#x8FD0;&#x884C;&#x8D77;&#x6765;&#xFF0C;&#x54CD;&#x5E94;&#x8BF7;&#x6C42;&#x3002;</p>
+<p>&#x8FD9;&#x4E2A;&#x5305;&#x6709;&#x5F88;&#x7B80;&#x5355;&#x7684;API&#xFF0C;&#x975E;&#x5E38;&#x5BB9;&#x6613;&#x4F7F;&#x7528;&#x3002;</p>
+<p>&#x4F46;&#x6709;&#x4E00;&#x4E2A;&#x95EE;&#x9898;&#xFF0C;&#x5F53;&#x4F60;&#x53D1;&#x5E03;&#x4E86;&#x4F60;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x7248;&#x672C;&#x540E;&#xFF0C;&#x65B0;&#x7684;&#x9700;&#x6C42;&#x4E0D;&#x65AD;&#x7684;&#x88AB;&#x63D0;&#x51FA;&#x6765;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design3.png"><img src="http://btfak.com/images/api-design3.png" alt="" class="ui centered image"></a></p>
+<p>&#x624B;&#x673A;&#x5BA2;&#x6237;&#x7AEF;&#x7ECF;&#x5E38;&#x662F;&#x54CD;&#x5E94;&#x7684;&#x5F88;&#x6162;&#xFF0C;&#x751A;&#x81F3;&#x505C;&#x6B62;&#x54CD;&#x5E94;&#x3002;&#x4F60;&#x9700;&#x8981;&#x6DFB;&#x52A0;&#x652F;&#x6301;&#x6765;&#x5BF9;&#x6162;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x4E3B;&#x52A8;&#x65AD;&#x5F00;&#x8FDE;&#x63A5;&#x3002;</p>
+<p>&#x4E3A;&#x4E86;&#x589E;&#x52A0;&#x5B89;&#x5168;&#xFF0C;&#x65B0;&#x7684;&#x9700;&#x6C42;&#x662F;&#x589E;&#x52A0;&#x5B89;&#x5168;&#x8FDE;&#x63A5;&#xFF08;TLS&#xFF09;&#x3002;</p>
+<p>&#x7136;&#x540E;&#xFF0C;&#x4F60;&#x7684;&#x67D0;&#x4E9B;&#x7528;&#x6237;&#x662F;&#x5728;&#x4E00;&#x4E2A;&#x5F88;&#x5C0F;&#x7684;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x8FD0;&#x884C;&#x670D;&#x52A1;&#xFF0C;&#x4ED6;&#x4EEC;&#x9700;&#x8981;&#x9650;&#x5236;&#x5BA2;&#x6237;&#x7AEF;&#x6570;&#x91CF;&#x7684;&#x65B9;&#x5F0F;&#x3002;</p>
+<p>&#x4E0B;&#x9762;&#x662F;&#x60F3;&#x8981;&#x5BF9;&#x5E76;&#x53D1;&#x6570;&#x8FDB;&#x884C;&#x9650;&#x5236;&#x3002;</p>
+<p>&#x4E0D;&#x65AD;&#x7684;&#x65B0;&#x9700;&#x6C42;&#x2026;</p>
+<p>&#x9650;&#x5236;&#x4F60;&#x9700;&#x8981;&#x8C03;&#x6574;&#x4F60;&#x7684;API&#x6765;&#x6EE1;&#x8DB3;&#x8FD9;&#x4E00;&#x7CFB;&#x5217;&#x7684;&#x65B0;&#x9700;&#x6C42;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design4.png"><img src="http://btfak.com/images/api-design4.png" alt="" class="ui centered image"></a></p>
+<p>&#x8FD8;&#x9700;&#x8981;&#x8003;&#x8651;&#x4E0D;&#x540C;&#x7248;&#x672C;&#x76F4;&#x63A5;&#x63A5;&#x53E3;&#x7684;&#x517C;&#x5BB9;&#x6027;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x5B9E;&#x8BDD;&#x8BF4;&#xFF0C;&#x8C01;&#x7528;&#x8FC7;&#x8FD9;&#x6837;&#x7684;API&#xFF1F;</p>
+<p>&#x8C01;&#x7F16;&#x5199;&#x8FC7;&#x8FD9;&#x6837;&#x7684;API?</p>
+<p>&#x8C01;&#x7684;&#x4EE3;&#x7801;&#x4EE5;&#x4E3A;&#x4F9D;&#x8D56;&#x4E86;&#x8FD9;&#x6837;&#x7684;&#x5305;&#xFF0C;&#x800C;&#x4E0D;&#x80FD;&#x6B63;&#x5E38;&#x4F7F;&#x7528;&#x4E86;&#xFF1F;</p>
+<p>&#x660E;&#x663E;&#x7684;&#x8FD9;&#x79CD;&#x89E3;&#x51B3;&#x65B9;&#x5F0F;&#x662F;&#x7B28;&#x91CD;&#x800C;&#x8106;&#x5F31;&#x7684;&#xFF0C;&#x540C;&#x65F6;&#x4E5F;&#x4E0D;&#x5BB9;&#x6613;&#x53D1;&#x73B0;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x4F60;&#x7684;&#x5305;&#x7684;&#x65B0;&#x7528;&#x6237;&#xFF0C;&#x4E0D;&#x77E5;&#x9053;&#x54EA;&#x4E9B;&#x53C2;&#x6570;&#x662F;&#x53EF;&#x9009;&#x7684;&#xFF0C;&#x54EA;&#x4E9B;&#x662F;&#x5FC5;&#x987B;&#x7684;&#x3002;</p>
+<p>&#x6BD4;&#x5982;&#x8BF4;&#xFF0C;&#x5982;&#x679C;&#x6211;&#x60F3;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x7684;&#x5B9E;&#x4F8B;&#x4F5C;&#x4E3A;&#x6D4B;&#x8BD5;&#xFF0C;&#x6211;&#x9700;&#x8981;&#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x771F;&#x5B9E;&#x7684;TLS&#x8BC1;&#x4E66;&#x5417;&#xFF0C;&#x5982;&#x679C;&#x4E0D;&#x9700;&#x8981;&#xFF0C;&#x6211;&#x9700;&#x8981;&#x5728;&#x63A5;&#x53E3;&#x4E2D;&#x63D0;&#x4F9B;&#x4EC0;&#x4E48;&#xFF1F;</p>
+<p>&#x5982;&#x679C;&#x6211;&#x4E0D;&#x5173;&#x5FC3;&#x6700;&#x5927;&#x8FDE;&#x63A5;&#x6570;&#xFF0C;&#x6216;&#x8005;&#x6700;&#x5927;&#x5E76;&#x53D1;&#x6570;&#xFF0C;&#x6211;&#x5E94;&#x8BE5;&#x5728;&#x53C2;&#x6570;&#x4E2D;&#x8BBE;&#x7F6E;&#x4EC0;&#x4E48;&#x503C;&#xFF0C;&#x6211;&#x5E94;&#x8BE5;&#x4F7F;&#x7528;0&#xFF1F;0&#x542C;&#x8D77;&#x6765;&#x662F;&#x5408;&#x7406;&#x7684;&#xFF0C;&#x4F46;&#x8FD9;&#x4F9D;&#x8D56;&#x4E8E;&#x5177;&#x4F53;&#x7684;&#x63A5;&#x53E3;&#x662F;&#x600E;&#x6837;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x8FD9;&#x4E5F;&#x8BB8;&#x771F;&#x7684;&#x4F1A;&#x5BFC;&#x81F4;&#x5E76;&#x53D1;&#x6570;&#x9650;&#x5236;&#x4E3A;0&#x3002;</p>
+<p>&#x5728;&#x6211;&#x770B;&#x6765;&#xFF0C;&#x8FD9;&#x6837;&#x5199;API&#x662F;&#x5BB9;&#x6613;&#x7684;&#xFF0C;&#x540C;&#x65F6;&#x4F60;&#x628A;&#x6B63;&#x786E;&#x4F7F;&#x7528;&#x63A5;&#x53E3;&#x7684;&#x8D23;&#x4EFB;&#x629B;&#x7ED9;&#x4E86;&#x4F7F;&#x7528;&#x8005;&#x3002;</p>
+<p>&#x8FD9;&#x4E2A;&#x4F8B;&#x5B50;&#x751A;&#x81F3;&#x4EE3;&#x7801;&#x5199;&#x7684;&#x5F88;&#x7CDF;&#x7CD5;&#xFF0C;&#x6587;&#x6863;&#x4E5F;&#x4E0D;&#x53CB;&#x597D;&#xFF0C;&#x6211;&#x60F3;&#x8FD9;&#x793A;&#x8303;&#x4E86;&#x4E00;&#x4E2A;&#x770B;&#x8D77;&#x6765;&#x534E;&#x4E3D;&#xFF0C;&#x5176;&#x5B9E;&#x5F88;&#x8106;&#x5F31;&#x7684;API&#x8BBE;&#x8BA1;&#x3002;</p>
+<p>&#x73B0;&#x5728;&#x6211;&#x4EEC;&#x5B9A;&#x4F4D;&#x4E86;&#x95EE;&#x9898;&#xFF0C;&#x6211;&#x4EEC;&#x770B;&#x770B;&#x89E3;&#x51B3;&#x65B9;&#x6848;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design5.png"><img src="http://btfak.com/images/api-design5.png" alt="" class="ui centered image"></a></p>
+<p>&#x4E0E;&#x5176;&#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x5355;&#x72EC;&#x7684;&#x63A5;&#x53E3;&#x5904;&#x7406;&#x591A;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x4E00;&#x79CD;&#x89E3;&#x51B3;&#x65B9;&#x6848;&#x662F;&#x63D0;&#x4F9B;&#x4E00;&#x7CFB;&#x5217;&#x7684;&#x63A5;&#x53E3;&#x3002;</p>
+<p>&#x7528;&#x6237;&#x6309;&#x9700;&#x8C03;&#x7528;&#x5373;&#x53EF;&#x3002;</p>
+<p>&#x4F46;&#x4F60;&#x5F88;&#x5FEB;&#x4F1A;&#x53D1;&#x73B0;&#xFF0C;&#x63D0;&#x4F9B;&#x5982;&#x6B64;&#x5927;&#x91CF;&#x7684;&#x63A5;&#x53E3;&#xFF0C;&#x5F88;&#x5FEB;&#x4F1A;&#x8BA9;&#x4F60;&#x4E0D;&#x582A;&#x91CD;&#x8D1F;&#x3002;</p>
+<p>&#x8BA9;&#x6211;&#x4EEC;&#x770B;&#x770B;&#x53E6;&#x4E00;&#x79CD;&#x65B9;&#x5F0F;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design6.png"><img src="http://btfak.com/images/api-design6.png" alt="" class="ui centered image"></a></p>
+<p>&#x4E00;&#x79CD;&#x975E;&#x5E38;&#x7B80;&#x5355;&#x7684;&#x65B9;&#x5F0F;&#x662F;&#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x914D;&#x7F6E;&#x7ED3;&#x6784;&#x4F53;&#x3002;</p>
+<p>&#x8FD9;&#x6709;&#x4E00;&#x4E9B;&#x4F18;&#x52BF;&#x3002;</p>
+<p>&#x4F7F;&#x7528;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#xFF0C;&#x5982;&#x679C;&#x6709;&#x65B0;&#x7684;&#x9700;&#x6C42;&#x52A0;&#x5165;&#xFF0C;&#x5728;&#x7ED3;&#x6784;&#x4F53;&#x4E2D;&#x589E;&#x52A0;&#x9009;&#x9879;&#x5373;&#x53EF;&#x3002;&#x5BF9;&#x5916;&#x7684;&#x516C;&#x5171;API&#x4ECD;&#x7136;&#x4FDD;&#x6301;&#x4E0D;&#x53D8;&#x3002;&#x8FD9;&#x4E5F;&#x80FD;&#x8BA9;&#x6587;&#x6863;&#x66F4;&#x52A0;&#x53CB;&#x597D;&#x3001;&#x53EF;&#x8BFB;&#x3002;</p>
+<p>&#x5728;&#x7ED3;&#x6784;&#x4F53;&#x4E0A;&#x6CE8;&#x660E;&#x8FD9;&#x662F;NewServer&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x6587;&#x6863;&#x4E0A;&#x4E5F;&#x5F88;&#x5BB9;&#x6613;&#x8BC6;&#x522B;&#x3002;</p>
+<p>&#x6F5C;&#x5728;&#x7684;&#x5B83;&#x4E5F;&#x5141;&#x8BB8;&#x7528;&#x6237;&#x4F7F;&#x7528;0&#x4F5C;&#x4E3A;&#x53C2;&#x6570;&#x7684;&#x503C;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design7.png"><img src="http://btfak.com/images/api-design7.png" alt="" class="ui centered image"></a></p>
+<p>&#x4F46;&#x662F;&#x8FD9;&#x79CD;&#x6A21;&#x5F0F;&#x5E76;&#x4E0D;&#x5B8C;&#x7F8E;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x9ED8;&#x8BA4;&#x503C;&#x662F;&#x6709;&#x6B67;&#x4E49;&#x7684;&#xFF0C;&#x7279;&#x522B;&#x662F;0&#x7684;&#x503C;&#x5982;&#x679C;&#x6709;&#x7279;&#x522B;&#x7684;&#x542B;&#x4E49;&#x3002;</p>
+<p>&#x6BD4;&#x5982;&#x5728;&#x8FD9;&#x91CC;&#x7684;&#x914D;&#x7F6E;&#x7ED3;&#x6784;&#x4E2D;&#xFF0C;&#x5982;&#x679C;port&#x6CA1;&#x6709;&#x88AB;&#x8BBE;&#x7F6E;&#xFF0C;NewServer&#x4F1A;&#x76D1;&#x542C;8080&#x7AEF;&#x53E3;&#x3002;</p>
+<p>&#x4F46;&#x662F;&#x8FD9;&#x6709;&#x4E00;&#x4E2A;&#x8D1F;&#x9762;&#x5F71;&#x54CD;&#xFF0C;&#x4F60;&#x4E5F;&#x8BB8;&#x60F3;&#x8BBE;&#x7F6E;&#x4E3A;0&#xFF0C;&#x7136;&#x540E;&#x670D;&#x52A1;&#x7AEF;&#x9ED8;&#x8BA4;&#x5206;&#x914D;&#x4E00;&#x4E2A;&#x968F;&#x673A;&#x7AEF;&#x53E3;&#xFF0C;&#x4F46;&#x4F60;&#x8BBE;&#x7F6E;&#x7684;0&#x4E0E;&#x9ED8;&#x8BA4;&#x503C;&#x662F;&#x76F8;&#x540C;&#x7684;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design8.png"><img src="http://btfak.com/images/api-design8.png" alt="" class="ui centered image"></a></p>
+<p>&#x5927;&#x90E8;&#x5206;&#x65F6;&#x5019;&#xFF0C;&#x4F60;&#x7684;API&#x7528;&#x6237;&#x53EA;&#x662F;&#x60F3;&#x4F7F;&#x7528;&#x4F60;&#x7684;&#x9ED8;&#x8BA4;&#x503C;&#x3002;</p>
+<p>&#x5373;&#x4F7F;&#x4ED6;&#x4EEC;&#x4E0D;&#x60F3;&#x6539;&#x53D8;&#x4F60;&#x7684;&#x914D;&#x7F6E;&#x7684;&#x4EFB;&#x4F55;&#x5185;&#x5BB9;&#xFF0C;&#x4ECD;&#x7136;&#x4E0D;&#x5F97;&#x4E0D;&#x4F20;&#x5165;&#x4E00;&#x4E9B;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x5F53;&#x4F60;&#x7684;&#x7528;&#x6237;&#x8BFB;&#x4F60;&#x7684;&#x6D4B;&#x8BD5;&#x4EE3;&#x7801;&#x6216;&#x8005;&#x793A;&#x4F8B;&#x4EE3;&#x7801;&#x65F6;&#xFF0C;&#x5728;&#x60F3;&#x7740;&#x600E;&#x6837;&#x4F7F;&#x7528;&#x4F60;&#x7684;&#x5305;&#xFF0C;&#x4ED6;&#x4EEC;&#x4F1A;&#x770B;&#x5230;&#x8FD9;&#x4E2A;&#x9B54;&#x5E7B;&#x7684;&#x7A7A;&#x5B57;&#x7B26;&#x4E32;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x5BF9;&#x6211;&#x6765;&#x8BF4;&#xFF0C;&#x8FD9;&#x8BA9;&#x6211;&#x611F;&#x89C9;&#x5F88;&#x7CDF;&#x7CD5;&#x3002;</p>
+<p>&#x4E3A;&#x4EC0;&#x4E48;&#x4F60;&#x7684;API&#x7684;&#x7528;&#x6237;&#x9700;&#x8981;&#x4F20;&#x5165;&#x4E00;&#x4E2A;&#x7A7A;&#x7684;&#x503C;&#xFF0C;&#x53EA;&#x662F;&#x7B80;&#x5355;&#x7684;&#x8BA9;&#x4F60;&#x7684;&#x51FD;&#x6570;&#x6EE1;&#x8DB3;&#x58F0;&#x660E;&#x9700;&#x6C42;&#xFF1F;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design9.png"><img src="http://btfak.com/images/api-design9.png" alt="" class="ui centered image"></a></p>
+<p>&#x4E00;&#x4E2A;&#x5E38;&#x89C1;&#x7684;&#x89E3;&#x51B3;&#x529E;&#x6CD5;&#x662F;&#x4F20;&#x5165;&#x4E00;&#x4E2A;&#x7ED3;&#x6784;&#x4F53;&#x6307;&#x9488;&#xFF0C;&#x8FD9;&#x8BA9;&#x8C03;&#x7528;&#x8005;&#x53EF;&#x4EE5;&#x4F20;&#x5165;nil&#xFF0C;&#x800C;&#x4E0D;&#x7528;&#x8003;&#x8651;&#x7A7A;&#x503C;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x5728;&#x6211;&#x770B;&#x6765;&#xFF0C;&#x8FD9;&#x4E2A;&#x65B9;&#x6848;&#x6709;&#x524D;&#x9762;&#x7684;&#x793A;&#x4F8B;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x95EE;&#x9898;&#xFF0C;&#x751A;&#x81F3;&#x8BA9;&#x95EE;&#x9898;&#x66F4;&#x590D;&#x6742;&#x4E86;&#x3002;</p>
+<p>&#x9996;&#x5148;&#xFF0C;&#x6211;&#x4EEC;&#x4ECD;&#x7136;&#x9700;&#x8981;&#x5728;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#x4F20;&#x5165;&#x70B9;&#x4EC0;&#x4E48;&#xFF0C;&#x4F46;&#x76EE;&#x524D;&#xFF0C;&#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x53EF;&#x4EE5;&#x662F;nil&#x4E86;&#xFF0C;&#x800C;&#x4E14;&#x5927;&#x90E8;&#x5206;&#x65F6;&#x5019;&#xFF0C;&#x5BF9;&#x4E8E;&#x9ED8;&#x8BA4;&#x7684;&#x4F7F;&#x7528;&#x8005;&#xFF0C;&#x5B83;&#x5C31;&#x662F;nil&#x3002;</p>
+<p>&#x4F7F;&#x7528;&#x6307;&#x9488;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x5305;&#x7684;&#x4F5C;&#x8005;&#x548C;&#x4F7F;&#x7528;&#x8005;&#x90FD;&#x4F1A;&#x62C5;&#x5FC3;&#x7684;&#x662F;&#xFF0C;&#x4ED6;&#x4EEC;&#x5F15;&#x7528;&#x4E86;&#x540C;&#x4E00;&#x4EFD;&#x6570;&#x636E;&#xFF0C;&#x968F;&#x65F6;&#x6709;&#x53EF;&#x80FD;&#x5728;&#x8FD0;&#x884C;&#x4E2D;&#x8FD9;&#x4EFD;&#x6570;&#x636E;&#x88AB;&#x4FEE;&#x6539;&#x800C;&#x53D1;&#x751F;&#x7A81;&#x53D8;&#x3002;</p>
+<p>&#x6211;&#x60F3;&#x8BBE;&#x8BA1;&#x7CBE;&#x826F;&#x7684;API&#x4E0D;&#x5E94;&#x8BE5;&#x8981;&#x6C42;&#x7528;&#x6237;&#x4F20;&#x9012;&#x8FD9;&#x4E9B;&#x989D;&#x5916;&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x53EA;&#x662F;&#x4E3A;&#x4E86;&#x5E94;&#x5BF9;&#x4E00;&#x4E9B;&#x7F55;&#x89C1;&#x7684;&#x60C5;&#x51B5;&#x3002;</p>
+<p>&#x6211;&#x8BA4;&#x4E3A;&#x6211;&#x4EEC;&#xFF0C;Go&#x7A0B;&#x5E8F;&#x5458;&#xFF0C;&#x5E94;&#x8BE5;&#x52AA;&#x529B;&#x786E;&#x4FDD;&#x4E0D;&#x8981;&#x6C42;&#x7528;&#x6237;&#x4F20;&#x9012;&#x4E00;&#x4E2A;nil&#x4F5C;&#x4E3A;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x5982;&#x679C;&#x6211;&#x4EEC;&#x60F3;&#x8981;&#x4F20;&#x9012;&#x914D;&#x7F6E;&#x4FE1;&#x606F;&#x65F6;&#xFF0C;&#x8FD9;&#x5E94;&#x8BE5;&#x662F;&#x81EA;&#x89E3;&#x91CA;&#x7684;&#xFF0C;&#x5C3D;&#x91CF;&#x7684;&#x6709;&#x8868;&#x8FBE;&#x6027;&#x3002;</p>
+<p>&#x73B0;&#x5728;&#xFF0C;&#x6211;&#x4EEC;&#x6000;&#x7740;&#x8FD9;&#x6837;&#x7684;&#x7406;&#x5FF5;&#xFF0C;&#x6211;&#x8BA8;&#x8BBA;&#x4E00;&#x4E0B;&#x6211;&#x8BA4;&#x4E3A;&#x66F4;&#x597D;&#x7684;&#x89E3;&#x51B3;&#x65B9;&#x6848;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design10.png"><img src="http://btfak.com/images/api-design10.png" alt="" class="ui centered image"></a></p>
+<p>&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x8BA9;API&#x628A;&#x4E0D;&#x5FC5;&#x987B;&#x7684;&#x53C2;&#x6570;&#x4F5C;&#x4E3A;&#x4E00;&#x4E2A;&#x53D8;&#x53C2;&#x3002;</p>
+<p>&#x4E0D;&#x662F;&#x4F20;&#x5165;nil&#xFF0C;&#x6216;&#x8005;&#x4E00;&#x4E9B;&#x503C;&#x4E3A;0&#x7684;&#x7ED3;&#x6784;&#x4F53;&#xFF0C;&#x8FD9;&#x79CD;&#x51FD;&#x6570;&#x7684;&#x8BBE;&#x8BA1;&#x53D1;&#x51FA;&#x4E86;&#x8FD9;&#x6837;&#x7684;&#x4FE1;&#x53F7;&#xFF1A;&#x4F60;&#x4E0D;&#x9700;&#x8981;&#x5728;config&#x4E0A;&#x4F20;&#x5165;&#x4EFB;&#x4F55;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x5728;&#x6211;&#x770B;&#x6765;&#x8FD9;&#x89E3;&#x51B3;&#x4E86;&#x4E24;&#x4E2A;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x9996;&#x5148;&#xFF0C;&#x9ED8;&#x8BA4;&#x7684;&#x8C03;&#x7528;&#x65B9;&#x5F0F;&#x53D8;&#x5F97;&#x7B80;&#x4ECB;&#x547D;&#x4E86;&#x3002;</p>
+<p>&#x5176;&#x6B21;&#xFF0C;NewServer&#x73B0;&#x5728;&#x53EA;&#x63A5;&#x53D7;config&#x7684;&#x503C;&#xFF0C;&#x4E0D;&#x662F;&#x6307;&#x9488;&#xFF0C;&#x79FB;&#x9664;&#x4E86;nil&#x548C;&#x5176;&#x4ED6;&#x53EF;&#x80FD;&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x786E;&#x4FDD;&#x7528;&#x6237;&#x4E0D;&#x4F1A;&#x4FEE;&#x6539;&#x5DF2;&#x7ECF;&#x4F20;&#x5165;&#x7684;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x6211;&#x8BA4;&#x4E3A;&#x8FD9;&#x4E2A;&#x4E00;&#x4E2A;&#x5DE8;&#x5927;&#x7684;&#x63D0;&#x5347;&#x3002;</p>
+<p>&#x4F46;&#x6211;&#x4EEC;&#x6DF1;&#x7A76;&#x4E00;&#x4E0B;&#xFF0C;&#x8FD9;&#x4ECD;&#x7136;&#x6709;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x660E;&#x663E;&#x5BF9;&#x4F60;&#x7684;&#x9884;&#x671F;&#x662F;&#x63D0;&#x4F9B;&#x6700;&#x591A;&#x4E00;&#x4E2A;config&#x503C;&#xFF0C;&#x4F46;&#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x662F;&#x53D8;&#x53C2;&#xFF0C;&#x5B9E;&#x73B0;&#x7684;&#x65F6;&#x5019;&#x9700;&#x8981;&#x8003;&#x8651;&#x7528;&#x6237;&#x4F20;&#x5165;&#x591A;&#x4E2A;&#x53C2;&#x6570;&#x7684;&#x60C5;&#x51B5;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x65E2;&#x80FD;&#x4F7F;&#x7528;&#x53D8;&#x53C2;&#xFF0C;&#x540C;&#x65F6;&#x4E5F;&#x80FD;&#x63D0;&#x9AD8;&#x6211;&#x4EEC;&#x7684;&#x53C2;&#x6570;&#x7684;&#x8868;&#x8FBE;&#x6027;&#x5417;&#xFF1F;</p>
+<p>&#x6211;&#x8BA4;&#x4E3A;&#x8FD9;&#x5C31;&#x662F;&#x7ED3;&#x5C40;&#x65B9;&#x6848;&#x3002;</p>
+<p><a class="magnific-img" href="http://btfak.com/images/api-design11.png"><img src="http://btfak.com/images/api-design11.png" alt="" class="ui centered image"></a></p>
+<p>&#x5728;&#x8FD9;&#x91CC;&#x6211;&#x60F3;&#x8981;&#x8BF4;&#x6E05;&#x695A;&#xFF0C;&#x51FD;&#x6570;&#x5F0F;&#x53C2;&#x6570;&#x7684;&#x60F3;&#x6CD5;&#x662F;&#x6765;&#x81EA;&#x4E8E;Rob Pike&#x7684;&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#xFF1A;<a href="http://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html" target="_blank" rel="noopener">Self referential functions and design</a> &#xFF0C;&#x6211;&#x9F13;&#x52B1;&#x6BCF;&#x4E2A;&#x4EBA;&#x90FD;&#x53BB;&#x770B;&#x770B;&#x3002;</p>
+<p>&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x4E0E;&#x4E0A;&#x9762;&#x7684;&#x4F8B;&#x5B50;&#x5173;&#x952E;&#x7684;&#x4E0D;&#x540C;&#x5728;&#x4E8E;&#xFF0C;&#x670D;&#x52A1;&#x7684;&#x5B9A;&#x5236;&#x5316;&#x5E76;&#x4E0D;&#x662F;&#x901A;&#x8FC7;&#x4F20;&#x9012;&#x53C2;&#x6570;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x800C;&#x662F;&#x901A;&#x8FC7;&#x51FD;&#x6570;&#x6765;&#x76F4;&#x63A5;&#x4FEE;&#x6539;server&#x7684;&#x914D;&#x7F6E;&#x672C;&#x8EAB;&#x3002;</p>
+<p>&#x6B63;&#x5982;&#x524D;&#x9762;&#x770B;&#x5230;&#x7684;&#xFF0C;&#x4E0D;&#x4F20;&#x9012;&#x53D8;&#x53C2;&#x8BA9;&#x6211;&#x4EEC;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x7684;&#x65B9;&#x5F0F;&#x3002;</p>
+<p>&#x5F53;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x914D;&#x7F6E;&#x65F6;&#xFF0C;&#x6211;&#x4EEC;&#x4F20;&#x9012;&#x4E00;&#x4E2A;&#x64CD;&#x4F5C;server&#x7684;&#x914D;&#x7F6E;&#x7684;&#x51FD;&#x6570;&#x3002;</p>
+<p>&#x4E0A;&#x9762;&#x7684;&#x4EE3;&#x7801;&#x4E2D;&#xFF0C;timeout&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x662F;&#x7528;&#x4E8E;&#x6539;&#x53D8;server&#x7684;&#x914D;&#x7F6E;&#x4E2D;&#x7684;timeout&#x5B57;&#x6BB5;&#x3002;</p>
+<p>&#x5728;NewServer&#x7684;&#x5B9E;&#x73B0;&#x5185;&#x90E8;&#xFF0C;&#x76F4;&#x63A5;&#x5E94;&#x7528;&#x8FD9;&#x4E9B;&#x51FD;&#x6570;&#x5373;&#x53EF;&#x3002;</p>
+<p>&#x5728;&#x4E0A;&#x9762;&#x7684;&#x4EE3;&#x7801;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x8C03;&#x7528;&#x4E86;&#x4E00;&#x4E2A; net.Listener&#xFF0C;&#x5728;server&#x7684;&#x793A;&#x4F8B;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x4F7F;&#x7528;&#x4E86;&#x8FD9;&#x4E2A;&#x9ED8;&#x8BA4;&#x7684;listener&#x3002;</p>
+<p>&#x7136;&#x540E;&#xFF0C;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A;&#x4F20;&#x5165;&#x7684;option&#xFF0C;&#x6211;&#x4EEC;&#x90FD;&#x8C03;&#x7528;&#x5B83;&#xFF0C;&#x628A;&#x6211;&#x4EEC;&#x7684;&#x914D;&#x7F6E;&#x4F20;&#x5165;&#x8FDB;&#x53BB;&#x3002;</p>
+<p>&#x5F88;&#x660E;&#x663E;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;option&#x4F20;&#x9012;&#x8FDB;&#x6765;&#xFF0C;&#x6211;&#x4EEC;&#x5C31;&#x4F7F;&#x7528;&#x7684;&#x662F;&#x9ED8;&#x8BA4;&#x7684;server.</p>
+<p>&#x4F7F;&#x7528;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x8BA9;API&#x6709;&#x8FD9;&#x6837;&#x7684;&#x7279;&#x6027;</p>
+<ul class="ui list">
+<li>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x662F;&#x5B9E;&#x7528;&#x7684;</li>
+<li>&#x9AD8;&#x5EA6;&#x53EF;&#x914D;&#x7F6E;</li>
+<li>&#x914D;&#x7F6E;&#x53EF;&#x4EE5;&#x4E0D;&#x65AD;&#x589E;&#x957F;</li>
+<li>&#x81EA;&#x89E3;&#x91CA;&#x7684;&#x6587;&#x6863;</li>
+<li>&#x5BF9;&#x65B0;&#x7684;&#x4F7F;&#x7528;&#x8005;&#x5F88;&#x5B89;&#x5168;</li>
+<li>&#x4E0D;&#x4F1A;&#x8981;&#x6C42;&#x4F20;&#x5165;&#x4E00;&#x4E2A;nil&#x7684;&#x6216;&#x8005;&#x7A7A;&#x503C;&#xFF08;&#x53EA;&#x662F;&#x4E3A;&#x4E86;&#x8BA9;&#x7F16;&#x8BD1;&#x901A;&#x8FC7;&#xFF09;</li>
 </ul>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2019/01/06/分布式系统入门/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">分布式系统入门</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/12/12/可插拔式代码结构思考/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">可插拔式代码结构思考</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&text=怎样设计golang友好的api"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&is_video=false&description=怎样设计golang友好的api"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=怎样设计golang友好的api&body=Check out this article: http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&title=怎样设计golang友好的api"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/&name=怎样设计golang友好的api&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/怎样设计golang友好的api.md" data-title="怎样设计golang友好的api" data-url="http://lqczzz.github.io/2018/12/24/怎样设计golang友好的api/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

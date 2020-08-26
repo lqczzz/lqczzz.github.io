@@ -2,65 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://lqczzz.github.io/about/index.html</loc>
+    
+    <lastmod>2020-08-26T12:19:50.161Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://lqczzz.github.io/2020/08/11/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
     
-    <lastmod>2020-08-11T06:02:24.117Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/2.%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
-    
-    <lastmod>2020-05-01T14:43:58.988Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/4.%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%BF%9B%E7%A8%8B_%E8%B0%83%E5%BA%A6_%E5%90%8C%E6%AD%A5_%E4%BA%92%E6%96%A5/</loc>
-    
-    <lastmod>2020-05-01T03:34:23.547Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/1.%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</loc>
-    
-    <lastmod>2020-05-01T03:29:12.920Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/0.%20README/</loc>
-    
-    <lastmod>2020-04-30T17:28:43.817Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/3.%20%E7%8E%B0%E4%BB%A3%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E9%87%8C%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
-    
-    <lastmod>2020-04-30T17:25:21.841Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/7.%20%E7%8E%B0%E4%BB%A3%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E9%87%8C%E7%9A%84io%E6%A8%A1%E5%9E%8B/</loc>
-    
-    <lastmod>2020-04-30T16:36:44.106Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/6.%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8Cio/</loc>
-    
-    <lastmod>2020-04-30T16:36:05.708Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/2020/05/01/ucore/5.%20%E7%8E%B0%E4%BB%A3%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E9%87%8C%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</loc>
-    
-    <lastmod>2020-04-30T16:33:57.037Z</lastmod>
+    <lastmod>2020-08-26T03:41:47.767Z</lastmod>
     
   </url>
   
@@ -89,13 +40,6 @@
     <loc>http://lqczzz.github.io/2019/08/17/%E4%B8%80%E4%B8%AA%E5%85%A5%E8%A1%8C%E4%B8%A4%E5%B9%B4%E7%9A%84%E8%8F%9C%E9%B8%9F%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E6%80%9D%E8%80%83%20/</loc>
     
     <lastmod>2019-08-17T02:37:03.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lqczzz.github.io/about/index.html</loc>
-    
-    <lastmod>2019-08-16T17:02:32.000Z</lastmod>
     
   </url>
   
@@ -191,14 +135,14 @@
   </url>
   
   <url>
-    <loc>http://lqczzz.github.io/categories/index.html</loc>
+    <loc>http://lqczzz.github.io/books/index.html</loc>
     
     <lastmod>2018-10-12T21:48:40.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://lqczzz.github.io/books/index.html</loc>
+    <loc>http://lqczzz.github.io/categories/index.html</loc>
     
     <lastmod>2018-10-12T21:48:40.000Z</lastmod>
     

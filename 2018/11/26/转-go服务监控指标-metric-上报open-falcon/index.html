@@ -1,250 +1,188 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="出处  1. 概述 指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈． 指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics. 另外，这里只是将指标在内存中进行处理及计算">
-<meta property="og:type" content="article">
-<meta property="og:title" content="[转]go服务监控指标(metric)上报open-falcon">
-<meta property="og:url" content="http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="出处  1. 概述 指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈． 指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics. 另外，这里只是将指标在内存中进行处理及计算">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://segmentfault.com/img/remote/1460000014646208?w=1832&h=501">
-<meta property="og:image" content="https://segmentfault.com/img/remote/1460000014646209">
-<meta property="og:updated_time" content="2018-11-26T05:38:22.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[转]go服务监控指标(metric)上报open-falcon">
-<meta name="twitter:description" content="出处  1. 概述 指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈． 指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics. 另外，这里只是将指标在内存中进行处理及计算">
-<meta name="twitter:image" content="https://segmentfault.com/img/remote/1460000014646208?w=1832&h=501">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>[转]go服务监控指标(metric)上报open-falcon</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                [转]go服务监控指标(metric)上报open-falcon | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/12/12/可插拔式代码结构思考/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/11/11/linux查看日志常用命令/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&text=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&is_video=false&description=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=[转]go服务监控指标(metric)上报open-falcon&body=Check out this article: http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&name=[转]go服务监控指标(metric)上报open-falcon&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.指标统计方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 Meters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 Gauges</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 Counter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 Histograms</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 Timers</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Counter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 Gauge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 Meters</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 指标上报到open-falcon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 上报方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 效果</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        [转]go服务监控指标(metric)上报open-falcon
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-11-26T05:20:30.000Z" itemprop="datePublished">2018-11-26</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <blockquote>
-<p><a href="https://segmentfault.com/a/1190000014646203#articleHeader3" target="_blank" rel="noopener">出处</a></p>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">[转]go服务监控指标(metric)上报open-falcon</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/11/26</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <blockquote>
+<p><a href="https://segmentfault.com/a/1190000014646203#articleHeader3" target="_blank" rel="noopener">&#x51FA;&#x5904;</a></p>
 </blockquote>
-<h2>1. 概述</h2>
-<p>指标统计是实现APM（Application performance management)的基础，通常通过一些指标的统计以及上报，我们可以了解程序的运行状况，及时发现程序的问题，提前预估系统瓶颈．
-指标(metric)目前的实现有metrics,这是java的实现，可以直接引入程序作为库使用．go语言的实现见go-metrics.
-另外，这里只是将指标在内存中进行处理及计算，如果我们想要展示，需要将数据抛出来，这里可以抛到日志里，也可以抛到时序数据库，最简单的做法就是直接抛到监控系统进行绘图或者报警．因此本文后面将讲解各指标的含义以及如何将计算好的数据抛到监控open-falcon</p>
-<h2>2.指标统计方式</h2>
-<h3>2.1 Meters</h3>
-<p>用于计算一段时间内的计量，通常用于计算接口调用频率，如QPS(每秒的次数)，主要分为rateMean,Rate1/Rate5/Rate15等指标．</p>
-<p>RateMean
-单位时间内发生的次数，如一分钟发送100次，则该值为100/60.</p>
-<p>Rate1/Rate5/Rate15
-1分钟/5分钟/15分钟内的滑动平均值(moving average),</p>
-<h3>2.2 Gauges</h3>
-<p>用于对瞬时值的测量，如我们可以过一段时间就对内存的使用量进行统计，并上报，那么所有的数据点集就是对应时间点的内存值，Gauges只有value指标．也就是上报的是什么就是什么．</p>
-<h3>2.3 Counter</h3>
-<p>计数类统计，可以进行加或减，也可以进行归零操作，所有的操作都是在旧值的基础上进行的．这里可以通过每天归零，然后新增注册用户时加1来统计每天的注册用户．</p>
-<h3>2.4 Histograms</h3>
-<p>主要用于对数据集中的值分布情况进行统计，典型的应用场景为接口耗时，接口每次调用都会产生耗时，记录每次调用耗时来对接口耗时情况进行分析显然不现实．因此将接口一段时间内的耗时看做数据集，并采集Count，Min, Max, Mean, Median, 75%, 95%, 99%等指标．以相对较小的资源消耗，来尽可能反应数据集的真实情况．</p>
-<p><code>Count</code>
-距离上次清理后产生的样本数量．</p>
-<p><code>Min</code>
-样本中的最小值</p>
-<p><code>Max</code>
-样本中的最大值</p>
-<p><code>Mean</code>
-所有样本的求得的平均值</p>
-<p><code>Median</code>
-样本中的中间位置的值．</p>
-<p><code>75%</code>
-样本中的%75位置的值．</p>
-<p><code>95%</code>
-样本中的%95位置的值．</p>
-<p><code>99%</code>
-样本中的%99位置的值．</p>
-<h3>2.5 Timers</h3>
-<p>对某个代码模块同时进行统计调用频率以及调用耗时统计．指标就是Histograms以及Meters两种统计方式的合集．</p>
-<h2>3.使用方式</h2>
-<p>更对详细用法见go-metric文档</p>
-<h3>3.1 Counter</h3>
-<pre><code>c := metrics.NewCounter()
+<h2 id="1-&#x6982;&#x8FF0;"><a href="#1-&#x6982;&#x8FF0;" class="headerlink" title="1. &#x6982;&#x8FF0;"></a>1. &#x6982;&#x8FF0;</h2><p>&#x6307;&#x6807;&#x7EDF;&#x8BA1;&#x662F;&#x5B9E;&#x73B0;APM&#xFF08;Application performance management)&#x7684;&#x57FA;&#x7840;&#xFF0C;&#x901A;&#x5E38;&#x901A;&#x8FC7;&#x4E00;&#x4E9B;&#x6307;&#x6807;&#x7684;&#x7EDF;&#x8BA1;&#x4EE5;&#x53CA;&#x4E0A;&#x62A5;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x4E86;&#x89E3;&#x7A0B;&#x5E8F;&#x7684;&#x8FD0;&#x884C;&#x72B6;&#x51B5;&#xFF0C;&#x53CA;&#x65F6;&#x53D1;&#x73B0;&#x7A0B;&#x5E8F;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x63D0;&#x524D;&#x9884;&#x4F30;&#x7CFB;&#x7EDF;&#x74F6;&#x9888;&#xFF0E;<br>&#x6307;&#x6807;(metric)&#x76EE;&#x524D;&#x7684;&#x5B9E;&#x73B0;&#x6709;metrics,&#x8FD9;&#x662F;java&#x7684;&#x5B9E;&#x73B0;&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x5F15;&#x5165;&#x7A0B;&#x5E8F;&#x4F5C;&#x4E3A;&#x5E93;&#x4F7F;&#x7528;&#xFF0E;go&#x8BED;&#x8A00;&#x7684;&#x5B9E;&#x73B0;&#x89C1;go-metrics.<br>&#x53E6;&#x5916;&#xFF0C;&#x8FD9;&#x91CC;&#x53EA;&#x662F;&#x5C06;&#x6307;&#x6807;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x8FDB;&#x884C;&#x5904;&#x7406;&#x53CA;&#x8BA1;&#x7B97;&#xFF0C;&#x5982;&#x679C;&#x6211;&#x4EEC;&#x60F3;&#x8981;&#x5C55;&#x793A;&#xFF0C;&#x9700;&#x8981;&#x5C06;&#x6570;&#x636E;&#x629B;&#x51FA;&#x6765;&#xFF0C;&#x8FD9;&#x91CC;&#x53EF;&#x4EE5;&#x629B;&#x5230;&#x65E5;&#x5FD7;&#x91CC;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x629B;&#x5230;&#x65F6;&#x5E8F;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x6700;&#x7B80;&#x5355;&#x7684;&#x505A;&#x6CD5;&#x5C31;&#x662F;&#x76F4;&#x63A5;&#x629B;&#x5230;&#x76D1;&#x63A7;&#x7CFB;&#x7EDF;&#x8FDB;&#x884C;&#x7ED8;&#x56FE;&#x6216;&#x8005;&#x62A5;&#x8B66;&#xFF0E;&#x56E0;&#x6B64;&#x672C;&#x6587;&#x540E;&#x9762;&#x5C06;&#x8BB2;&#x89E3;&#x5404;&#x6307;&#x6807;&#x7684;&#x542B;&#x4E49;&#x4EE5;&#x53CA;&#x5982;&#x4F55;&#x5C06;&#x8BA1;&#x7B97;&#x597D;&#x7684;&#x6570;&#x636E;&#x629B;&#x5230;&#x76D1;&#x63A7;open-falcon</p>
+<h2 id="2-&#x6307;&#x6807;&#x7EDF;&#x8BA1;&#x65B9;&#x5F0F;"><a href="#2-&#x6307;&#x6807;&#x7EDF;&#x8BA1;&#x65B9;&#x5F0F;" class="headerlink" title="2.&#x6307;&#x6807;&#x7EDF;&#x8BA1;&#x65B9;&#x5F0F;"></a>2.&#x6307;&#x6807;&#x7EDF;&#x8BA1;&#x65B9;&#x5F0F;</h2><h3 id="2-1-Meters"><a href="#2-1-Meters" class="headerlink" title="2.1 Meters"></a>2.1 Meters</h3><p>&#x7528;&#x4E8E;&#x8BA1;&#x7B97;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7684;&#x8BA1;&#x91CF;&#xFF0C;&#x901A;&#x5E38;&#x7528;&#x4E8E;&#x8BA1;&#x7B97;&#x63A5;&#x53E3;&#x8C03;&#x7528;&#x9891;&#x7387;&#xFF0C;&#x5982;QPS(&#x6BCF;&#x79D2;&#x7684;&#x6B21;&#x6570;)&#xFF0C;&#x4E3B;&#x8981;&#x5206;&#x4E3A;rateMean,Rate1/Rate5/Rate15&#x7B49;&#x6307;&#x6807;&#xFF0E;</p>
+<p>RateMean<br>&#x5355;&#x4F4D;&#x65F6;&#x95F4;&#x5185;&#x53D1;&#x751F;&#x7684;&#x6B21;&#x6570;&#xFF0C;&#x5982;&#x4E00;&#x5206;&#x949F;&#x53D1;&#x9001;100&#x6B21;&#xFF0C;&#x5219;&#x8BE5;&#x503C;&#x4E3A;100/60.</p>
+<p>Rate1/Rate5/Rate15<br>1&#x5206;&#x949F;/5&#x5206;&#x949F;/15&#x5206;&#x949F;&#x5185;&#x7684;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x503C;(moving average),</p>
+<h3 id="2-2-Gauges"><a href="#2-2-Gauges" class="headerlink" title="2.2 Gauges"></a>2.2 Gauges</h3><p>&#x7528;&#x4E8E;&#x5BF9;&#x77AC;&#x65F6;&#x503C;&#x7684;&#x6D4B;&#x91CF;&#xFF0C;&#x5982;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x8FC7;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x5C31;&#x5BF9;&#x5185;&#x5B58;&#x7684;&#x4F7F;&#x7528;&#x91CF;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#xFF0C;&#x5E76;&#x4E0A;&#x62A5;&#xFF0C;&#x90A3;&#x4E48;&#x6240;&#x6709;&#x7684;&#x6570;&#x636E;&#x70B9;&#x96C6;&#x5C31;&#x662F;&#x5BF9;&#x5E94;&#x65F6;&#x95F4;&#x70B9;&#x7684;&#x5185;&#x5B58;&#x503C;&#xFF0C;Gauges&#x53EA;&#x6709;value&#x6307;&#x6807;&#xFF0E;&#x4E5F;&#x5C31;&#x662F;&#x4E0A;&#x62A5;&#x7684;&#x662F;&#x4EC0;&#x4E48;&#x5C31;&#x662F;&#x4EC0;&#x4E48;&#xFF0E;</p>
+<h3 id="2-3-Counter"><a href="#2-3-Counter" class="headerlink" title="2.3 Counter"></a>2.3 Counter</h3><p>&#x8BA1;&#x6570;&#x7C7B;&#x7EDF;&#x8BA1;&#xFF0C;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x52A0;&#x6216;&#x51CF;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x5F52;&#x96F6;&#x64CD;&#x4F5C;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x64CD;&#x4F5C;&#x90FD;&#x662F;&#x5728;&#x65E7;&#x503C;&#x7684;&#x57FA;&#x7840;&#x4E0A;&#x8FDB;&#x884C;&#x7684;&#xFF0E;&#x8FD9;&#x91CC;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6BCF;&#x5929;&#x5F52;&#x96F6;&#xFF0C;&#x7136;&#x540E;&#x65B0;&#x589E;&#x6CE8;&#x518C;&#x7528;&#x6237;&#x65F6;&#x52A0;1&#x6765;&#x7EDF;&#x8BA1;&#x6BCF;&#x5929;&#x7684;&#x6CE8;&#x518C;&#x7528;&#x6237;&#xFF0E;</p>
+<h3 id="2-4-Histograms"><a href="#2-4-Histograms" class="headerlink" title="2.4 Histograms"></a>2.4 Histograms</h3><p>&#x4E3B;&#x8981;&#x7528;&#x4E8E;&#x5BF9;&#x6570;&#x636E;&#x96C6;&#x4E2D;&#x7684;&#x503C;&#x5206;&#x5E03;&#x60C5;&#x51B5;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#xFF0C;&#x5178;&#x578B;&#x7684;&#x5E94;&#x7528;&#x573A;&#x666F;&#x4E3A;&#x63A5;&#x53E3;&#x8017;&#x65F6;&#xFF0C;&#x63A5;&#x53E3;&#x6BCF;&#x6B21;&#x8C03;&#x7528;&#x90FD;&#x4F1A;&#x4EA7;&#x751F;&#x8017;&#x65F6;&#xFF0C;&#x8BB0;&#x5F55;&#x6BCF;&#x6B21;&#x8C03;&#x7528;&#x8017;&#x65F6;&#x6765;&#x5BF9;&#x63A5;&#x53E3;&#x8017;&#x65F6;&#x60C5;&#x51B5;&#x8FDB;&#x884C;&#x5206;&#x6790;&#x663E;&#x7136;&#x4E0D;&#x73B0;&#x5B9E;&#xFF0E;&#x56E0;&#x6B64;&#x5C06;&#x63A5;&#x53E3;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7684;&#x8017;&#x65F6;&#x770B;&#x505A;&#x6570;&#x636E;&#x96C6;&#xFF0C;&#x5E76;&#x91C7;&#x96C6;Count&#xFF0C;Min, Max, Mean, Median, 75%, 95%, 99%&#x7B49;&#x6307;&#x6807;&#xFF0E;&#x4EE5;&#x76F8;&#x5BF9;&#x8F83;&#x5C0F;&#x7684;&#x8D44;&#x6E90;&#x6D88;&#x8017;&#xFF0C;&#x6765;&#x5C3D;&#x53EF;&#x80FD;&#x53CD;&#x5E94;&#x6570;&#x636E;&#x96C6;&#x7684;&#x771F;&#x5B9E;&#x60C5;&#x51B5;&#xFF0E;</p>
+<p><code>Count</code><br>&#x8DDD;&#x79BB;&#x4E0A;&#x6B21;&#x6E05;&#x7406;&#x540E;&#x4EA7;&#x751F;&#x7684;&#x6837;&#x672C;&#x6570;&#x91CF;&#xFF0E;</p>
+<p><code>Min</code><br>&#x6837;&#x672C;&#x4E2D;&#x7684;&#x6700;&#x5C0F;&#x503C;</p>
+<p><code>Max</code><br>&#x6837;&#x672C;&#x4E2D;&#x7684;&#x6700;&#x5927;&#x503C;</p>
+<p><code>Mean</code><br>&#x6240;&#x6709;&#x6837;&#x672C;&#x7684;&#x6C42;&#x5F97;&#x7684;&#x5E73;&#x5747;&#x503C;</p>
+<p><code>Median</code><br>&#x6837;&#x672C;&#x4E2D;&#x7684;&#x4E2D;&#x95F4;&#x4F4D;&#x7F6E;&#x7684;&#x503C;&#xFF0E;</p>
+<p><code>75%</code><br>&#x6837;&#x672C;&#x4E2D;&#x7684;%75&#x4F4D;&#x7F6E;&#x7684;&#x503C;&#xFF0E;</p>
+<p><code>95%</code><br>&#x6837;&#x672C;&#x4E2D;&#x7684;%95&#x4F4D;&#x7F6E;&#x7684;&#x503C;&#xFF0E;</p>
+<p><code>99%</code><br>&#x6837;&#x672C;&#x4E2D;&#x7684;%99&#x4F4D;&#x7F6E;&#x7684;&#x503C;&#xFF0E;</p>
+<h3 id="2-5-Timers"><a href="#2-5-Timers" class="headerlink" title="2.5 Timers"></a>2.5 Timers</h3><p>&#x5BF9;&#x67D0;&#x4E2A;&#x4EE3;&#x7801;&#x6A21;&#x5757;&#x540C;&#x65F6;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#x8C03;&#x7528;&#x9891;&#x7387;&#x4EE5;&#x53CA;&#x8C03;&#x7528;&#x8017;&#x65F6;&#x7EDF;&#x8BA1;&#xFF0E;&#x6307;&#x6807;&#x5C31;&#x662F;Histograms&#x4EE5;&#x53CA;Meters&#x4E24;&#x79CD;&#x7EDF;&#x8BA1;&#x65B9;&#x5F0F;&#x7684;&#x5408;&#x96C6;&#xFF0E;</p>
+<h2 id="3-&#x4F7F;&#x7528;&#x65B9;&#x5F0F;"><a href="#3-&#x4F7F;&#x7528;&#x65B9;&#x5F0F;" class="headerlink" title="3.&#x4F7F;&#x7528;&#x65B9;&#x5F0F;"></a>3.&#x4F7F;&#x7528;&#x65B9;&#x5F0F;</h2><p>&#x66F4;&#x5BF9;&#x8BE6;&#x7EC6;&#x7528;&#x6CD5;&#x89C1;go-metric&#x6587;&#x6863;</p>
+<h3 id="3-1-Counter"><a href="#3-1-Counter" class="headerlink" title="3.1 Counter"></a>3.1 Counter</h3><pre><code>c := metrics.NewCounter()
 metrics.Register(&quot;foo&quot;, c)
-//进行加操作
+//&#x8FDB;&#x884C;&#x52A0;&#x64CD;&#x4F5C;
 c.Inc(47)
 
-//进行减操作
+//&#x8FDB;&#x884C;&#x51CF;&#x64CD;&#x4F5C;
 c.Dec(1)
 
-//获取出值
+//&#x83B7;&#x53D6;&#x51FA;&#x503C;
 c.Count()
-</code></pre>
-<h3>3.2 Gauge</h3>
-<pre><code>g := metrics.NewGauge()
+</code></pre><h3 id="3-2-Gauge"><a href="#3-2-Gauge" class="headerlink" title="3.2 Gauge"></a>3.2 Gauge</h3><pre><code>g := metrics.NewGauge()
 metrics.Register(&quot;bar&quot;, g)
-//更新瞬时值
+//&#x66F4;&#x65B0;&#x77AC;&#x65F6;&#x503C;
 g.Update(47)
 
-//获取出瞬时值
+//&#x83B7;&#x53D6;&#x51FA;&#x77AC;&#x65F6;&#x503C;
 g.Value()
-</code></pre>
-<h3>3.3 Meters</h3>
-<pre><code>m := metrics.NewMeter()
+</code></pre><h3 id="3-3-Meters"><a href="#3-3-Meters" class="headerlink" title="3.3 Meters"></a>3.3 Meters</h3><pre><code>m := metrics.NewMeter()
 metrics.Register(&quot;quux&quot;, m)
-//写入数据集
+//&#x5199;&#x5165;&#x6570;&#x636E;&#x96C6;
 m.Mark(47)
-//获取数据集只读快照
+//&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x53EA;&#x8BFB;&#x5FEB;&#x7167;
 m := metric.Snapshot()
-//数据集大小
+//&#x6570;&#x636E;&#x96C6;&#x5927;&#x5C0F;
 m.Count()
-//1分钟滑动平均值
+//1&#x5206;&#x949F;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x503C;
 m.Rate1()
-//5分钟滑动平均值
+//5&#x5206;&#x949F;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x503C;
 m.Rate5()
-//15分钟滑动平均值
+//15&#x5206;&#x949F;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x503C;
 m.Rate15()
-//平均值
+//&#x5E73;&#x5747;&#x503C;
 m.RateMean()
 3.4 Histograms
 h := metrics.NewHistogram(s)
 metrics.Register(&quot;baz&quot;, h)
-//写入数据集
+//&#x5199;&#x5165;&#x6570;&#x636E;&#x96C6;
 h.Update(47)
-//获取数据集只读快照
+//&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x53EA;&#x8BFB;&#x5FEB;&#x7167;
 h := metric.Snapshot()
-//数据集大小
+//&#x6570;&#x636E;&#x96C6;&#x5927;&#x5C0F;
 h.Count()
-//最小值
+//&#x6700;&#x5C0F;&#x503C;
 h.Min()
-//最大值
+//&#x6700;&#x5927;&#x503C;
 h.Max()
-//平均值
+//&#x5E73;&#x5747;&#x503C;
 h.Mean()
 ps := h.Percentiles([]float64{0.5, 0.75, 0.95, 0.99})
-//中位数
+//&#x4E2D;&#x4F4D;&#x6570;
 ps[0]
-//75%的数
+//75%&#x7684;&#x6570;
 ps[1]
-//95%的数
+//95%&#x7684;&#x6570;
 ps[2]
-//99%的数
+//99%&#x7684;&#x6570;
 ps[3]
 3.5 Timer
 t := metrics.NewTimer()
@@ -255,12 +193,9 @@ t.Time(func() {
 })
 t.Update(47)
 
-//获取方式同meter以及Histograms
-</code></pre>
-<h2>4. 指标上报到open-falcon</h2>
-<h3>4.1 上报方式</h3>
-<p>代码及使用方式见 go-metrics-falcon</p>
-<p>实现数据上报open-falcon，只需要将所有数据取出，按open-falcon格式上报即可，这里有涉及到上报json的定义，具体如下．</p>
+//&#x83B7;&#x53D6;&#x65B9;&#x5F0F;&#x540C;meter&#x4EE5;&#x53CA;Histograms
+</code></pre><h2 id="4-&#x6307;&#x6807;&#x4E0A;&#x62A5;&#x5230;open-falcon"><a href="#4-&#x6307;&#x6807;&#x4E0A;&#x62A5;&#x5230;open-falcon" class="headerlink" title="4. &#x6307;&#x6807;&#x4E0A;&#x62A5;&#x5230;open-falcon"></a>4. &#x6307;&#x6807;&#x4E0A;&#x62A5;&#x5230;open-falcon</h2><h3 id="4-1-&#x4E0A;&#x62A5;&#x65B9;&#x5F0F;"><a href="#4-1-&#x4E0A;&#x62A5;&#x65B9;&#x5F0F;" class="headerlink" title="4.1 &#x4E0A;&#x62A5;&#x65B9;&#x5F0F;"></a>4.1 &#x4E0A;&#x62A5;&#x65B9;&#x5F0F;</h3><p>&#x4EE3;&#x7801;&#x53CA;&#x4F7F;&#x7528;&#x65B9;&#x5F0F;&#x89C1; go-metrics-falcon</p>
+<p>&#x5B9E;&#x73B0;&#x6570;&#x636E;&#x4E0A;&#x62A5;open-falcon&#xFF0C;&#x53EA;&#x9700;&#x8981;&#x5C06;&#x6240;&#x6709;&#x6570;&#x636E;&#x53D6;&#x51FA;&#xFF0C;&#x6309;open-falcon&#x683C;&#x5F0F;&#x4E0A;&#x62A5;&#x5373;&#x53EF;&#xFF0C;&#x8FD9;&#x91CC;&#x6709;&#x6D89;&#x53CA;&#x5230;&#x4E0A;&#x62A5;json&#x7684;&#x5B9A;&#x4E49;&#xFF0C;&#x5177;&#x4F53;&#x5982;&#x4E0B;&#xFF0E;</p>
 <pre><code>{
     &quot;endpoint&quot;: &quot;$endpoint&quot;,
     &quot;metric&quot;: &quot;$name&quot;,
@@ -270,138 +205,84 @@ t.Update(47)
     &quot;tags&quot;: &quot;project=$projectName,metricType=meter,valueType=ratemean&quot;,
     &quot;timestamp&quot;: 1524724608
 }
-</code></pre>
-<ul>
-<li>endpoint: 这一个一般是主机hostname，用于标注是哪台机器．</li>
-<li>metric: 指标名，由用户定义</li>
-<li>value: 指标的值</li>
-<li>step: 上报的时间周期</li>
-<li>counterType: 上报的类型,这里open-falcon只支持GAUGE以及COUNTER,因此统一使用GAUGE.</li>
-<li>tags: 标签，用于却别指标，包含指标类型，值类型，项目名三项．</li>
-<li>timestamp: 指标上报的时间戳，单位秒．</li>
+</code></pre><ul class="ui list">
+<li>endpoint: &#x8FD9;&#x4E00;&#x4E2A;&#x4E00;&#x822C;&#x662F;&#x4E3B;&#x673A;hostname&#xFF0C;&#x7528;&#x4E8E;&#x6807;&#x6CE8;&#x662F;&#x54EA;&#x53F0;&#x673A;&#x5668;&#xFF0E;</li>
+<li>metric: &#x6307;&#x6807;&#x540D;&#xFF0C;&#x7531;&#x7528;&#x6237;&#x5B9A;&#x4E49;</li>
+<li>value: &#x6307;&#x6807;&#x7684;&#x503C;</li>
+<li>step: &#x4E0A;&#x62A5;&#x7684;&#x65F6;&#x95F4;&#x5468;&#x671F;</li>
+<li>counterType: &#x4E0A;&#x62A5;&#x7684;&#x7C7B;&#x578B;,&#x8FD9;&#x91CC;open-falcon&#x53EA;&#x652F;&#x6301;GAUGE&#x4EE5;&#x53CA;COUNTER,&#x56E0;&#x6B64;&#x7EDF;&#x4E00;&#x4F7F;&#x7528;GAUGE.</li>
+<li>tags: &#x6807;&#x7B7E;&#xFF0C;&#x7528;&#x4E8E;&#x5374;&#x522B;&#x6307;&#x6807;&#xFF0C;&#x5305;&#x542B;&#x6307;&#x6807;&#x7C7B;&#x578B;&#xFF0C;&#x503C;&#x7C7B;&#x578B;&#xFF0C;&#x9879;&#x76EE;&#x540D;&#x4E09;&#x9879;&#xFF0E;</li>
+<li>timestamp: &#x6307;&#x6807;&#x4E0A;&#x62A5;&#x7684;&#x65F6;&#x95F4;&#x6233;&#xFF0C;&#x5355;&#x4F4D;&#x79D2;&#xFF0E;</li>
 </ul>
-<h3>4.2 效果</h3>
-<p>如图，输入endpoint, 然后在counter部分输入项目名就可以过滤出该项目上报的所有指标．
-<img src="https://segmentfault.com/img/remote/1460000014646208?w=1832&amp;h=501" alt="">
-点击指标，进入查询该指标的大图．
-<img src="https://segmentfault.com/img/remote/1460000014646209" alt=""></p>
-<p>同时我们可以对指标设置监控，具体见open-falcon文档．</p>
+<h3 id="4-2-&#x6548;&#x679C;"><a href="#4-2-&#x6548;&#x679C;" class="headerlink" title="4.2 &#x6548;&#x679C;"></a>4.2 &#x6548;&#x679C;</h3><p>&#x5982;&#x56FE;&#xFF0C;&#x8F93;&#x5165;endpoint, &#x7136;&#x540E;&#x5728;counter&#x90E8;&#x5206;&#x8F93;&#x5165;&#x9879;&#x76EE;&#x540D;&#x5C31;&#x53EF;&#x4EE5;&#x8FC7;&#x6EE4;&#x51FA;&#x8BE5;&#x9879;&#x76EE;&#x4E0A;&#x62A5;&#x7684;&#x6240;&#x6709;&#x6307;&#x6807;&#xFF0E;<br><a class="magnific-img" href="https://segmentfault.com/img/remote/1460000014646208?w=1832&amp;h=501"><img src="https://segmentfault.com/img/remote/1460000014646208?w=1832&amp;h=501" alt="" class="ui centered image"></a><br>&#x70B9;&#x51FB;&#x6307;&#x6807;&#xFF0C;&#x8FDB;&#x5165;&#x67E5;&#x8BE2;&#x8BE5;&#x6307;&#x6807;&#x7684;&#x5927;&#x56FE;&#xFF0E;<br><a class="magnific-img" href="https://segmentfault.com/img/remote/1460000014646209"><img src="https://segmentfault.com/img/remote/1460000014646209" alt="" class="ui centered image"></a></p>
+<p>&#x540C;&#x65F6;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5BF9;&#x6307;&#x6807;&#x8BBE;&#x7F6E;&#x76D1;&#x63A7;&#xFF0C;&#x5177;&#x4F53;&#x89C1;open-falcon&#x6587;&#x6863;&#xFF0E;</p>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/12/12/可插拔式代码结构思考/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">可插拔式代码结构思考</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/11/11/linux查看日志常用命令/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">linux查看日志常用命令</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.指标统计方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 Meters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 Gauges</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 Counter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 Histograms</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 Timers</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Counter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 Gauge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 Meters</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4. 指标上报到open-falcon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 上报方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 效果</span></a></li></ol></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&text=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&is_video=false&description=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=[转]go服务监控指标(metric)上报open-falcon&body=Check out this article: http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&title=[转]go服务监控指标(metric)上报open-falcon"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/&name=[转]go服务监控指标(metric)上报open-falcon&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/转-go服务监控指标-metric-上报open-falcon.md" data-title="[转]go服务监控指标(metric)上报open-falcon" data-url="http://lqczzz.github.io/2018/11/26/转-go服务监控指标-metric-上报open-falcon/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

@@ -1,185 +1,142 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="elasticSearch入门 最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门 1.安装es 前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装">
-<meta property="og:type" content="article">
-<meta property="og:title" content="elasticSearch学习笔记">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="elasticSearch入门 最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门 1.安装es 前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-17T05:17:10.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="elasticSearch学习笔记">
-<meta name="twitter:description" content="elasticSearch入门 最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。 怎么入门：  类比入门：类比一个熟悉的知识点，知识迁移会更容易 简单的事例入门：动手进行简单的一个demo感受一下流程  入门 1.安装es 前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>elasticSearch学习笔记</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                elasticSearch学习笔记 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/10/16/一次goroutine内存泄漏问题定位/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/10/13/golang并发/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&text=elasticSearch学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&is_video=false&description=elasticSearch学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=elasticSearch学习笔记&body=Check out this article: http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&name=elasticSearch学习笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">elasticSearch入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.安装es</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.自动补全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">mappings &amp; analysizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">添加数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">查询数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        elasticSearch学习笔记
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-10-13T14:29:32.000Z" itemprop="datePublished">2018-10-13</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h1>elasticSearch入门</h1>
-<p>最近在项目中遇到了需要搜索引擎的场景，对用户输入进行自动推荐和补全，elasticSearch是开源的搜索引引擎，入门使用也很简单。</p>
-<p>怎么入门：</p>
-<ol>
-<li>类比入门：类比一个熟悉的知识点，知识迁移会更容易</li>
-<li>简单的事例入门：动手进行简单的一个demo感受一下流程</li>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">elasticSearch学习笔记</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/10/13</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <h1 id="elasticSearch&#x5165;&#x95E8;"><a href="#elasticSearch&#x5165;&#x95E8;" class="headerlink" title="elasticSearch&#x5165;&#x95E8;"></a>elasticSearch&#x5165;&#x95E8;</h1><p>&#x6700;&#x8FD1;&#x5728;&#x9879;&#x76EE;&#x4E2D;&#x9047;&#x5230;&#x4E86;&#x9700;&#x8981;&#x641C;&#x7D22;&#x5F15;&#x64CE;&#x7684;&#x573A;&#x666F;&#xFF0C;&#x5BF9;&#x7528;&#x6237;&#x8F93;&#x5165;&#x8FDB;&#x884C;&#x81EA;&#x52A8;&#x63A8;&#x8350;&#x548C;&#x8865;&#x5168;&#xFF0C;elasticSearch&#x662F;&#x5F00;&#x6E90;&#x7684;&#x641C;&#x7D22;&#x5F15;&#x5F15;&#x64CE;&#xFF0C;&#x5165;&#x95E8;&#x4F7F;&#x7528;&#x4E5F;&#x5F88;&#x7B80;&#x5355;&#x3002;</p>
+<p>&#x600E;&#x4E48;&#x5165;&#x95E8;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x7C7B;&#x6BD4;&#x5165;&#x95E8;&#xFF1A;&#x7C7B;&#x6BD4;&#x4E00;&#x4E2A;&#x719F;&#x6089;&#x7684;&#x77E5;&#x8BC6;&#x70B9;&#xFF0C;&#x77E5;&#x8BC6;&#x8FC1;&#x79FB;&#x4F1A;&#x66F4;&#x5BB9;&#x6613;</li>
+<li>&#x7B80;&#x5355;&#x7684;&#x4E8B;&#x4F8B;&#x5165;&#x95E8;&#xFF1A;&#x52A8;&#x624B;&#x8FDB;&#x884C;&#x7B80;&#x5355;&#x7684;&#x4E00;&#x4E2A;demo&#x611F;&#x53D7;&#x4E00;&#x4E0B;&#x6D41;&#x7A0B;</li>
 </ol>
-<h2>入门</h2>
-<h3>1.安装es</h3>
-<p>前置条件：mac环境(其他环境自行google)，brew工具安装好了，java环境安装好了</p>
-<p>步骤：</p>
-<ol>
-<li>安装es：
-<ul>
+<h2 id="&#x5165;&#x95E8;"><a href="#&#x5165;&#x95E8;" class="headerlink" title="&#x5165;&#x95E8;"></a>&#x5165;&#x95E8;</h2><h3 id="1-&#x5B89;&#x88C5;es"><a href="#1-&#x5B89;&#x88C5;es" class="headerlink" title="1.&#x5B89;&#x88C5;es"></a>1.&#x5B89;&#x88C5;es</h3><p>&#x524D;&#x7F6E;&#x6761;&#x4EF6;&#xFF1A;mac&#x73AF;&#x5883;(&#x5176;&#x4ED6;&#x73AF;&#x5883;&#x81EA;&#x884C;google)&#xFF0C;brew&#x5DE5;&#x5177;&#x5B89;&#x88C5;&#x597D;&#x4E86;&#xFF0C;java&#x73AF;&#x5883;&#x5B89;&#x88C5;&#x597D;&#x4E86;</p>
+<p>&#x6B65;&#x9AA4;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x5B89;&#x88C5;es&#xFF1A;<ul>
 <li>brew install elasticsearch</li>
-<li>es服务端会被安装</li>
+<li>es&#x670D;&#x52A1;&#x7AEF;&#x4F1A;&#x88AB;&#x5B89;&#x88C5;</li>
 </ul>
 </li>
-<li>安装kibana：
-<ul>
+<li>&#x5B89;&#x88C5;kibana&#xFF1A;<ul>
 <li>brew install kibana</li>
-<li>kibana可以理解为图形化的es客户端</li>
+<li>kibana&#x53EF;&#x4EE5;&#x7406;&#x89E3;&#x4E3A;&#x56FE;&#x5F62;&#x5316;&#x7684;es&#x5BA2;&#x6237;&#x7AEF;</li>
 </ul>
 </li>
-<li>启动es：brew services start elasticsearch</li>
-<li>启动kibana：brew services start kibana</li>
+<li>&#x542F;&#x52A8;es&#xFF1A;brew services start elasticsearch</li>
+<li>&#x542F;&#x52A8;kibana&#xFF1A;brew services start kibana</li>
 </ol>
-<p>安装es成功之后访问<code>http://localhost:9200/</code>可以获得es的状态信息
-安装kibana成功之后访问<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>可以对es进行操作</p>
-<h3>2.自动补全</h3>
-<pre><code>// hashtag
+<p>&#x5B89;&#x88C5;es&#x6210;&#x529F;&#x4E4B;&#x540E;&#x8BBF;&#x95EE;<code>http://localhost:9200/</code>&#x53EF;&#x4EE5;&#x83B7;&#x5F97;es&#x7684;&#x72B6;&#x6001;&#x4FE1;&#x606F;<br>&#x5B89;&#x88C5;kibana&#x6210;&#x529F;&#x4E4B;&#x540E;&#x8BBF;&#x95EE;<code>http://localhost:5601/app/kibana#/dev_tools/console?_g=()</code>&#x53EF;&#x4EE5;&#x5BF9;es&#x8FDB;&#x884C;&#x64CD;&#x4F5C;</p>
+<h3 id="2-&#x81EA;&#x52A8;&#x8865;&#x5168;"><a href="#2-&#x81EA;&#x52A8;&#x8865;&#x5168;" class="headerlink" title="2.&#x81EA;&#x52A8;&#x8865;&#x5168;"></a>2.&#x81EA;&#x52A8;&#x8865;&#x5168;</h3><pre><code>// hashtag
 {
     id,
     name,
     score, // weight
 }
-</code></pre>
-<h4>mappings &amp; analysizer</h4>
-<pre><code>PUT feed_id
+</code></pre><h4 id="mappings-amp-analysizer"><a href="#mappings-amp-analysizer" class="headerlink" title="mappings &amp; analysizer"></a>mappings &amp; analysizer</h4><pre><code>PUT feed_id
 {
     &quot;mappings&quot;: {
         &quot;hashtag&quot;: {
@@ -191,9 +148,7 @@
         }
     }
 }
-</code></pre>
-<h4>添加数据</h4>
-<pre><code>POST feed_id/hashtag
+</code></pre><h4 id="&#x6DFB;&#x52A0;&#x6570;&#x636E;"><a href="#&#x6DFB;&#x52A0;&#x6570;&#x636E;" class="headerlink" title="&#x6DFB;&#x52A0;&#x6570;&#x636E;"></a>&#x6DFB;&#x52A0;&#x6570;&#x636E;</h4><pre><code>POST feed_id/hashtag
 {
     &quot;name&quot;: {
         &quot;input&quot;: [&quot;hashtag name&quot;],
@@ -231,27 +186,25 @@ POST feed_id/hashtag/6
 POST feed_id/hashtag/7
 {
     &quot;name&quot;: {
-        &quot;input&quot;: [&quot;爱我中华&quot;],
+        &quot;input&quot;: [&quot;&#x7231;&#x6211;&#x4E2D;&#x534E;&quot;],
         &quot;weight&quot;: 6
     }
 }
 POST feed_id/hashtag/8
 {
     &quot;name&quot;: {
-        &quot;input&quot;: [&quot;爱你中华&quot;],
+        &quot;input&quot;: [&quot;&#x7231;&#x4F60;&#x4E2D;&#x534E;&quot;],
         &quot;weight&quot;: 6
     }
 }
 POST feed_id/hashtag/9
 {
     &quot;name&quot;: {
-        &quot;input&quot;: [&quot;爱你&quot;],
+        &quot;input&quot;: [&quot;&#x7231;&#x4F60;&quot;],
         &quot;weight&quot;: 6
     }
 }
-</code></pre>
-<h4>查询数据</h4>
-<pre><code>POST feed_id/_search?pretty
+</code></pre><h4 id="&#x67E5;&#x8BE2;&#x6570;&#x636E;"><a href="#&#x67E5;&#x8BE2;&#x6570;&#x636E;" class="headerlink" title="&#x67E5;&#x8BE2;&#x6570;&#x636E;"></a>&#x67E5;&#x8BE2;&#x6570;&#x636E;</h4><pre><code>POST feed_id/_search?pretty
 {
     &quot;suggest&quot;: {
         &quot;hashtag-suggest&quot;: {
@@ -262,126 +215,74 @@ POST feed_id/hashtag/9
         }
     }
 }
-</code></pre>
-<h2>基本概念</h2>
-<p>摘抄自<a href="ttps://github.com/looly/elasticsearch-definitive-guide-cn" target="_blank" rel="noopener">elasticsearch-definitive-guide-cn</a></p>
-<h2>参考：</h2>
-
-  </div>
-</article>
-
-
-
+</code></pre><h2 id="&#x57FA;&#x672C;&#x6982;&#x5FF5;"><a href="#&#x57FA;&#x672C;&#x6982;&#x5FF5;" class="headerlink" title="&#x57FA;&#x672C;&#x6982;&#x5FF5;"></a>&#x57FA;&#x672C;&#x6982;&#x5FF5;</h2><p>&#x6458;&#x6284;&#x81EA;<a href="ttps://github.com/looly/elasticsearch-definitive-guide-cn" target="_blank" rel="noopener">elasticsearch-definitive-guide-cn</a></p>
+<h2 id="&#x53C2;&#x8003;&#xFF1A;"><a href="#&#x53C2;&#x8003;&#xFF1A;" class="headerlink" title="&#x53C2;&#x8003;&#xFF1A;"></a>&#x53C2;&#x8003;&#xFF1A;</h2>
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/10/16/一次goroutine内存泄漏问题定位/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">一次goroutine内存泄漏问题定位</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/10/13/golang并发/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">golang并发学习笔记</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">elasticSearch入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.安装es</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.自动补全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">mappings &amp; analysizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">添加数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">查询数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.3.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&text=elasticSearch学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&is_video=false&description=elasticSearch学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=elasticSearch学习笔记&body=Check out this article: http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&title=elasticSearch学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/&name=elasticSearch学习笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/elasticSearch学习笔记.md" data-title="elasticSearch学习笔记" data-url="http://lqczzz.github.io/2018/10/13/elasticSearch学习笔记/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

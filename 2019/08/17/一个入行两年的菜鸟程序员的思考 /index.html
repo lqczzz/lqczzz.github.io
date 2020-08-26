@@ -1,387 +1,282 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="前面的话 从6月到8月，feed着手timeline的优化和新需求开发。从开始的轻松从容，到后来的逐渐失控。实际上，一个仿造的“人月神话”悄悄来到了我的身边。其中有很多值得反思和总结的地方。希望趁现在处于羞耻，自责和焦虑中，思考和总结点东西，一方面希望能够总结出一些自己受用的一些规则和教训，对以后成长更有帮助。另一方面，希望能借此透过现象看本质，穿越流于表面的情绪看到问题的本质，真正的获得成长。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="一个入行两年的菜鸟程序员的思考">
-<meta property="og:url" content="http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前面的话 从6月到8月，feed着手timeline的优化和新需求开发。从开始的轻松从容，到后来的逐渐失控。实际上，一个仿造的“人月神话”悄悄来到了我的身边。其中有很多值得反思和总结的地方。希望趁现在处于羞耻，自责和焦虑中，思考和总结点东西，一方面希望能够总结出一些自己受用的一些规则和教训，对以后成长更有帮助。另一方面，希望能借此透过现象看本质，穿越流于表面的情绪看到问题的本质，真正的获得成长。">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-17T02:37:03.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一个入行两年的菜鸟程序员的思考">
-<meta name="twitter:description" content="前面的话 从6月到8月，feed着手timeline的优化和新需求开发。从开始的轻松从容，到后来的逐渐失控。实际上，一个仿造的“人月神话”悄悄来到了我的身边。其中有很多值得反思和总结的地方。希望趁现在处于羞耻，自责和焦虑中，思考和总结点东西，一方面希望能够总结出一些自己受用的一些规则和教训，对以后成长更有帮助。另一方面，希望能借此透过现象看本质，穿越流于表面的情绪看到问题的本质，真正的获得成长。">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>一个入行两年的菜鸟程序员的思考</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                一个入行两年的菜鸟程序员的思考 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2019/08/27/树,文件系统和数据库/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2019/01/06/分布式系统入门/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&text=一个入行两年的菜鸟程序员的思考"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&is_video=false&description=一个入行两年的菜鸟程序员的思考"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=一个入行两年的菜鸟程序员的思考&body=Check out this article: http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&name=一个入行两年的菜鸟程序员的思考&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">前面的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">需求之坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">不要搜集需求，要挖掘需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">需求文档的坑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">进度管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">计划</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">设计和编码的分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">外部依赖管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">设计之坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">初级设计之坑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.2.</span> <span class="toc-text">高级设计之坑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">总结和勉励</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        一个入行两年的菜鸟程序员的思考
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2019-08-16T17:45:32.000Z" itemprop="datePublished">2019-08-17</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h2>前面的话</h2>
-<p>从6月到8月，feed着手timeline的优化和新需求开发。从开始的轻松从容，到后来的逐渐失控。实际上，一个仿造的“人月神话”悄悄来到了我的身边。其中有很多值得反思和总结的地方。希望趁现在处于羞耻，自责和焦虑中，思考和总结点东西，一方面希望能够总结出一些自己受用的一些规则和教训，对以后成长更有帮助。另一方面，希望能借此透过现象看本质，穿越流于表面的情绪看到问题的本质，真正的获得成长。</p>
-<h2>需求之坑</h2>
-<p>在做feed之前，我也曾经被需求弄的很头疼，但是当时自己并没有很重视，而是单纯的归因到团队里去。在华为正式工作的时候，因为在预研部门，项目流程不是很规范，直接leader是项目管理和人员管理的，需求是由另一个领导直接提的。</p>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">一个入行两年的菜鸟程序员的思考</h1>
+
+          <section class="post-info">
+            <span class="post-date">2019/08/17</span>
+            
+            
+          </section>
+
+          <section class="post-content">
+            <h2 id="&#x524D;&#x9762;&#x7684;&#x8BDD;"><a href="#&#x524D;&#x9762;&#x7684;&#x8BDD;" class="headerlink" title="&#x524D;&#x9762;&#x7684;&#x8BDD;"></a>&#x524D;&#x9762;&#x7684;&#x8BDD;</h2><p>&#x4ECE;6&#x6708;&#x5230;8&#x6708;&#xFF0C;feed&#x7740;&#x624B;timeline&#x7684;&#x4F18;&#x5316;&#x548C;&#x65B0;&#x9700;&#x6C42;&#x5F00;&#x53D1;&#x3002;&#x4ECE;&#x5F00;&#x59CB;&#x7684;&#x8F7B;&#x677E;&#x4ECE;&#x5BB9;&#xFF0C;&#x5230;&#x540E;&#x6765;&#x7684;&#x9010;&#x6E10;&#x5931;&#x63A7;&#x3002;&#x5B9E;&#x9645;&#x4E0A;&#xFF0C;&#x4E00;&#x4E2A;&#x4EFF;&#x9020;&#x7684;&#x201C;&#x4EBA;&#x6708;&#x795E;&#x8BDD;&#x201D;&#x6084;&#x6084;&#x6765;&#x5230;&#x4E86;&#x6211;&#x7684;&#x8EAB;&#x8FB9;&#x3002;&#x5176;&#x4E2D;&#x6709;&#x5F88;&#x591A;&#x503C;&#x5F97;&#x53CD;&#x601D;&#x548C;&#x603B;&#x7ED3;&#x7684;&#x5730;&#x65B9;&#x3002;&#x5E0C;&#x671B;&#x8D81;&#x73B0;&#x5728;&#x5904;&#x4E8E;&#x7F9E;&#x803B;&#xFF0C;&#x81EA;&#x8D23;&#x548C;&#x7126;&#x8651;&#x4E2D;&#xFF0C;&#x601D;&#x8003;&#x548C;&#x603B;&#x7ED3;&#x70B9;&#x4E1C;&#x897F;&#xFF0C;&#x4E00;&#x65B9;&#x9762;&#x5E0C;&#x671B;&#x80FD;&#x591F;&#x603B;&#x7ED3;&#x51FA;&#x4E00;&#x4E9B;&#x81EA;&#x5DF1;&#x53D7;&#x7528;&#x7684;&#x4E00;&#x4E9B;&#x89C4;&#x5219;&#x548C;&#x6559;&#x8BAD;&#xFF0C;&#x5BF9;&#x4EE5;&#x540E;&#x6210;&#x957F;&#x66F4;&#x6709;&#x5E2E;&#x52A9;&#x3002;&#x53E6;&#x4E00;&#x65B9;&#x9762;&#xFF0C;&#x5E0C;&#x671B;&#x80FD;&#x501F;&#x6B64;&#x900F;&#x8FC7;&#x73B0;&#x8C61;&#x770B;&#x672C;&#x8D28;&#xFF0C;&#x7A7F;&#x8D8A;&#x6D41;&#x4E8E;&#x8868;&#x9762;&#x7684;&#x60C5;&#x7EEA;&#x770B;&#x5230;&#x95EE;&#x9898;&#x7684;&#x672C;&#x8D28;&#xFF0C;&#x771F;&#x6B63;&#x7684;&#x83B7;&#x5F97;&#x6210;&#x957F;&#x3002;</p>
+<h2 id="&#x9700;&#x6C42;&#x4E4B;&#x5751;"><a href="#&#x9700;&#x6C42;&#x4E4B;&#x5751;" class="headerlink" title="&#x9700;&#x6C42;&#x4E4B;&#x5751;"></a>&#x9700;&#x6C42;&#x4E4B;&#x5751;</h2><p>&#x5728;&#x505A;feed&#x4E4B;&#x524D;&#xFF0C;&#x6211;&#x4E5F;&#x66FE;&#x7ECF;&#x88AB;&#x9700;&#x6C42;&#x5F04;&#x7684;&#x5F88;&#x5934;&#x75BC;&#xFF0C;&#x4F46;&#x662F;&#x5F53;&#x65F6;&#x81EA;&#x5DF1;&#x5E76;&#x6CA1;&#x6709;&#x5F88;&#x91CD;&#x89C6;&#xFF0C;&#x800C;&#x662F;&#x5355;&#x7EAF;&#x7684;&#x5F52;&#x56E0;&#x5230;&#x56E2;&#x961F;&#x91CC;&#x53BB;&#x3002;&#x5728;&#x534E;&#x4E3A;&#x6B63;&#x5F0F;&#x5DE5;&#x4F5C;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x56E0;&#x4E3A;&#x5728;&#x9884;&#x7814;&#x90E8;&#x95E8;&#xFF0C;&#x9879;&#x76EE;&#x6D41;&#x7A0B;&#x4E0D;&#x662F;&#x5F88;&#x89C4;&#x8303;&#xFF0C;&#x76F4;&#x63A5;leader&#x662F;&#x9879;&#x76EE;&#x7BA1;&#x7406;&#x548C;&#x4EBA;&#x5458;&#x7BA1;&#x7406;&#x7684;&#xFF0C;&#x9700;&#x6C42;&#x662F;&#x7531;&#x53E6;&#x4E00;&#x4E2A;&#x9886;&#x5BFC;&#x76F4;&#x63A5;&#x63D0;&#x7684;&#x3002;</p>
 <blockquote>
-<p>需求不是架构，需求不是设计也不是用户界面，需求是需要 —— 《程序员修炼之道》</p>
+<p>&#x9700;&#x6C42;&#x4E0D;&#x662F;&#x67B6;&#x6784;&#xFF0C;&#x9700;&#x6C42;&#x4E0D;&#x662F;&#x8BBE;&#x8BA1;&#x4E5F;&#x4E0D;&#x662F;&#x7528;&#x6237;&#x754C;&#x9762;&#xFF0C;&#x9700;&#x6C42;&#x662F;&#x9700;&#x8981; &#x2014;&#x2014; &#x300A;&#x7A0B;&#x5E8F;&#x5458;&#x4FEE;&#x70BC;&#x4E4B;&#x9053;&#x300B;</p>
 </blockquote>
-<p>在华为的时候，我们得到的并不是真正的需求，只是用户(leader)的模糊的需要。这种需要没有形成需求文档，产品设计文档，没有ui去描绘用户界面。还是初入职场的菜鸟的我那时候也不懂得《程序员修炼之道》里面的真知灼见，单纯的归因为团队的不规范，却又说不出具体怎么的不规范，归因为自己的技术水平但事实上，导致项目失败的原因，技术水平只占了不到1%。</p>
-<p>来到shopee，leader是在微信和产品经理斗智斗勇多年的老司机，他用他的经验告诉我们，开发要站在用户的角度思考问题，要评估需求的合理性.另一方面，这边的产品经理也显得更加正规靠谱，毕竟是阿里头条挖过来的。</p>
+<p>&#x5728;&#x534E;&#x4E3A;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6211;&#x4EEC;&#x5F97;&#x5230;&#x7684;&#x5E76;&#x4E0D;&#x662F;&#x771F;&#x6B63;&#x7684;&#x9700;&#x6C42;&#xFF0C;&#x53EA;&#x662F;&#x7528;&#x6237;(leader)&#x7684;&#x6A21;&#x7CCA;&#x7684;&#x9700;&#x8981;&#x3002;&#x8FD9;&#x79CD;&#x9700;&#x8981;&#x6CA1;&#x6709;&#x5F62;&#x6210;&#x9700;&#x6C42;&#x6587;&#x6863;&#xFF0C;&#x4EA7;&#x54C1;&#x8BBE;&#x8BA1;&#x6587;&#x6863;&#xFF0C;&#x6CA1;&#x6709;ui&#x53BB;&#x63CF;&#x7ED8;&#x7528;&#x6237;&#x754C;&#x9762;&#x3002;&#x8FD8;&#x662F;&#x521D;&#x5165;&#x804C;&#x573A;&#x7684;&#x83DC;&#x9E1F;&#x7684;&#x6211;&#x90A3;&#x65F6;&#x5019;&#x4E5F;&#x4E0D;&#x61C2;&#x5F97;&#x300A;&#x7A0B;&#x5E8F;&#x5458;&#x4FEE;&#x70BC;&#x4E4B;&#x9053;&#x300B;&#x91CC;&#x9762;&#x7684;&#x771F;&#x77E5;&#x707C;&#x89C1;&#xFF0C;&#x5355;&#x7EAF;&#x7684;&#x5F52;&#x56E0;&#x4E3A;&#x56E2;&#x961F;&#x7684;&#x4E0D;&#x89C4;&#x8303;&#xFF0C;&#x5374;&#x53C8;&#x8BF4;&#x4E0D;&#x51FA;&#x5177;&#x4F53;&#x600E;&#x4E48;&#x7684;&#x4E0D;&#x89C4;&#x8303;&#xFF0C;&#x5F52;&#x56E0;&#x4E3A;&#x81EA;&#x5DF1;&#x7684;&#x6280;&#x672F;&#x6C34;&#x5E73;&#x4F46;&#x4E8B;&#x5B9E;&#x4E0A;&#xFF0C;&#x5BFC;&#x81F4;&#x9879;&#x76EE;&#x5931;&#x8D25;&#x7684;&#x539F;&#x56E0;&#xFF0C;&#x6280;&#x672F;&#x6C34;&#x5E73;&#x53EA;&#x5360;&#x4E86;&#x4E0D;&#x5230;1%&#x3002;</p>
+<p>&#x6765;&#x5230;shopee&#xFF0C;leader&#x662F;&#x5728;&#x5FAE;&#x4FE1;&#x548C;&#x4EA7;&#x54C1;&#x7ECF;&#x7406;&#x6597;&#x667A;&#x6597;&#x52C7;&#x591A;&#x5E74;&#x7684;&#x8001;&#x53F8;&#x673A;&#xFF0C;&#x4ED6;&#x7528;&#x4ED6;&#x7684;&#x7ECF;&#x9A8C;&#x544A;&#x8BC9;&#x6211;&#x4EEC;&#xFF0C;&#x5F00;&#x53D1;&#x8981;&#x7AD9;&#x5728;&#x7528;&#x6237;&#x7684;&#x89D2;&#x5EA6;&#x601D;&#x8003;&#x95EE;&#x9898;&#xFF0C;&#x8981;&#x8BC4;&#x4F30;&#x9700;&#x6C42;&#x7684;&#x5408;&#x7406;&#x6027;.&#x53E6;&#x4E00;&#x65B9;&#x9762;&#xFF0C;&#x8FD9;&#x8FB9;&#x7684;&#x4EA7;&#x54C1;&#x7ECF;&#x7406;&#x4E5F;&#x663E;&#x5F97;&#x66F4;&#x52A0;&#x6B63;&#x89C4;&#x9760;&#x8C31;&#xFF0C;&#x6BD5;&#x7ADF;&#x662F;&#x963F;&#x91CC;&#x5934;&#x6761;&#x6316;&#x8FC7;&#x6765;&#x7684;&#x3002;</p>
 <blockquote>
-<p>与用户一同工作，以像用户一样思考 —— 《程序员修炼之道》</p>
+<p>&#x4E0E;&#x7528;&#x6237;&#x4E00;&#x540C;&#x5DE5;&#x4F5C;&#xFF0C;&#x4EE5;&#x50CF;&#x7528;&#x6237;&#x4E00;&#x6837;&#x601D;&#x8003; &#x2014;&#x2014; &#x300A;&#x7A0B;&#x5E8F;&#x5458;&#x4FEE;&#x70BC;&#x4E4B;&#x9053;&#x300B;</p>
 </blockquote>
-<p>正是这些，导致我再一次忽略了对需求的思考。也许我用leader那拾人牙慧的学习到了一点需求的经验。但是并没有形成自己的一套方法。</p>
-<p>先抛出我作为一个开发者对需求评估的工作流总结：</p>
-<h3>不要搜集需求，要挖掘需求</h3>
-<p>《程序员修炼之道》里给了一个典型的例子：&quot;只有员工的上级和人事部们可以查看员工的档案&quot;是需求吗。转换一下：只有获得授权的用户才可以访问员工档案。两种陈述对于实现来说是截然不同的。</p>
-<p>这一点通常主要是产品的工作，但是开发从产品和用户角度去思考需求产生的原因，往往更能把控实现这件事情的方式。典型的例子是对于这一次开放用户白名单给非kol的商家的需求，PM提出来之后我马上就思考现有的实现细节，没有先分析需求提出来的原因，或者说思考的不够认真，只是流于表面的认为这个只是为了紧急支持local的99促销活动。如果我再进一步的思考，我应该去思考为什么现有的系统不能做，怎么做更佳合理。最终导致自己加班加点的去做需求。</p>
-<h3>需求文档的坑</h3>
-<p>同上，这个也主要是PM的工作，但是需求文档是PM和开发的接口文档，对于开发来说，分析需求文档，建立用例图，然后通过沟通和PM澄清需求，是开发前期最重要的一个阶段。</p>
-<p>在我们的系统中，需求文档主要有两个问题：</p>
-<ol>
-<li>需求文档变更，我们经常抱怨需求文档变化，一方面是需求下来的时候可能比较紧急，文档确实不够详细，另一方面，这是需求文档本来的&quot;原罪&quot;，我们只是没有认识到这一点而已。</li>
+<p>&#x6B63;&#x662F;&#x8FD9;&#x4E9B;&#xFF0C;&#x5BFC;&#x81F4;&#x6211;&#x518D;&#x4E00;&#x6B21;&#x5FFD;&#x7565;&#x4E86;&#x5BF9;&#x9700;&#x6C42;&#x7684;&#x601D;&#x8003;&#x3002;&#x4E5F;&#x8BB8;&#x6211;&#x7528;leader&#x90A3;&#x62FE;&#x4EBA;&#x7259;&#x6167;&#x7684;&#x5B66;&#x4E60;&#x5230;&#x4E86;&#x4E00;&#x70B9;&#x9700;&#x6C42;&#x7684;&#x7ECF;&#x9A8C;&#x3002;&#x4F46;&#x662F;&#x5E76;&#x6CA1;&#x6709;&#x5F62;&#x6210;&#x81EA;&#x5DF1;&#x7684;&#x4E00;&#x5957;&#x65B9;&#x6CD5;&#x3002;</p>
+<p>&#x5148;&#x629B;&#x51FA;&#x6211;&#x4F5C;&#x4E3A;&#x4E00;&#x4E2A;&#x5F00;&#x53D1;&#x8005;&#x5BF9;&#x9700;&#x6C42;&#x8BC4;&#x4F30;&#x7684;&#x5DE5;&#x4F5C;&#x6D41;&#x603B;&#x7ED3;&#xFF1A;</p>
+<h3 id="&#x4E0D;&#x8981;&#x641C;&#x96C6;&#x9700;&#x6C42;&#xFF0C;&#x8981;&#x6316;&#x6398;&#x9700;&#x6C42;"><a href="#&#x4E0D;&#x8981;&#x641C;&#x96C6;&#x9700;&#x6C42;&#xFF0C;&#x8981;&#x6316;&#x6398;&#x9700;&#x6C42;" class="headerlink" title="&#x4E0D;&#x8981;&#x641C;&#x96C6;&#x9700;&#x6C42;&#xFF0C;&#x8981;&#x6316;&#x6398;&#x9700;&#x6C42;"></a>&#x4E0D;&#x8981;&#x641C;&#x96C6;&#x9700;&#x6C42;&#xFF0C;&#x8981;&#x6316;&#x6398;&#x9700;&#x6C42;</h3><p>&#x300A;&#x7A0B;&#x5E8F;&#x5458;&#x4FEE;&#x70BC;&#x4E4B;&#x9053;&#x300B;&#x91CC;&#x7ED9;&#x4E86;&#x4E00;&#x4E2A;&#x5178;&#x578B;&#x7684;&#x4F8B;&#x5B50;&#xFF1A;&#x201D;&#x53EA;&#x6709;&#x5458;&#x5DE5;&#x7684;&#x4E0A;&#x7EA7;&#x548C;&#x4EBA;&#x4E8B;&#x90E8;&#x4EEC;&#x53EF;&#x4EE5;&#x67E5;&#x770B;&#x5458;&#x5DE5;&#x7684;&#x6863;&#x6848;&#x201D;&#x662F;&#x9700;&#x6C42;&#x5417;&#x3002;&#x8F6C;&#x6362;&#x4E00;&#x4E0B;&#xFF1A;&#x53EA;&#x6709;&#x83B7;&#x5F97;&#x6388;&#x6743;&#x7684;&#x7528;&#x6237;&#x624D;&#x53EF;&#x4EE5;&#x8BBF;&#x95EE;&#x5458;&#x5DE5;&#x6863;&#x6848;&#x3002;&#x4E24;&#x79CD;&#x9648;&#x8FF0;&#x5BF9;&#x4E8E;&#x5B9E;&#x73B0;&#x6765;&#x8BF4;&#x662F;&#x622A;&#x7136;&#x4E0D;&#x540C;&#x7684;&#x3002;</p>
+<p>&#x8FD9;&#x4E00;&#x70B9;&#x901A;&#x5E38;&#x4E3B;&#x8981;&#x662F;&#x4EA7;&#x54C1;&#x7684;&#x5DE5;&#x4F5C;&#xFF0C;&#x4F46;&#x662F;&#x5F00;&#x53D1;&#x4ECE;&#x4EA7;&#x54C1;&#x548C;&#x7528;&#x6237;&#x89D2;&#x5EA6;&#x53BB;&#x601D;&#x8003;&#x9700;&#x6C42;&#x4EA7;&#x751F;&#x7684;&#x539F;&#x56E0;&#xFF0C;&#x5F80;&#x5F80;&#x66F4;&#x80FD;&#x628A;&#x63A7;&#x5B9E;&#x73B0;&#x8FD9;&#x4EF6;&#x4E8B;&#x60C5;&#x7684;&#x65B9;&#x5F0F;&#x3002;&#x5178;&#x578B;&#x7684;&#x4F8B;&#x5B50;&#x662F;&#x5BF9;&#x4E8E;&#x8FD9;&#x4E00;&#x6B21;&#x5F00;&#x653E;&#x7528;&#x6237;&#x767D;&#x540D;&#x5355;&#x7ED9;&#x975E;kol&#x7684;&#x5546;&#x5BB6;&#x7684;&#x9700;&#x6C42;&#xFF0C;PM&#x63D0;&#x51FA;&#x6765;&#x4E4B;&#x540E;&#x6211;&#x9A6C;&#x4E0A;&#x5C31;&#x601D;&#x8003;&#x73B0;&#x6709;&#x7684;&#x5B9E;&#x73B0;&#x7EC6;&#x8282;&#xFF0C;&#x6CA1;&#x6709;&#x5148;&#x5206;&#x6790;&#x9700;&#x6C42;&#x63D0;&#x51FA;&#x6765;&#x7684;&#x539F;&#x56E0;&#xFF0C;&#x6216;&#x8005;&#x8BF4;&#x601D;&#x8003;&#x7684;&#x4E0D;&#x591F;&#x8BA4;&#x771F;&#xFF0C;&#x53EA;&#x662F;&#x6D41;&#x4E8E;&#x8868;&#x9762;&#x7684;&#x8BA4;&#x4E3A;&#x8FD9;&#x4E2A;&#x53EA;&#x662F;&#x4E3A;&#x4E86;&#x7D27;&#x6025;&#x652F;&#x6301;local&#x7684;99&#x4FC3;&#x9500;&#x6D3B;&#x52A8;&#x3002;&#x5982;&#x679C;&#x6211;&#x518D;&#x8FDB;&#x4E00;&#x6B65;&#x7684;&#x601D;&#x8003;&#xFF0C;&#x6211;&#x5E94;&#x8BE5;&#x53BB;&#x601D;&#x8003;&#x4E3A;&#x4EC0;&#x4E48;&#x73B0;&#x6709;&#x7684;&#x7CFB;&#x7EDF;&#x4E0D;&#x80FD;&#x505A;&#xFF0C;&#x600E;&#x4E48;&#x505A;&#x66F4;&#x4F73;&#x5408;&#x7406;&#x3002;&#x6700;&#x7EC8;&#x5BFC;&#x81F4;&#x81EA;&#x5DF1;&#x52A0;&#x73ED;&#x52A0;&#x70B9;&#x7684;&#x53BB;&#x505A;&#x9700;&#x6C42;&#x3002;</p>
+<h3 id="&#x9700;&#x6C42;&#x6587;&#x6863;&#x7684;&#x5751;"><a href="#&#x9700;&#x6C42;&#x6587;&#x6863;&#x7684;&#x5751;" class="headerlink" title="&#x9700;&#x6C42;&#x6587;&#x6863;&#x7684;&#x5751;"></a>&#x9700;&#x6C42;&#x6587;&#x6863;&#x7684;&#x5751;</h3><p>&#x540C;&#x4E0A;&#xFF0C;&#x8FD9;&#x4E2A;&#x4E5F;&#x4E3B;&#x8981;&#x662F;PM&#x7684;&#x5DE5;&#x4F5C;&#xFF0C;&#x4F46;&#x662F;&#x9700;&#x6C42;&#x6587;&#x6863;&#x662F;PM&#x548C;&#x5F00;&#x53D1;&#x7684;&#x63A5;&#x53E3;&#x6587;&#x6863;&#xFF0C;&#x5BF9;&#x4E8E;&#x5F00;&#x53D1;&#x6765;&#x8BF4;&#xFF0C;&#x5206;&#x6790;&#x9700;&#x6C42;&#x6587;&#x6863;&#xFF0C;&#x5EFA;&#x7ACB;&#x7528;&#x4F8B;&#x56FE;&#xFF0C;&#x7136;&#x540E;&#x901A;&#x8FC7;&#x6C9F;&#x901A;&#x548C;PM&#x6F84;&#x6E05;&#x9700;&#x6C42;&#xFF0C;&#x662F;&#x5F00;&#x53D1;&#x524D;&#x671F;&#x6700;&#x91CD;&#x8981;&#x7684;&#x4E00;&#x4E2A;&#x9636;&#x6BB5;&#x3002;</p>
+<p>&#x5728;&#x6211;&#x4EEC;&#x7684;&#x7CFB;&#x7EDF;&#x4E2D;&#xFF0C;&#x9700;&#x6C42;&#x6587;&#x6863;&#x4E3B;&#x8981;&#x6709;&#x4E24;&#x4E2A;&#x95EE;&#x9898;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x9700;&#x6C42;&#x6587;&#x6863;&#x53D8;&#x66F4;&#xFF0C;&#x6211;&#x4EEC;&#x7ECF;&#x5E38;&#x62B1;&#x6028;&#x9700;&#x6C42;&#x6587;&#x6863;&#x53D8;&#x5316;&#xFF0C;&#x4E00;&#x65B9;&#x9762;&#x662F;&#x9700;&#x6C42;&#x4E0B;&#x6765;&#x7684;&#x65F6;&#x5019;&#x53EF;&#x80FD;&#x6BD4;&#x8F83;&#x7D27;&#x6025;&#xFF0C;&#x6587;&#x6863;&#x786E;&#x5B9E;&#x4E0D;&#x591F;&#x8BE6;&#x7EC6;&#xFF0C;&#x53E6;&#x4E00;&#x65B9;&#x9762;&#xFF0C;&#x8FD9;&#x662F;&#x9700;&#x6C42;&#x6587;&#x6863;&#x672C;&#x6765;&#x7684;&#x201D;&#x539F;&#x7F6A;&#x201D;&#xFF0C;&#x6211;&#x4EEC;&#x53EA;&#x662F;&#x6CA1;&#x6709;&#x8BA4;&#x8BC6;&#x5230;&#x8FD9;&#x4E00;&#x70B9;&#x800C;&#x5DF2;&#x3002;</li>
 </ol>
 <blockquote>
-<p>制作需求文档的一大危险是太过具体，好的需求文档会保持抽象，需求文档能准确反映商业需求 — 《程序员修炼之道》</p>
+<p>&#x5236;&#x4F5C;&#x9700;&#x6C42;&#x6587;&#x6863;&#x7684;&#x4E00;&#x5927;&#x5371;&#x9669;&#x662F;&#x592A;&#x8FC7;&#x5177;&#x4F53;&#xFF0C;&#x597D;&#x7684;&#x9700;&#x6C42;&#x6587;&#x6863;&#x4F1A;&#x4FDD;&#x6301;&#x62BD;&#x8C61;&#xFF0C;&#x9700;&#x6C42;&#x6587;&#x6863;&#x80FD;&#x51C6;&#x786E;&#x53CD;&#x6620;&#x5546;&#x4E1A;&#x9700;&#x6C42; &#x2014; &#x300A;&#x7A0B;&#x5E8F;&#x5458;&#x4FEE;&#x70BC;&#x4E4B;&#x9053;&#x300B;</p>
 </blockquote>
-<p>在multitabs的需求中，我承认自己对需求文档不够重视，没有仔细斟酌里面的描述，缺少在写代码前和PM的交流，澄清需求，为了逃避交流自己做了太多假设。交流产生的结果也没有准确写入到PRD或者自己的需求规约汇中。这是自己给自己埋下的第一个坑。</p>
-<h3></h3>
-<h2>进度管理</h2>
-<p>人月神话在&quot;系统测试&quot;一节给出了一个软件任务进度安排的经验法则：</p>
-<ul>
-<li>
-<p>1/3 计划</p>
+<p>&#x5728;multitabs&#x7684;&#x9700;&#x6C42;&#x4E2D;&#xFF0C;&#x6211;&#x627F;&#x8BA4;&#x81EA;&#x5DF1;&#x5BF9;&#x9700;&#x6C42;&#x6587;&#x6863;&#x4E0D;&#x591F;&#x91CD;&#x89C6;&#xFF0C;&#x6CA1;&#x6709;&#x4ED4;&#x7EC6;&#x659F;&#x914C;&#x91CC;&#x9762;&#x7684;&#x63CF;&#x8FF0;&#xFF0C;&#x7F3A;&#x5C11;&#x5728;&#x5199;&#x4EE3;&#x7801;&#x524D;&#x548C;PM&#x7684;&#x4EA4;&#x6D41;&#xFF0C;&#x6F84;&#x6E05;&#x9700;&#x6C42;&#xFF0C;&#x4E3A;&#x4E86;&#x9003;&#x907F;&#x4EA4;&#x6D41;&#x81EA;&#x5DF1;&#x505A;&#x4E86;&#x592A;&#x591A;&#x5047;&#x8BBE;&#x3002;&#x4EA4;&#x6D41;&#x4EA7;&#x751F;&#x7684;&#x7ED3;&#x679C;&#x4E5F;&#x6CA1;&#x6709;&#x51C6;&#x786E;&#x5199;&#x5165;&#x5230;PRD&#x6216;&#x8005;&#x81EA;&#x5DF1;&#x7684;&#x9700;&#x6C42;&#x89C4;&#x7EA6;&#x6C47;&#x4E2D;&#x3002;&#x8FD9;&#x662F;&#x81EA;&#x5DF1;&#x7ED9;&#x81EA;&#x5DF1;&#x57CB;&#x4E0B;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5751;&#x3002;</p>
+<p>### </p>
+<h2 id="&#x8FDB;&#x5EA6;&#x7BA1;&#x7406;"><a href="#&#x8FDB;&#x5EA6;&#x7BA1;&#x7406;" class="headerlink" title="&#x8FDB;&#x5EA6;&#x7BA1;&#x7406;"></a>&#x8FDB;&#x5EA6;&#x7BA1;&#x7406;</h2><p>&#x4EBA;&#x6708;&#x795E;&#x8BDD;&#x5728;&#x201D;&#x7CFB;&#x7EDF;&#x6D4B;&#x8BD5;&#x201D;&#x4E00;&#x8282;&#x7ED9;&#x51FA;&#x4E86;&#x4E00;&#x4E2A;&#x8F6F;&#x4EF6;&#x4EFB;&#x52A1;&#x8FDB;&#x5EA6;&#x5B89;&#x6392;&#x7684;&#x7ECF;&#x9A8C;&#x6CD5;&#x5219;&#xFF1A;</p>
+<ul class="ui list">
+<li><p>1/3 &#x8BA1;&#x5212;</p>
 </li>
-<li>
-<p>1/6 编码</p>
+<li><p>1/6 &#x7F16;&#x7801;</p>
 </li>
-<li>
-<p>1/4 构建测试和早期系统测试</p>
+<li><p>1/4 &#x6784;&#x5EFA;&#x6D4B;&#x8BD5;&#x548C;&#x65E9;&#x671F;&#x7CFB;&#x7EDF;&#x6D4B;&#x8BD5;</p>
 </li>
-<li>
-<p>1/4 系统测试，所有构件完成</p>
+<li><p>1/4 &#x7CFB;&#x7EDF;&#x6D4B;&#x8BD5;&#xFF0C;&#x6240;&#x6709;&#x6784;&#x4EF6;&#x5B8C;&#x6210;</p>
 </li>
 </ul>
-<p>在我看来，这些比例也并非一成不变的，但是更多的东西我没有足够的重视，或者没有足够的经验去思考出自己的一套需求开发进度安排和任务工作量估算的方式。经过一年多的踩坑，我终于认识到，进度管理真的不仅仅是leader的事情，也许我们只需要管理好一部分进度，但是进度管理的基本方法论是不变的。</p>
-<h3>计划</h3>
-<p>计划这一阶段应该在需求评审会的时候，明确好以下的一些东西。</p>
-<ol>
-<li>任务</li>
-<li>责任人</li>
-<li>进度</li>
-<li>接口定义</li>
+<p>&#x5728;&#x6211;&#x770B;&#x6765;&#xFF0C;&#x8FD9;&#x4E9B;&#x6BD4;&#x4F8B;&#x4E5F;&#x5E76;&#x975E;&#x4E00;&#x6210;&#x4E0D;&#x53D8;&#x7684;&#xFF0C;&#x4F46;&#x662F;&#x66F4;&#x591A;&#x7684;&#x4E1C;&#x897F;&#x6211;&#x6CA1;&#x6709;&#x8DB3;&#x591F;&#x7684;&#x91CD;&#x89C6;&#xFF0C;&#x6216;&#x8005;&#x6CA1;&#x6709;&#x8DB3;&#x591F;&#x7684;&#x7ECF;&#x9A8C;&#x53BB;&#x601D;&#x8003;&#x51FA;&#x81EA;&#x5DF1;&#x7684;&#x4E00;&#x5957;&#x9700;&#x6C42;&#x5F00;&#x53D1;&#x8FDB;&#x5EA6;&#x5B89;&#x6392;&#x548C;&#x4EFB;&#x52A1;&#x5DE5;&#x4F5C;&#x91CF;&#x4F30;&#x7B97;&#x7684;&#x65B9;&#x5F0F;&#x3002;&#x7ECF;&#x8FC7;&#x4E00;&#x5E74;&#x591A;&#x7684;&#x8E29;&#x5751;&#xFF0C;&#x6211;&#x7EC8;&#x4E8E;&#x8BA4;&#x8BC6;&#x5230;&#xFF0C;&#x8FDB;&#x5EA6;&#x7BA1;&#x7406;&#x771F;&#x7684;&#x4E0D;&#x4EC5;&#x4EC5;&#x662F;leader&#x7684;&#x4E8B;&#x60C5;&#xFF0C;&#x4E5F;&#x8BB8;&#x6211;&#x4EEC;&#x53EA;&#x9700;&#x8981;&#x7BA1;&#x7406;&#x597D;&#x4E00;&#x90E8;&#x5206;&#x8FDB;&#x5EA6;&#xFF0C;&#x4F46;&#x662F;&#x8FDB;&#x5EA6;&#x7BA1;&#x7406;&#x7684;&#x57FA;&#x672C;&#x65B9;&#x6CD5;&#x8BBA;&#x662F;&#x4E0D;&#x53D8;&#x7684;&#x3002;</p>
+<h3 id="&#x8BA1;&#x5212;"><a href="#&#x8BA1;&#x5212;" class="headerlink" title="&#x8BA1;&#x5212;"></a>&#x8BA1;&#x5212;</h3><p>&#x8BA1;&#x5212;&#x8FD9;&#x4E00;&#x9636;&#x6BB5;&#x5E94;&#x8BE5;&#x5728;&#x9700;&#x6C42;&#x8BC4;&#x5BA1;&#x4F1A;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x660E;&#x786E;&#x597D;&#x4EE5;&#x4E0B;&#x7684;&#x4E00;&#x4E9B;&#x4E1C;&#x897F;&#x3002;</p>
+<ol class="ui list">
+<li>&#x4EFB;&#x52A1;</li>
+<li>&#x8D23;&#x4EFB;&#x4EBA;</li>
+<li>&#x8FDB;&#x5EA6;</li>
+<li>&#x63A5;&#x53E3;&#x5B9A;&#x4E49;</li>
 </ol>
-<h3>设计和编码的分离</h3>
-<p>首先一点我没有清晰的认识的是，计划和编码是具有清晰明确的边界的。而且计划的时间一定比编码长。在feed项目之初或者至今，我都没有很好的平衡这两点。系统时序图对于思考编码的实现，业务流程是很好的工具，可以当作设计阶段的一个很好的形式化工具，类似于vscode之于编码，系统时序图就是设计阶段的工作。</p>
-<p>设计工作量永远大于编码，除非是一个需求很清晰，实现很清晰，代码量不足50行的需求，否则我都应该在编码之前，在草稿纸上，画出一个简单的设计。更加复杂的需求，就要借助startuml工具(puml)来完成了。</p>
-<h3>外部依赖管理</h3>
-<p>一个0.5天工作量的需求，往往具有的特点是：</p>
-<ol>
-<li>不存在外部依赖</li>
-<li>代码修改量少于50行</li>
+<h3 id="&#x8BBE;&#x8BA1;&#x548C;&#x7F16;&#x7801;&#x7684;&#x5206;&#x79BB;"><a href="#&#x8BBE;&#x8BA1;&#x548C;&#x7F16;&#x7801;&#x7684;&#x5206;&#x79BB;" class="headerlink" title="&#x8BBE;&#x8BA1;&#x548C;&#x7F16;&#x7801;&#x7684;&#x5206;&#x79BB;"></a>&#x8BBE;&#x8BA1;&#x548C;&#x7F16;&#x7801;&#x7684;&#x5206;&#x79BB;</h3><p>&#x9996;&#x5148;&#x4E00;&#x70B9;&#x6211;&#x6CA1;&#x6709;&#x6E05;&#x6670;&#x7684;&#x8BA4;&#x8BC6;&#x7684;&#x662F;&#xFF0C;&#x8BA1;&#x5212;&#x548C;&#x7F16;&#x7801;&#x662F;&#x5177;&#x6709;&#x6E05;&#x6670;&#x660E;&#x786E;&#x7684;&#x8FB9;&#x754C;&#x7684;&#x3002;&#x800C;&#x4E14;&#x8BA1;&#x5212;&#x7684;&#x65F6;&#x95F4;&#x4E00;&#x5B9A;&#x6BD4;&#x7F16;&#x7801;&#x957F;&#x3002;&#x5728;feed&#x9879;&#x76EE;&#x4E4B;&#x521D;&#x6216;&#x8005;&#x81F3;&#x4ECA;&#xFF0C;&#x6211;&#x90FD;&#x6CA1;&#x6709;&#x5F88;&#x597D;&#x7684;&#x5E73;&#x8861;&#x8FD9;&#x4E24;&#x70B9;&#x3002;&#x7CFB;&#x7EDF;&#x65F6;&#x5E8F;&#x56FE;&#x5BF9;&#x4E8E;&#x601D;&#x8003;&#x7F16;&#x7801;&#x7684;&#x5B9E;&#x73B0;&#xFF0C;&#x4E1A;&#x52A1;&#x6D41;&#x7A0B;&#x662F;&#x5F88;&#x597D;&#x7684;&#x5DE5;&#x5177;&#xFF0C;&#x53EF;&#x4EE5;&#x5F53;&#x4F5C;&#x8BBE;&#x8BA1;&#x9636;&#x6BB5;&#x7684;&#x4E00;&#x4E2A;&#x5F88;&#x597D;&#x7684;&#x5F62;&#x5F0F;&#x5316;&#x5DE5;&#x5177;&#xFF0C;&#x7C7B;&#x4F3C;&#x4E8E;vscode&#x4E4B;&#x4E8E;&#x7F16;&#x7801;&#xFF0C;&#x7CFB;&#x7EDF;&#x65F6;&#x5E8F;&#x56FE;&#x5C31;&#x662F;&#x8BBE;&#x8BA1;&#x9636;&#x6BB5;&#x7684;&#x5DE5;&#x4F5C;&#x3002;</p>
+<p>&#x8BBE;&#x8BA1;&#x5DE5;&#x4F5C;&#x91CF;&#x6C38;&#x8FDC;&#x5927;&#x4E8E;&#x7F16;&#x7801;&#xFF0C;&#x9664;&#x975E;&#x662F;&#x4E00;&#x4E2A;&#x9700;&#x6C42;&#x5F88;&#x6E05;&#x6670;&#xFF0C;&#x5B9E;&#x73B0;&#x5F88;&#x6E05;&#x6670;&#xFF0C;&#x4EE3;&#x7801;&#x91CF;&#x4E0D;&#x8DB3;50&#x884C;&#x7684;&#x9700;&#x6C42;&#xFF0C;&#x5426;&#x5219;&#x6211;&#x90FD;&#x5E94;&#x8BE5;&#x5728;&#x7F16;&#x7801;&#x4E4B;&#x524D;&#xFF0C;&#x5728;&#x8349;&#x7A3F;&#x7EB8;&#x4E0A;&#xFF0C;&#x753B;&#x51FA;&#x4E00;&#x4E2A;&#x7B80;&#x5355;&#x7684;&#x8BBE;&#x8BA1;&#x3002;&#x66F4;&#x52A0;&#x590D;&#x6742;&#x7684;&#x9700;&#x6C42;&#xFF0C;&#x5C31;&#x8981;&#x501F;&#x52A9;startuml&#x5DE5;&#x5177;(puml)&#x6765;&#x5B8C;&#x6210;&#x4E86;&#x3002;</p>
+<h3 id="&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x7BA1;&#x7406;"><a href="#&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x7BA1;&#x7406;" class="headerlink" title="&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x7BA1;&#x7406;"></a>&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x7BA1;&#x7406;</h3><p>&#x4E00;&#x4E2A;0.5&#x5929;&#x5DE5;&#x4F5C;&#x91CF;&#x7684;&#x9700;&#x6C42;&#xFF0C;&#x5F80;&#x5F80;&#x5177;&#x6709;&#x7684;&#x7279;&#x70B9;&#x662F;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x4E0D;&#x5B58;&#x5728;&#x5916;&#x90E8;&#x4F9D;&#x8D56;</li>
+<li>&#x4EE3;&#x7801;&#x4FEE;&#x6539;&#x91CF;&#x5C11;&#x4E8E;50&#x884C;</li>
 </ol>
-<p>存在外部依赖的时候，即使条件2满足了，也不能乐观的认为工作量只有0.5天完事，《人月神话》里，对于职业的苦恼，有一点正是说的——</p>
+<p>&#x5B58;&#x5728;&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5373;&#x4F7F;&#x6761;&#x4EF6;2&#x6EE1;&#x8DB3;&#x4E86;&#xFF0C;&#x4E5F;&#x4E0D;&#x80FD;&#x4E50;&#x89C2;&#x7684;&#x8BA4;&#x4E3A;&#x5DE5;&#x4F5C;&#x91CF;&#x53EA;&#x6709;0.5&#x5929;&#x5B8C;&#x4E8B;&#xFF0C;&#x300A;&#x4EBA;&#x6708;&#x795E;&#x8BDD;&#x300B;&#x91CC;&#xFF0C;&#x5BF9;&#x4E8E;&#x804C;&#x4E1A;&#x7684;&#x82E6;&#x607C;&#xFF0C;&#x6709;&#x4E00;&#x70B9;&#x6B63;&#x662F;&#x8BF4;&#x7684;&#x2014;&#x2014;</p>
 <blockquote>
-<p>&quot;苦恼来自由他人设定目标，供给资源和提供信息&quot;</p>
+<p>&#x201C;&#x82E6;&#x607C;&#x6765;&#x81EA;&#x7531;&#x4ED6;&#x4EBA;&#x8BBE;&#x5B9A;&#x76EE;&#x6807;&#xFF0C;&#x4F9B;&#x7ED9;&#x8D44;&#x6E90;&#x548C;&#x63D0;&#x4F9B;&#x4FE1;&#x606F;&#x201D;</p>
 </blockquote>
-<p>推荐团队是我见过的最恶劣的合作团队，不仅仅无限延期对接的接口，给出的接口竟然能不按照穿进去的分页参数去返回结果。这也让我认识到，外部依赖永远都是不可靠的。</p>
-<p>不仅仅是团队，内部的依赖往往也不可靠，比如你永远不清楚，一个别人定义的delexxx方法，究竟在实现里面会不会带有副作用。</p>
-<p>在有外部依赖的情况下，工作量都需要按照1天起估算，主要是因为，对于外部依赖，需要有充足的系统测试时间。另外，当一个需求实现的工作量时间大于两天，往往需要再细分到更小的粒度，不然很容易导致失控，或者在遇到困难的时候，没办法让别人更好的参与进来一起解决。</p>
-<h2>设计之坑</h2>
-<h3>初级设计之坑</h3>
-<p>用华为的等级来看，能不能掌握避开初级设计之坑的方法，是13级和14级的区别。13级基本不需要设计，按照既定的规范来做就好，14级开始要做初级设计，接口文档，系统设计之类的。不再埋头编码，是一个准备入行的菜鸟和已入行的弱鸡的区别。</p>
-<p>设计阶段，有两个坑：</p>
-<ol>
-<li>不知道抓重点</li>
-<li>不知道使用什么工具／流程图表达</li>
+<p>&#x63A8;&#x8350;&#x56E2;&#x961F;&#x662F;&#x6211;&#x89C1;&#x8FC7;&#x7684;&#x6700;&#x6076;&#x52A3;&#x7684;&#x5408;&#x4F5C;&#x56E2;&#x961F;&#xFF0C;&#x4E0D;&#x4EC5;&#x4EC5;&#x65E0;&#x9650;&#x5EF6;&#x671F;&#x5BF9;&#x63A5;&#x7684;&#x63A5;&#x53E3;&#xFF0C;&#x7ED9;&#x51FA;&#x7684;&#x63A5;&#x53E3;&#x7ADF;&#x7136;&#x80FD;&#x4E0D;&#x6309;&#x7167;&#x7A7F;&#x8FDB;&#x53BB;&#x7684;&#x5206;&#x9875;&#x53C2;&#x6570;&#x53BB;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;&#x3002;&#x8FD9;&#x4E5F;&#x8BA9;&#x6211;&#x8BA4;&#x8BC6;&#x5230;&#xFF0C;&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x6C38;&#x8FDC;&#x90FD;&#x662F;&#x4E0D;&#x53EF;&#x9760;&#x7684;&#x3002;</p>
+<p>&#x4E0D;&#x4EC5;&#x4EC5;&#x662F;&#x56E2;&#x961F;&#xFF0C;&#x5185;&#x90E8;&#x7684;&#x4F9D;&#x8D56;&#x5F80;&#x5F80;&#x4E5F;&#x4E0D;&#x53EF;&#x9760;&#xFF0C;&#x6BD4;&#x5982;&#x4F60;&#x6C38;&#x8FDC;&#x4E0D;&#x6E05;&#x695A;&#xFF0C;&#x4E00;&#x4E2A;&#x522B;&#x4EBA;&#x5B9A;&#x4E49;&#x7684;delexxx&#x65B9;&#x6CD5;&#xFF0C;&#x7A76;&#x7ADF;&#x5728;&#x5B9E;&#x73B0;&#x91CC;&#x9762;&#x4F1A;&#x4E0D;&#x4F1A;&#x5E26;&#x6709;&#x526F;&#x4F5C;&#x7528;&#x3002;</p>
+<p>&#x5728;&#x6709;&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x5DE5;&#x4F5C;&#x91CF;&#x90FD;&#x9700;&#x8981;&#x6309;&#x7167;1&#x5929;&#x8D77;&#x4F30;&#x7B97;&#xFF0C;&#x4E3B;&#x8981;&#x662F;&#x56E0;&#x4E3A;&#xFF0C;&#x5BF9;&#x4E8E;&#x5916;&#x90E8;&#x4F9D;&#x8D56;&#xFF0C;&#x9700;&#x8981;&#x6709;&#x5145;&#x8DB3;&#x7684;&#x7CFB;&#x7EDF;&#x6D4B;&#x8BD5;&#x65F6;&#x95F4;&#x3002;&#x53E6;&#x5916;&#xFF0C;&#x5F53;&#x4E00;&#x4E2A;&#x9700;&#x6C42;&#x5B9E;&#x73B0;&#x7684;&#x5DE5;&#x4F5C;&#x91CF;&#x65F6;&#x95F4;&#x5927;&#x4E8E;&#x4E24;&#x5929;&#xFF0C;&#x5F80;&#x5F80;&#x9700;&#x8981;&#x518D;&#x7EC6;&#x5206;&#x5230;&#x66F4;&#x5C0F;&#x7684;&#x7C92;&#x5EA6;&#xFF0C;&#x4E0D;&#x7136;&#x5F88;&#x5BB9;&#x6613;&#x5BFC;&#x81F4;&#x5931;&#x63A7;&#xFF0C;&#x6216;&#x8005;&#x5728;&#x9047;&#x5230;&#x56F0;&#x96BE;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6CA1;&#x529E;&#x6CD5;&#x8BA9;&#x522B;&#x4EBA;&#x66F4;&#x597D;&#x7684;&#x53C2;&#x4E0E;&#x8FDB;&#x6765;&#x4E00;&#x8D77;&#x89E3;&#x51B3;&#x3002;</p>
+<h2 id="&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;"><a href="#&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;" class="headerlink" title="&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;"></a>&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;</h2><h3 id="&#x521D;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;"><a href="#&#x521D;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;" class="headerlink" title="&#x521D;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;"></a>&#x521D;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;</h3><p>&#x7528;&#x534E;&#x4E3A;&#x7684;&#x7B49;&#x7EA7;&#x6765;&#x770B;&#xFF0C;&#x80FD;&#x4E0D;&#x80FD;&#x638C;&#x63E1;&#x907F;&#x5F00;&#x521D;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x662F;13&#x7EA7;&#x548C;14&#x7EA7;&#x7684;&#x533A;&#x522B;&#x3002;13&#x7EA7;&#x57FA;&#x672C;&#x4E0D;&#x9700;&#x8981;&#x8BBE;&#x8BA1;&#xFF0C;&#x6309;&#x7167;&#x65E2;&#x5B9A;&#x7684;&#x89C4;&#x8303;&#x6765;&#x505A;&#x5C31;&#x597D;&#xFF0C;14&#x7EA7;&#x5F00;&#x59CB;&#x8981;&#x505A;&#x521D;&#x7EA7;&#x8BBE;&#x8BA1;&#xFF0C;&#x63A5;&#x53E3;&#x6587;&#x6863;&#xFF0C;&#x7CFB;&#x7EDF;&#x8BBE;&#x8BA1;&#x4E4B;&#x7C7B;&#x7684;&#x3002;&#x4E0D;&#x518D;&#x57CB;&#x5934;&#x7F16;&#x7801;&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x51C6;&#x5907;&#x5165;&#x884C;&#x7684;&#x83DC;&#x9E1F;&#x548C;&#x5DF2;&#x5165;&#x884C;&#x7684;&#x5F31;&#x9E21;&#x7684;&#x533A;&#x522B;&#x3002;</p>
+<p>&#x8BBE;&#x8BA1;&#x9636;&#x6BB5;&#xFF0C;&#x6709;&#x4E24;&#x4E2A;&#x5751;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x4E0D;&#x77E5;&#x9053;&#x6293;&#x91CD;&#x70B9;</li>
+<li>&#x4E0D;&#x77E5;&#x9053;&#x4F7F;&#x7528;&#x4EC0;&#x4E48;&#x5DE5;&#x5177;&#xFF0F;&#x6D41;&#x7A0B;&#x56FE;&#x8868;&#x8FBE;</li>
 </ol>
-<p>第1点在去年的时候我也没有清晰的认识，但是今年看完《DDIA》，结合一些实践上的思考，得出一些自己的经验规律。</p>
-<p>比如对于接口，或者系统设计，我们首先要明确好负载，负载可能是一个高并发场景下的QPS这个指标，也可能是feed关注关系的读写扩散导致的读写放大。之后要明确好性能，性能主要是响应时间等一些我们期望达到的目标。抓重点首先要简化需求模型，脑海里有一个MVP（最小可行性）模型，方便我们对症下药。</p>
-<p>不知道使用什么工具，一方面可能是我们对于软件开发的众多UML工具没有一个系统的了解。但是在学习完《软件方法》课程之后，其实就不太应该了。我觉得，最应该熟悉的是：</p>
-<ol>
-<li>
-<p>用例图</p>
+<p>&#x7B2C;1&#x70B9;&#x5728;&#x53BB;&#x5E74;&#x7684;&#x65F6;&#x5019;&#x6211;&#x4E5F;&#x6CA1;&#x6709;&#x6E05;&#x6670;&#x7684;&#x8BA4;&#x8BC6;&#xFF0C;&#x4F46;&#x662F;&#x4ECA;&#x5E74;&#x770B;&#x5B8C;&#x300A;DDIA&#x300B;&#xFF0C;&#x7ED3;&#x5408;&#x4E00;&#x4E9B;&#x5B9E;&#x8DF5;&#x4E0A;&#x7684;&#x601D;&#x8003;&#xFF0C;&#x5F97;&#x51FA;&#x4E00;&#x4E9B;&#x81EA;&#x5DF1;&#x7684;&#x7ECF;&#x9A8C;&#x89C4;&#x5F8B;&#x3002;</p>
+<p>&#x6BD4;&#x5982;&#x5BF9;&#x4E8E;&#x63A5;&#x53E3;&#xFF0C;&#x6216;&#x8005;&#x7CFB;&#x7EDF;&#x8BBE;&#x8BA1;&#xFF0C;&#x6211;&#x4EEC;&#x9996;&#x5148;&#x8981;&#x660E;&#x786E;&#x597D;&#x8D1F;&#x8F7D;&#xFF0C;&#x8D1F;&#x8F7D;&#x53EF;&#x80FD;&#x662F;&#x4E00;&#x4E2A;&#x9AD8;&#x5E76;&#x53D1;&#x573A;&#x666F;&#x4E0B;&#x7684;QPS&#x8FD9;&#x4E2A;&#x6307;&#x6807;&#xFF0C;&#x4E5F;&#x53EF;&#x80FD;&#x662F;feed&#x5173;&#x6CE8;&#x5173;&#x7CFB;&#x7684;&#x8BFB;&#x5199;&#x6269;&#x6563;&#x5BFC;&#x81F4;&#x7684;&#x8BFB;&#x5199;&#x653E;&#x5927;&#x3002;&#x4E4B;&#x540E;&#x8981;&#x660E;&#x786E;&#x597D;&#x6027;&#x80FD;&#xFF0C;&#x6027;&#x80FD;&#x4E3B;&#x8981;&#x662F;&#x54CD;&#x5E94;&#x65F6;&#x95F4;&#x7B49;&#x4E00;&#x4E9B;&#x6211;&#x4EEC;&#x671F;&#x671B;&#x8FBE;&#x5230;&#x7684;&#x76EE;&#x6807;&#x3002;&#x6293;&#x91CD;&#x70B9;&#x9996;&#x5148;&#x8981;&#x7B80;&#x5316;&#x9700;&#x6C42;&#x6A21;&#x578B;&#xFF0C;&#x8111;&#x6D77;&#x91CC;&#x6709;&#x4E00;&#x4E2A;MVP&#xFF08;&#x6700;&#x5C0F;&#x53EF;&#x884C;&#x6027;&#xFF09;&#x6A21;&#x578B;&#xFF0C;&#x65B9;&#x4FBF;&#x6211;&#x4EEC;&#x5BF9;&#x75C7;&#x4E0B;&#x836F;&#x3002;</p>
+<p>&#x4E0D;&#x77E5;&#x9053;&#x4F7F;&#x7528;&#x4EC0;&#x4E48;&#x5DE5;&#x5177;&#xFF0C;&#x4E00;&#x65B9;&#x9762;&#x53EF;&#x80FD;&#x662F;&#x6211;&#x4EEC;&#x5BF9;&#x4E8E;&#x8F6F;&#x4EF6;&#x5F00;&#x53D1;&#x7684;&#x4F17;&#x591A;UML&#x5DE5;&#x5177;&#x6CA1;&#x6709;&#x4E00;&#x4E2A;&#x7CFB;&#x7EDF;&#x7684;&#x4E86;&#x89E3;&#x3002;&#x4F46;&#x662F;&#x5728;&#x5B66;&#x4E60;&#x5B8C;&#x300A;&#x8F6F;&#x4EF6;&#x65B9;&#x6CD5;&#x300B;&#x8BFE;&#x7A0B;&#x4E4B;&#x540E;&#xFF0C;&#x5176;&#x5B9E;&#x5C31;&#x4E0D;&#x592A;&#x5E94;&#x8BE5;&#x4E86;&#x3002;&#x6211;&#x89C9;&#x5F97;&#xFF0C;&#x6700;&#x5E94;&#x8BE5;&#x719F;&#x6089;&#x7684;&#x662F;&#xFF1A;</p>
+<ol class="ui list">
+<li><p>&#x7528;&#x4F8B;&#x56FE;</p>
 </li>
-<li>
-<p>系统时序图</p>
+<li><p>&#x7CFB;&#x7EDF;&#x65F6;&#x5E8F;&#x56FE;</p>
 </li>
 </ol>
-<p>其他的都是用的时候再去思考哪种合适就好，永远都不要做工具的奴隶，拿起锤子，看到什么都是钉子。</p>
-<h3>高级设计之坑</h3>
-<p>在华为我见过最厉害的14级的设计，也很少去很好的思考以下的一些问题：</p>
-<ol>
-<li>
-<p>责任是否得到了良好的定义</p>
+<p>&#x5176;&#x4ED6;&#x7684;&#x90FD;&#x662F;&#x7528;&#x7684;&#x65F6;&#x5019;&#x518D;&#x53BB;&#x601D;&#x8003;&#x54EA;&#x79CD;&#x5408;&#x9002;&#x5C31;&#x597D;&#xFF0C;&#x6C38;&#x8FDC;&#x90FD;&#x4E0D;&#x8981;&#x505A;&#x5DE5;&#x5177;&#x7684;&#x5974;&#x96B6;&#xFF0C;&#x62FF;&#x8D77;&#x9524;&#x5B50;&#xFF0C;&#x770B;&#x5230;&#x4EC0;&#x4E48;&#x90FD;&#x662F;&#x9489;&#x5B50;&#x3002;</p>
+<h3 id="&#x9AD8;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;"><a href="#&#x9AD8;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;" class="headerlink" title="&#x9AD8;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;"></a>&#x9AD8;&#x7EA7;&#x8BBE;&#x8BA1;&#x4E4B;&#x5751;</h3><p>&#x5728;&#x534E;&#x4E3A;&#x6211;&#x89C1;&#x8FC7;&#x6700;&#x5389;&#x5BB3;&#x7684;14&#x7EA7;&#x7684;&#x8BBE;&#x8BA1;&#xFF0C;&#x4E5F;&#x5F88;&#x5C11;&#x53BB;&#x5F88;&#x597D;&#x7684;&#x601D;&#x8003;&#x4EE5;&#x4E0B;&#x7684;&#x4E00;&#x4E9B;&#x95EE;&#x9898;&#xFF1A;</p>
+<ol class="ui list">
+<li><p>&#x8D23;&#x4EFB;&#x662F;&#x5426;&#x5F97;&#x5230;&#x4E86;&#x826F;&#x597D;&#x7684;&#x5B9A;&#x4E49;</p>
 </li>
-<li>
-<p>协作是否得到了良好的定义</p>
+<li><p>&#x534F;&#x4F5C;&#x662F;&#x5426;&#x5F97;&#x5230;&#x4E86;&#x826F;&#x597D;&#x7684;&#x5B9A;&#x4E49;</p>
 </li>
-<li>
-<p>耦合是否得以最小化</p>
+<li><p>&#x8026;&#x5408;&#x662F;&#x5426;&#x5F97;&#x4EE5;&#x6700;&#x5C0F;&#x5316;</p>
 </li>
-<li>
-<p>接口定义和各项约束是否可接受</p>
+<li><p>&#x63A5;&#x53E3;&#x5B9A;&#x4E49;&#x548C;&#x5404;&#x9879;&#x7EA6;&#x675F;&#x662F;&#x5426;&#x53EF;&#x63A5;&#x53D7;</p>
 </li>
 </ol>
-<p>这些都涉及一定的经验和一定的技术直觉。经验有得到需要的是3年／5年，对于善于思考的人，往往更短。</p>
+<p>&#x8FD9;&#x4E9B;&#x90FD;&#x6D89;&#x53CA;&#x4E00;&#x5B9A;&#x7684;&#x7ECF;&#x9A8C;&#x548C;&#x4E00;&#x5B9A;&#x7684;&#x6280;&#x672F;&#x76F4;&#x89C9;&#x3002;&#x7ECF;&#x9A8C;&#x6709;&#x5F97;&#x5230;&#x9700;&#x8981;&#x7684;&#x662F;3&#x5E74;&#xFF0F;5&#x5E74;&#xFF0C;&#x5BF9;&#x4E8E;&#x5584;&#x4E8E;&#x601D;&#x8003;&#x7684;&#x4EBA;&#xFF0C;&#x5F80;&#x5F80;&#x66F4;&#x77ED;&#x3002;</p>
 <blockquote>
-<p>实践是最好的老师，但智者还能从其他的地方有所收获 — 《穷查理年鉴》</p>
+<p>&#x5B9E;&#x8DF5;&#x662F;&#x6700;&#x597D;&#x7684;&#x8001;&#x5E08;&#xFF0C;&#x4F46;&#x667A;&#x8005;&#x8FD8;&#x80FD;&#x4ECE;&#x5176;&#x4ED6;&#x7684;&#x5730;&#x65B9;&#x6709;&#x6240;&#x6536;&#x83B7; &#x2014; &#x300A;&#x7A77;&#x67E5;&#x7406;&#x5E74;&#x9274;&#x300B;</p>
 </blockquote>
-<p>我们可以在自己的设计和别人的设计中不断思考反思上面的4点是如何迭代实现的。在学习开源框架中学习如何抽象对象和结构，在业务开发中，更佳灵活的根据各种需求来进行设计，把阅读开源代码学习到设计灵活应用起来，这样才能真正转化为自己的东西。</p>
-<p>技术直觉需要源源不断的学习，保持好奇心，保持兴趣。</p>
-<p>比如通过DDIA对数据系统的高屋建瓴般的总结，从而对常用的中间件建立一定的技术直觉。</p>
-<p>当然，好奇心和兴趣往往因为压力打压变小，这种时候就该反思自己最近一段时间的状态了。而不是把这种状态视为理所当然。不要逃避问题，否则只能遭致更大的问题。</p>
-<h2>总结和勉励</h2>
-<p>有时候，心里总会有这样的一个声音反复问自己：&quot;为什么要总结这些东西，再怎么总结，以自己的经验，都是做不到比书本更完美的&quot;。我想，有了两年的工作经验之后的今年，我终于找到了原因：</p>
+<p>&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5728;&#x81EA;&#x5DF1;&#x7684;&#x8BBE;&#x8BA1;&#x548C;&#x522B;&#x4EBA;&#x7684;&#x8BBE;&#x8BA1;&#x4E2D;&#x4E0D;&#x65AD;&#x601D;&#x8003;&#x53CD;&#x601D;&#x4E0A;&#x9762;&#x7684;4&#x70B9;&#x662F;&#x5982;&#x4F55;&#x8FED;&#x4EE3;&#x5B9E;&#x73B0;&#x7684;&#x3002;&#x5728;&#x5B66;&#x4E60;&#x5F00;&#x6E90;&#x6846;&#x67B6;&#x4E2D;&#x5B66;&#x4E60;&#x5982;&#x4F55;&#x62BD;&#x8C61;&#x5BF9;&#x8C61;&#x548C;&#x7ED3;&#x6784;&#xFF0C;&#x5728;&#x4E1A;&#x52A1;&#x5F00;&#x53D1;&#x4E2D;&#xFF0C;&#x66F4;&#x4F73;&#x7075;&#x6D3B;&#x7684;&#x6839;&#x636E;&#x5404;&#x79CD;&#x9700;&#x6C42;&#x6765;&#x8FDB;&#x884C;&#x8BBE;&#x8BA1;&#xFF0C;&#x628A;&#x9605;&#x8BFB;&#x5F00;&#x6E90;&#x4EE3;&#x7801;&#x5B66;&#x4E60;&#x5230;&#x8BBE;&#x8BA1;&#x7075;&#x6D3B;&#x5E94;&#x7528;&#x8D77;&#x6765;&#xFF0C;&#x8FD9;&#x6837;&#x624D;&#x80FD;&#x771F;&#x6B63;&#x8F6C;&#x5316;&#x4E3A;&#x81EA;&#x5DF1;&#x7684;&#x4E1C;&#x897F;&#x3002;</p>
+<p>&#x6280;&#x672F;&#x76F4;&#x89C9;&#x9700;&#x8981;&#x6E90;&#x6E90;&#x4E0D;&#x65AD;&#x7684;&#x5B66;&#x4E60;&#xFF0C;&#x4FDD;&#x6301;&#x597D;&#x5947;&#x5FC3;&#xFF0C;&#x4FDD;&#x6301;&#x5174;&#x8DA3;&#x3002;</p>
+<p>&#x6BD4;&#x5982;&#x901A;&#x8FC7;DDIA&#x5BF9;&#x6570;&#x636E;&#x7CFB;&#x7EDF;&#x7684;&#x9AD8;&#x5C4B;&#x5EFA;&#x74F4;&#x822C;&#x7684;&#x603B;&#x7ED3;&#xFF0C;&#x4ECE;&#x800C;&#x5BF9;&#x5E38;&#x7528;&#x7684;&#x4E2D;&#x95F4;&#x4EF6;&#x5EFA;&#x7ACB;&#x4E00;&#x5B9A;&#x7684;&#x6280;&#x672F;&#x76F4;&#x89C9;&#x3002;</p>
+<p>&#x5F53;&#x7136;&#xFF0C;&#x597D;&#x5947;&#x5FC3;&#x548C;&#x5174;&#x8DA3;&#x5F80;&#x5F80;&#x56E0;&#x4E3A;&#x538B;&#x529B;&#x6253;&#x538B;&#x53D8;&#x5C0F;&#xFF0C;&#x8FD9;&#x79CD;&#x65F6;&#x5019;&#x5C31;&#x8BE5;&#x53CD;&#x601D;&#x81EA;&#x5DF1;&#x6700;&#x8FD1;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x7684;&#x72B6;&#x6001;&#x4E86;&#x3002;&#x800C;&#x4E0D;&#x662F;&#x628A;&#x8FD9;&#x79CD;&#x72B6;&#x6001;&#x89C6;&#x4E3A;&#x7406;&#x6240;&#x5F53;&#x7136;&#x3002;&#x4E0D;&#x8981;&#x9003;&#x907F;&#x95EE;&#x9898;&#xFF0C;&#x5426;&#x5219;&#x53EA;&#x80FD;&#x906D;&#x81F4;&#x66F4;&#x5927;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
+<h2 id="&#x603B;&#x7ED3;&#x548C;&#x52C9;&#x52B1;"><a href="#&#x603B;&#x7ED3;&#x548C;&#x52C9;&#x52B1;" class="headerlink" title="&#x603B;&#x7ED3;&#x548C;&#x52C9;&#x52B1;"></a>&#x603B;&#x7ED3;&#x548C;&#x52C9;&#x52B1;</h2><p>&#x6709;&#x65F6;&#x5019;&#xFF0C;&#x5FC3;&#x91CC;&#x603B;&#x4F1A;&#x6709;&#x8FD9;&#x6837;&#x7684;&#x4E00;&#x4E2A;&#x58F0;&#x97F3;&#x53CD;&#x590D;&#x95EE;&#x81EA;&#x5DF1;&#xFF1A;&#x201D;&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x603B;&#x7ED3;&#x8FD9;&#x4E9B;&#x4E1C;&#x897F;&#xFF0C;&#x518D;&#x600E;&#x4E48;&#x603B;&#x7ED3;&#xFF0C;&#x4EE5;&#x81EA;&#x5DF1;&#x7684;&#x7ECF;&#x9A8C;&#xFF0C;&#x90FD;&#x662F;&#x505A;&#x4E0D;&#x5230;&#x6BD4;&#x4E66;&#x672C;&#x66F4;&#x5B8C;&#x7F8E;&#x7684;&#x201D;&#x3002;&#x6211;&#x60F3;&#xFF0C;&#x6709;&#x4E86;&#x4E24;&#x5E74;&#x7684;&#x5DE5;&#x4F5C;&#x7ECF;&#x9A8C;&#x4E4B;&#x540E;&#x7684;&#x4ECA;&#x5E74;&#xFF0C;&#x6211;&#x7EC8;&#x4E8E;&#x627E;&#x5230;&#x4E86;&#x539F;&#x56E0;&#xFF1A;</p>
 <blockquote>
-<p>不把信息当知识，不把收藏当学习，不把阅读当思考，不把存储当掌握</p>
+<p>&#x4E0D;&#x628A;&#x4FE1;&#x606F;&#x5F53;&#x77E5;&#x8BC6;&#xFF0C;&#x4E0D;&#x628A;&#x6536;&#x85CF;&#x5F53;&#x5B66;&#x4E60;&#xFF0C;&#x4E0D;&#x628A;&#x9605;&#x8BFB;&#x5F53;&#x601D;&#x8003;&#xFF0C;&#x4E0D;&#x628A;&#x5B58;&#x50A8;&#x5F53;&#x638C;&#x63E1;</p>
 </blockquote>
-<p>当我们生搬硬套教科书的知识／别人的经验，那是永远都没有真正去掌握并转化为自己的能力的。</p>
-<ul>
-<li>比如网络5层协议没有生搬硬套OSI7层网络模型</li>
-<li>比如东施效颦</li>
+<p>&#x5F53;&#x6211;&#x4EEC;&#x751F;&#x642C;&#x786C;&#x5957;&#x6559;&#x79D1;&#x4E66;&#x7684;&#x77E5;&#x8BC6;&#xFF0F;&#x522B;&#x4EBA;&#x7684;&#x7ECF;&#x9A8C;&#xFF0C;&#x90A3;&#x662F;&#x6C38;&#x8FDC;&#x90FD;&#x6CA1;&#x6709;&#x771F;&#x6B63;&#x53BB;&#x638C;&#x63E1;&#x5E76;&#x8F6C;&#x5316;&#x4E3A;&#x81EA;&#x5DF1;&#x7684;&#x80FD;&#x529B;&#x7684;&#x3002;</p>
+<ul class="ui list">
+<li>&#x6BD4;&#x5982;&#x7F51;&#x7EDC;5&#x5C42;&#x534F;&#x8BAE;&#x6CA1;&#x6709;&#x751F;&#x642C;&#x786C;&#x5957;OSI7&#x5C42;&#x7F51;&#x7EDC;&#x6A21;&#x578B;</li>
+<li>&#x6BD4;&#x5982;&#x4E1C;&#x65BD;&#x6548;&#x98A6;</li>
 </ul>
-<p>编码工作是理性的，枯燥和创造性并存，让其成为近百年来改变世界最明显的工作的原因，正是千百年来无数数学家思考的结晶。很多东西和生活也是相通的，比如生活中怎么管理好大大小小的事情，和项目管理也没啥区别。</p>
-<p>愿我能继续拥有感性的精神世界，理性的生活方式。继续矫情下去，但是也能理性的去掌控好自己的生活。</p>
+<p>&#x7F16;&#x7801;&#x5DE5;&#x4F5C;&#x662F;&#x7406;&#x6027;&#x7684;&#xFF0C;&#x67AF;&#x71E5;&#x548C;&#x521B;&#x9020;&#x6027;&#x5E76;&#x5B58;&#xFF0C;&#x8BA9;&#x5176;&#x6210;&#x4E3A;&#x8FD1;&#x767E;&#x5E74;&#x6765;&#x6539;&#x53D8;&#x4E16;&#x754C;&#x6700;&#x660E;&#x663E;&#x7684;&#x5DE5;&#x4F5C;&#x7684;&#x539F;&#x56E0;&#xFF0C;&#x6B63;&#x662F;&#x5343;&#x767E;&#x5E74;&#x6765;&#x65E0;&#x6570;&#x6570;&#x5B66;&#x5BB6;&#x601D;&#x8003;&#x7684;&#x7ED3;&#x6676;&#x3002;&#x5F88;&#x591A;&#x4E1C;&#x897F;&#x548C;&#x751F;&#x6D3B;&#x4E5F;&#x662F;&#x76F8;&#x901A;&#x7684;&#xFF0C;&#x6BD4;&#x5982;&#x751F;&#x6D3B;&#x4E2D;&#x600E;&#x4E48;&#x7BA1;&#x7406;&#x597D;&#x5927;&#x5927;&#x5C0F;&#x5C0F;&#x7684;&#x4E8B;&#x60C5;&#xFF0C;&#x548C;&#x9879;&#x76EE;&#x7BA1;&#x7406;&#x4E5F;&#x6CA1;&#x5565;&#x533A;&#x522B;&#x3002;</p>
+<p>&#x613F;&#x6211;&#x80FD;&#x7EE7;&#x7EED;&#x62E5;&#x6709;&#x611F;&#x6027;&#x7684;&#x7CBE;&#x795E;&#x4E16;&#x754C;&#xFF0C;&#x7406;&#x6027;&#x7684;&#x751F;&#x6D3B;&#x65B9;&#x5F0F;&#x3002;&#x7EE7;&#x7EED;&#x77EB;&#x60C5;&#x4E0B;&#x53BB;&#xFF0C;&#x4F46;&#x662F;&#x4E5F;&#x80FD;&#x7406;&#x6027;&#x7684;&#x53BB;&#x638C;&#x63A7;&#x597D;&#x81EA;&#x5DF1;&#x7684;&#x751F;&#x6D3B;&#x3002;</p>
 
-  </div>
-</article>
-
-
-
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2019/08/27/树,文件系统和数据库/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">动手写一个数据库(开篇)</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2019/01/06/分布式系统入门/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">分布式系统入门</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">前面的话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">需求之坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">不要搜集需求，要挖掘需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">需求文档的坑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">进度管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">计划</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">设计和编码的分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.3.</span> <span class="toc-text">外部依赖管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">设计之坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text">初级设计之坑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.2.</span> <span class="toc-text">高级设计之坑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">总结和勉励</span></a></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&text=一个入行两年的菜鸟程序员的思考"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&is_video=false&description=一个入行两年的菜鸟程序员的思考"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=一个入行两年的菜鸟程序员的思考&body=Check out this article: http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&title=一个入行两年的菜鸟程序员的思考"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /&name=一个入行两年的菜鸟程序员的思考&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/一个入行两年的菜鸟程序员的思考 .md" data-title="一个入行两年的菜鸟程序员的思考" data-url="http://lqczzz.github.io/2019/08/17/一个入行两年的菜鸟程序员的思考 /"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>

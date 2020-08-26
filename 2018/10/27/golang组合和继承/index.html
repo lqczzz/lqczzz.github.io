@@ -1,171 +1,132 @@
 <!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="从需求说起 还是timeline（微博／朋友圈etc）的业务场景。 timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类">
-<meta name="keywords" content="golang">
-<meta property="og:type" content="article">
-<meta property="og:title" content="模版模式在golang的使用">
-<meta property="og:url" content="http://lqczzz.github.io/2018/10/27/golang组合和继承/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="从需求说起 还是timeline（微博／朋友圈etc）的业务场景。 timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-27T11:12:20.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="模版模式在golang的使用">
-<meta name="twitter:description" content="从需求说起 还是timeline（微博／朋友圈etc）的业务场景。 timeline业务从步骤上考虑，无非就是几个步骤：  获取不同的数据队列（通常是meta信息) 根据一定的算法合并和截取数据 根据合并后的meta数据获取详细的信息（content信息) 返回  如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多 另外，timeline可能会分成很多类">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>模版模式在golang的使用</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
-    
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
-</head>
+          <head>
+        <meta charset="utf-8">
+            
+            <title>
+                模版模式在golang的使用 | lance的编程笔记
+            </title>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+            <meta name="theme-color" content="#4184f3">
+            
+            
+            <link href="/favicon.ico" rel="icon"/>
+            
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/11/11/linux查看日志常用命令/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/10/26/break-in-golang/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/27/golang组合和继承/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&text=模版模式在golang的使用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&is_video=false&description=模版模式在golang的使用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=模版模式在golang的使用&body=Check out this article: http://lqczzz.github.io/2018/10/27/golang组合和继承/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&name=模版模式在golang的使用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">从需求说起</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        模版模式在golang的使用
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hexo</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-10-27T10:05:57.000Z" itemprop="datePublished">2018-10-27</time>
-        
-      
-    </div>
-
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/golang/">golang</a>
-    </div>
-
-
-    </div>
-  </header>
+            <link rel="stylesheet" href="/css/highlight.light.css">
+            <link rel="stylesheet" href="/css/prism-customize.css">
+            <link rel="stylesheet" href="/css/nav-icon.css">
+            <link rel="stylesheet" href="/css/waves.min.css">
+            <link rel="stylesheet" href="/css/jquery.tocify.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/nav-indicator.css">
+            
   
 
-  <div class="content" itemprop="articleBody">
-    <h2>从需求说起</h2>
-<p>还是timeline（微博／朋友圈etc）的业务场景。
-timeline业务从步骤上考虑，无非就是几个步骤：</p>
-<ol>
-<li>获取不同的数据队列（通常是meta信息)</li>
-<li>根据一定的算法合并和截取数据</li>
-<li>根据合并后的meta数据获取详细的信息（content信息)</li>
-<li>返回</li>
+  
+            </meta>
+        </meta>
+    </head>
+
+    <body>
+        <header>
+            <!-- cover image or sth. -->
+        </header>
+        <div id="main" class="m-scene">
+            
+<div class="nav-wrapper">
+
+    <div class="container">
+        <nav>
+            <div class="logo wave">
+                <a href="/" id="logo">
+                    lance的编程笔记
+                </a>
+            </div>
+            <div class="nav-toggle-icon" >
+                <div class="material-hamburger">
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+            <div class="menu-wrapper">
+                <div class="nav-indicator">
+                </div>
+                <ul class="menus">
+                    
+                     
+                        <li>
+                            <a class="wave " href="/">
+                                首页
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/archives">
+                                归档
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave " href="/about">
+                                关于
+                            </a>
+                        </li>
+                     
+                        <li>
+                            <a class="wave no-smoothstate" href="/atom.xml">
+                                订阅
+                            </a>
+                        </li>
+                     
+                    
+                   
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+            <div class="container content">
+                <div class="scene_element scene_element--fadein">
+                    <div class="row">
+    <div class="main">
+        <article>
+          
+          <header class="post-header">
+          
+          </header>
+          <h1 class="post-title">模版模式在golang的使用</h1>
+
+          <section class="post-info">
+            <span class="post-date">2018/10/27</span>
+            
+            
+            <span class="post-tags">
+              <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/golang/">golang</a></li></ul>
+            </span>
+            
+          </section>
+
+          <section class="post-content">
+            <h2 id="&#x4ECE;&#x9700;&#x6C42;&#x8BF4;&#x8D77;"><a href="#&#x4ECE;&#x9700;&#x6C42;&#x8BF4;&#x8D77;" class="headerlink" title="&#x4ECE;&#x9700;&#x6C42;&#x8BF4;&#x8D77;"></a>&#x4ECE;&#x9700;&#x6C42;&#x8BF4;&#x8D77;</h2><p>&#x8FD8;&#x662F;timeline&#xFF08;&#x5FAE;&#x535A;&#xFF0F;&#x670B;&#x53CB;&#x5708;etc&#xFF09;&#x7684;&#x4E1A;&#x52A1;&#x573A;&#x666F;&#x3002;<br>timeline&#x4E1A;&#x52A1;&#x4ECE;&#x6B65;&#x9AA4;&#x4E0A;&#x8003;&#x8651;&#xFF0C;&#x65E0;&#x975E;&#x5C31;&#x662F;&#x51E0;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x83B7;&#x53D6;&#x4E0D;&#x540C;&#x7684;&#x6570;&#x636E;&#x961F;&#x5217;&#xFF08;&#x901A;&#x5E38;&#x662F;meta&#x4FE1;&#x606F;)</li>
+<li>&#x6839;&#x636E;&#x4E00;&#x5B9A;&#x7684;&#x7B97;&#x6CD5;&#x5408;&#x5E76;&#x548C;&#x622A;&#x53D6;&#x6570;&#x636E;</li>
+<li>&#x6839;&#x636E;&#x5408;&#x5E76;&#x540E;&#x7684;meta&#x6570;&#x636E;&#x83B7;&#x53D6;&#x8BE6;&#x7EC6;&#x7684;&#x4FE1;&#x606F;&#xFF08;content&#x4FE1;&#x606F;)</li>
+<li>&#x8FD4;&#x56DE;</li>
 </ol>
-<p><em>如果第一步直接获取meta信息和content信息，则信息太大，tcp耗时和内存消耗也很多</em></p>
-<p>另外，timeline可能会分成很多类型：</p>
-<ol>
-<li>用户未登录看到的</li>
-<li>用户登录看到的</li>
-<li>推荐列表</li>
+<p><em>&#x5982;&#x679C;&#x7B2C;&#x4E00;&#x6B65;&#x76F4;&#x63A5;&#x83B7;&#x53D6;meta&#x4FE1;&#x606F;&#x548C;content&#x4FE1;&#x606F;&#xFF0C;&#x5219;&#x4FE1;&#x606F;&#x592A;&#x5927;&#xFF0C;tcp&#x8017;&#x65F6;&#x548C;&#x5185;&#x5B58;&#x6D88;&#x8017;&#x4E5F;&#x5F88;&#x591A;</em></p>
+<p>&#x53E6;&#x5916;&#xFF0C;timeline&#x53EF;&#x80FD;&#x4F1A;&#x5206;&#x6210;&#x5F88;&#x591A;&#x7C7B;&#x578B;&#xFF1A;</p>
+<ol class="ui list">
+<li>&#x7528;&#x6237;&#x672A;&#x767B;&#x5F55;&#x770B;&#x5230;&#x7684;</li>
+<li>&#x7528;&#x6237;&#x767B;&#x5F55;&#x770B;&#x5230;&#x7684;</li>
+<li>&#x63A8;&#x8350;&#x5217;&#x8868;</li>
 <li>etc</li>
 </ol>
-<p>这种场景最适合用模版模式实现了
-在java里面：</p>
+<p>&#x8FD9;&#x79CD;&#x573A;&#x666F;&#x6700;&#x9002;&#x5408;&#x7528;&#x6A21;&#x7248;&#x6A21;&#x5F0F;&#x5B9E;&#x73B0;&#x4E86;<br>&#x5728;java&#x91CC;&#x9762;&#xFF1A;</p>
 <pre><code>public asbtract class BaseTimeline {
     public void Do() {
         this.doRetrieve()
@@ -191,7 +152,7 @@ class UnLoginedTimeline extends BaseTimeline {
 }
 
 
-// 场景类
+// &#x573A;&#x666F;&#x7C7B;
 public class Server {
     private BaseTimeline timeline 
     public static void main([]string args) {
@@ -204,13 +165,12 @@ public class Server {
         timeline.Do()
     }
 }
-</code></pre>
-<p>通过模版模式可以很方便的实现对timeline的扩展，新增不同的展示方式直接新增timeline类。在java servlet编程和图形界面开发(android view, html5 vue .etc)中是很常见的设计模式</p>
-<p>可是golang的组合的方式没办法支持抽象方法</p>
+</code></pre><p>&#x901A;&#x8FC7;&#x6A21;&#x7248;&#x6A21;&#x5F0F;&#x53EF;&#x4EE5;&#x5F88;&#x65B9;&#x4FBF;&#x7684;&#x5B9E;&#x73B0;&#x5BF9;timeline&#x7684;&#x6269;&#x5C55;&#xFF0C;&#x65B0;&#x589E;&#x4E0D;&#x540C;&#x7684;&#x5C55;&#x793A;&#x65B9;&#x5F0F;&#x76F4;&#x63A5;&#x65B0;&#x589E;timeline&#x7C7B;&#x3002;&#x5728;java servlet&#x7F16;&#x7A0B;&#x548C;&#x56FE;&#x5F62;&#x754C;&#x9762;&#x5F00;&#x53D1;(android view, html5 vue .etc)&#x4E2D;&#x662F;&#x5F88;&#x5E38;&#x89C1;&#x7684;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</p>
+<p>&#x53EF;&#x662F;golang&#x7684;&#x7EC4;&#x5408;&#x7684;&#x65B9;&#x5F0F;&#x6CA1;&#x529E;&#x6CD5;&#x652F;&#x6301;&#x62BD;&#x8C61;&#x65B9;&#x6CD5;</p>
 <pre><code>type ITimeline interface {
-    doRetrieve()   // 获取不同的队列
-    doMerge()      // 合并
-    doGetContent() // 获取详情
+    doRetrieve()   // &#x83B7;&#x53D6;&#x4E0D;&#x540C;&#x7684;&#x961F;&#x5217;
+    doMerge()      // &#x5408;&#x5E76;
+    doGetContent() // &#x83B7;&#x53D6;&#x8BE6;&#x60C5;
     Do()
 }
 
@@ -241,7 +201,7 @@ func (bt *UnLoginedTimeline) doRetrieve()   { fmt.Println(&quot;UnLoginedTimelin
 func (bt *UnLoginedTimeline) doMerge()      { fmt.Println(&quot;UnLoginedTimeline merge&quot;) }
 func (bt *UnLoginedTimeline) doGetContent() { fmt.Println(&quot;UnLoginedTimeline content&quot;) }
 
-// 使用
+// &#x4F7F;&#x7528;
 type GetTimelineRequest struct {
     UserID uint64
 }
@@ -264,17 +224,15 @@ func main() {
     server(req, nil)
 }
 
-// 输出：
+// &#x8F93;&#x51FA;&#xFF1A;
 // base retrieve
 // base merge
 // base content
-</code></pre>
-<p>原因是因为组合方式不支持方法覆盖
-可以把Do单独出来：</p>
+</code></pre><p>&#x539F;&#x56E0;&#x662F;&#x56E0;&#x4E3A;&#x7EC4;&#x5408;&#x65B9;&#x5F0F;&#x4E0D;&#x652F;&#x6301;&#x65B9;&#x6CD5;&#x8986;&#x76D6;<br>&#x53EF;&#x4EE5;&#x628A;Do&#x5355;&#x72EC;&#x51FA;&#x6765;&#xFF1A;</p>
 <pre><code>type ITimeline interface {
-    doRetrieve()   // 获取不同的队列
-    doMerge()      // 合并
-    doGetContent() // 获取详情
+    doRetrieve()   // &#x83B7;&#x53D6;&#x4E0D;&#x540C;&#x7684;&#x961F;&#x5217;
+    doMerge()      // &#x5408;&#x5E76;
+    doGetContent() // &#x83B7;&#x53D6;&#x8BE6;&#x60C5;
 }
 
 type BaseTimeline struct{}
@@ -283,7 +241,7 @@ func (bt *BaseTimeline) doRetrieve()   { fmt.Println(&quot;base retrieve&quot;) 
 func (bt *BaseTimeline) doMerge()      { fmt.Println(&quot;base merge&quot;) }
 func (bt *BaseTimeline) doGetContent() { fmt.Println(&quot;base content&quot;) }
 
-// !!! 这里Do不再是具有接收者的方法了，调用方式也会不一样
+// !!! &#x8FD9;&#x91CC;Do&#x4E0D;&#x518D;&#x662F;&#x5177;&#x6709;&#x63A5;&#x6536;&#x8005;&#x7684;&#x65B9;&#x6CD5;&#x4E86;&#xFF0C;&#x8C03;&#x7528;&#x65B9;&#x5F0F;&#x4E5F;&#x4F1A;&#x4E0D;&#x4E00;&#x6837;
 func Do(bt ITimeline) {
     bt.doRetrieve()
     bt.doMerge()
@@ -306,7 +264,7 @@ func (bt *UnLoginedTimeline) doRetrieve()   { fmt.Println(&quot;UnLoginedTimelin
 func (bt *UnLoginedTimeline) doMerge()      { fmt.Println(&quot;UnLoginedTimeline merge&quot;) }
 func (bt *UnLoginedTimeline) doGetContent() { fmt.Println(&quot;UnLoginedTimeline content&quot;) }
 
-// 使用
+// &#x4F7F;&#x7528;
 type GetTimelineRequest struct {
     UserID uint64
 }
@@ -321,130 +279,81 @@ func server(request, response interface{}) {
         timeline = &amp;UnLoginedTimeline{}
     }
 
-    // 这里的调用方式也就变化了
+    // &#x8FD9;&#x91CC;&#x7684;&#x8C03;&#x7528;&#x65B9;&#x5F0F;&#x4E5F;&#x5C31;&#x53D8;&#x5316;&#x4E86;
     Do(timeline)
 }
 
 func main() {
     req := &amp;GetTimelineRequest{}
     server(req, nil)
-}</code></pre>
-
-  </div>
-</article>
-
-
-
+}
+</code></pre>
+          </section>
+        </article>
         
-          <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
+       
+        <div class="pager">
+          
+            <a class="post-prev pager-item" href="/2018/11/11/linux查看日志常用命令/" >
+              <strong class="article-nav-caption">上一篇</strong>
+              <p class="post-nav-title">linux查看日志常用命令</p>
+            </a>
+          
+          
+            <a class="post-next pager-item" href="/2018/10/26/break-in-golang/">
+              <strong class="article-nav-caption">下一篇</strong>
+              <p class="post-nav-title">break 和 continue</p>
+            </a>
+          
+        </div>
         
-      </ul>
-    </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">从需求说起</span></a></li></ol>
-    </div>
+         <!-- comments -->
+        <div class="comment-section">
+  
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lqczzz.github.io/2018/10/27/golang组合和继承/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&text=模版模式在golang的使用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&is_video=false&description=模版模式在golang的使用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=模版模式在golang的使用&body=Check out this article: http://lqczzz.github.io/2018/10/27/golang组合和继承/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&title=模版模式在golang的使用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lqczzz.github.io/2018/10/27/golang组合和继承/&name=模版模式在golang的使用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+    <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="_posts/golang组合和继承.md" data-title="模版模式在golang的使用" data-url="http://lqczzz.github.io/2018/10/27/golang组合和继承/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wayouliu"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
 
-    </div>
+  
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
 
-  </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2020 lqczzz
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">首页</a></li>
-         
-          <li><a href="/about/">关于</a></li>
-         
-          <li><a href="/archives/">归档</a></li>
-         
-          <li><a href="https://github.com/lqczzz?tab=projects">项目</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
     </div>
-    <!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    
+</div>
 
-    <!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-<!-- clipboard -->
-
-  <script src="/lib/clipboard/clipboard.min.js"></script>
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight .code pre").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      target: function(trigger) {
-        return trigger.nextElementSibling;
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <p>由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动，搭载<a href="https://github.com/wayou/hexo-theme-gstyle">gstyle</a>主题</p>
+    <p>
+        &copy; 2020 lqczzz
+    </p>
+</footer>
+<script src="/lib/jquery.js"></script>
+<script src="/lib/waves.js"></script>
+<script src="/lib/jquery-ui.js"></script>
+<script src="/lib/jquery.tocify.js"></script>
 <script src="/js/main.js"></script>
-<!-- search -->
 
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
+    </body>
 </html>
